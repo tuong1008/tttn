@@ -1,66 +1,60 @@
 package com.ptithcm.tttn.entity;
 
+import javax.persistence.*;
 import java.io.Serializable;
 
-import javax.persistence.AssociationOverride;
-import javax.persistence.AssociationOverrides;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Table;
-
-@Entity @Table(name = "CTPHIEUDAT")
+@Entity
+@Table(name = "CTPHIEUDAT")
 @AssociationOverrides({
-    @AssociationOverride(name = "pk.sanPham", 
-        joinColumns = @JoinColumn(name = "MASP")),
-    @AssociationOverride(name = "pk.phieuDat", 
-        joinColumns = @JoinColumn(name = "MAPD")) })
-public class CTPhieuDat implements Serializable{
+        @AssociationOverride(name = "pk.sanPham",
+                joinColumns = @JoinColumn(name = "MASP")),
+        @AssociationOverride(name = "pk.phieuDat",
+                joinColumns = @JoinColumn(name = "MAPD"))})
+public class CTPhieuDat implements Serializable {
 
-	@Embedded @Id
-	CTPhieuDatPK pk;
-	
-	@Column(name = "GIA")
-	private long gia;
-	
-	@Column(name = "SL")
-	private int sl;
-	
-	public CTPhieuDat() {
-		
-	}
+    @Embedded
+    @Id
+    CTPhieuDatPK pk;
 
-	public CTPhieuDat(CTPhieuDatPK pk, long gia, int sl) {
-		super();
-		this.pk = pk;
-		this.gia = gia;
-		this.sl = sl;
-	}
+    @Column(name = "GIA")
+    private long gia;
 
-	public CTPhieuDatPK getPk() {
-		return pk;
-	}
+    @Column(name = "SL")
+    private int sl;
 
-	public void setPk(CTPhieuDatPK pk) {
-		this.pk = pk;
-	}
+    public CTPhieuDat() {
 
-	public long getGia() {
-		return gia;
-	}
+    }
 
-	public void setGia(long gia) {
-		this.gia = gia;
-	}
+    public CTPhieuDat(CTPhieuDatPK pk, long gia, int sl) {
+        super();
+        this.pk = pk;
+        this.gia = gia;
+        this.sl = sl;
+    }
 
-	public int getSl() {
-		return sl;
-	}
+    public CTPhieuDatPK getPk() {
+        return pk;
+    }
 
-	public void setSl(int sl) {
-		this.sl = sl;
-	}
-	
+    public void setPk(CTPhieuDatPK pk) {
+        this.pk = pk;
+    }
+
+    public long getGia() {
+        return gia;
+    }
+
+    public void setGia(long gia) {
+        this.gia = gia;
+    }
+
+    public int getSl() {
+        return sl;
+    }
+
+    public void setSl(int sl) {
+        this.sl = sl;
+    }
+
 }

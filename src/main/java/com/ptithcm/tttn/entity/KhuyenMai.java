@@ -1,106 +1,103 @@
 package com.ptithcm.tttn.entity;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
-import org.springframework.format.annotation.DateTimeFormat;
+@Entity
+@Table(name = "KHUYENMAI")
+public class KhuyenMai implements Serializable {
 
+    @Id
+    @GeneratedValue
+    @Column(name = "MAKM")
+    private int maKM;
 
-@Entity @Table(name = "KHUYENMAI")
-public class KhuyenMai implements Serializable{
+    @Column(name = "NGAYBD")
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "MM/dd/yyyy")
+    private Date ngayBD;
 
-	@Id @GeneratedValue @Column(name = "MAKM")
-	private int maKM;
-	
-	@Column(name = "NGAYBD") @Temporal(TemporalType.DATE) @DateTimeFormat(pattern = "MM/dd/yyyy")
-	private Date ngayBD;
-	
-	@Column(name = "NGAYKT") @Temporal(TemporalType.DATE) @DateTimeFormat(pattern = "MM/dd/yyyy")
-	private Date ngayKT;
-	
-	@Column(name = "MOTA")
-	private String moTa;
-	
-	@ManyToOne @JoinColumn(name = "MANV")
-	private NhanVien nhanVien;
-	
-	@OneToMany(mappedBy = "pk.khuyenMai", fetch = FetchType.EAGER)
-	private Collection<ChiTietKM> chiTietKMs;
-	
-	public KhuyenMai() {
-		
-	}
+    @Column(name = "NGAYKT")
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "MM/dd/yyyy")
+    private Date ngayKT;
 
-	public KhuyenMai(int maKM, Date ngayBD, Date ngayKT, String moTa, NhanVien nhanVien,
-			Collection<ChiTietKM> chiTietKMs) {
-		super();
-		this.maKM = maKM;
-		this.ngayBD = ngayBD;
-		this.ngayKT = ngayKT;
-		this.moTa = moTa;
-		this.nhanVien = nhanVien;
-		this.chiTietKMs = chiTietKMs;
-	}
+    @Column(name = "MOTA")
+    private String moTa;
 
-	public int getMaKM() {
-		return maKM;
-	}
+    @ManyToOne
+    @JoinColumn(name = "MANV")
+    private NhanVien nhanVien;
 
-	public void setMaKM(int maKM) {
-		this.maKM = maKM;
-	}
+    @OneToMany(mappedBy = "pk.khuyenMai", fetch = FetchType.EAGER)
+    private Collection<ChiTietKM> chiTietKMs;
 
-	public Date getNgayBD() {
-		return ngayBD;
-	}
+    public KhuyenMai() {
 
-	public void setNgayBD(Date ngayBD) {
-		this.ngayBD = ngayBD;
-	}
+    }
 
-	public Date getNgayKT() {
-		return ngayKT;
-	}
+    public KhuyenMai(int maKM, Date ngayBD, Date ngayKT, String moTa, NhanVien nhanVien,
+                     Collection<ChiTietKM> chiTietKMs) {
+        super();
+        this.maKM = maKM;
+        this.ngayBD = ngayBD;
+        this.ngayKT = ngayKT;
+        this.moTa = moTa;
+        this.nhanVien = nhanVien;
+        this.chiTietKMs = chiTietKMs;
+    }
 
-	public void setNgayKT(Date ngayKT) {
-		this.ngayKT = ngayKT;
-	}
+    public int getMaKM() {
+        return maKM;
+    }
 
-	public String getMoTa() {
-		return moTa;
-	}
+    public void setMaKM(int maKM) {
+        this.maKM = maKM;
+    }
 
-	public void setMoTa(String moTa) {
-		this.moTa = moTa;
-	}
+    public Date getNgayBD() {
+        return ngayBD;
+    }
 
-	public NhanVien getNhanVien() {
-		return nhanVien;
-	}
+    public void setNgayBD(Date ngayBD) {
+        this.ngayBD = ngayBD;
+    }
 
-	public void setNhanVien(NhanVien nhanVien) {
-		this.nhanVien = nhanVien;
-	}
+    public Date getNgayKT() {
+        return ngayKT;
+    }
 
-	public Collection<ChiTietKM> getChiTietKMs() {
-		return chiTietKMs;
-	}
+    public void setNgayKT(Date ngayKT) {
+        this.ngayKT = ngayKT;
+    }
 
-	public void setChiTietKMs(Collection<ChiTietKM> chiTietKMs) {
-		this.chiTietKMs = chiTietKMs;
-	}
-	
+    public String getMoTa() {
+        return moTa;
+    }
+
+    public void setMoTa(String moTa) {
+        this.moTa = moTa;
+    }
+
+    public NhanVien getNhanVien() {
+        return nhanVien;
+    }
+
+    public void setNhanVien(NhanVien nhanVien) {
+        this.nhanVien = nhanVien;
+    }
+
+    public Collection<ChiTietKM> getChiTietKMs() {
+        return chiTietKMs;
+    }
+
+    public void setChiTietKMs(Collection<ChiTietKM> chiTietKMs) {
+        this.chiTietKMs = chiTietKMs;
+    }
+
 }

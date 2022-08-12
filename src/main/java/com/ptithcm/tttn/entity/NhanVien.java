@@ -1,198 +1,192 @@
 package com.ptithcm.tttn.entity;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Collection;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+@Entity
+@Table(name = "NHANVIEN")
+public class NhanVien implements Serializable {
 
-@Entity @Table(name = "NHANVIEN")
-public class NhanVien implements Serializable{
+    @Id
+    @Column(name = "MANV")
+    private String maNV;
 
-	@Id @Column(name = "MANV")
-	private String maNV;
-	
-	@Column(name = "EMAIL")
-	private String email;
-	
-	@Column(name = "HOTEN")
-	private String hoTen;
-	
-	@Column(name = "GIOITINH")
-	private String gioiTinh;
-	
-	@Column(name = "DIACHI")
-	private String diaChi;
-	
-	@Column(name = "SDT")
-	private String sdt;
-		
-	@ManyToOne @JoinColumn(name = "TENDN")
-	private TaiKhoan taiKhoan;
-	
-	@OneToMany(mappedBy = "nhanVienD", fetch = FetchType.EAGER)
-	private Collection<DonHang> donHangDs;
-	
-	@OneToMany(mappedBy = "nhanVienG", fetch = FetchType.EAGER)
-	private Collection<DonHang> donHangGs;
-	
-	@OneToMany(mappedBy = "nhanVien", fetch = FetchType.EAGER)
-	private Collection<HoaDon> hoaDons;
-	
-	@OneToMany(mappedBy = "nhanVien", fetch = FetchType.EAGER)
-	private Collection<PhieuTra> phieuTras;
-	
-	@OneToMany(mappedBy = "nhanVien", fetch = FetchType.EAGER)
-	private Collection<PhieuDat> phieuDats;
+    @Column(name = "EMAIL")
+    private String email;
 
-	@OneToMany(mappedBy = "nhanVien", fetch = FetchType.EAGER)
-	private Collection<PhieuNhap> phieuNhaps;
-//	
-	@OneToMany(mappedBy = "nhanVien", fetch = FetchType.EAGER)
-	private Collection<KhuyenMai> khuyenMais;
-	
-	public NhanVien() {
-		
-	}
+    @Column(name = "HOTEN")
+    private String hoTen;
 
-	public NhanVien(String maNV, String email, String hoTen, String gioiTinh, String diaChi, String sdt,
-			TaiKhoan taiKhoan, Collection<DonHang> donHangDs, Collection<DonHang> donHangGs, Collection<HoaDon> hoaDons,
-			Collection<PhieuTra> phieuTras, Collection<PhieuDat> phieuDats, Collection<PhieuNhap> phieuNhaps,
-			Collection<KhuyenMai> khuyenMais) {
-		super();
-		this.maNV = maNV;
-		this.email = email;
-		this.hoTen = hoTen;
-		this.gioiTinh = gioiTinh;
-		this.diaChi = diaChi;
-		this.sdt = sdt;
-		this.taiKhoan = taiKhoan;
-		this.donHangDs = donHangDs;
-		this.donHangGs = donHangGs;
-		this.hoaDons = hoaDons;
-		this.phieuTras = phieuTras;
-		this.phieuDats = phieuDats;
-		this.phieuNhaps = phieuNhaps;
-		this.khuyenMais = khuyenMais;
-	}
+    @Column(name = "GIOITINH")
+    private String gioiTinh;
 
-	public String getMaNV() {
-		return maNV;
-	}
+    @Column(name = "DIACHI")
+    private String diaChi;
 
-	public void setMaNV(String maNV) {
-		this.maNV = maNV;
-	}
+    @Column(name = "SDT")
+    private String sdt;
 
-	public String getEmail() {
-		return email;
-	}
+    @ManyToOne
+    @JoinColumn(name = "TENDN")
+    private TaiKhoan taiKhoan;
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    @OneToMany(mappedBy = "nhanVienD", fetch = FetchType.EAGER)
+    private Collection<DonHang> donHangDs;
 
-	public String getHoTen() {
-		return hoTen;
-	}
+    @OneToMany(mappedBy = "nhanVienG", fetch = FetchType.EAGER)
+    private Collection<DonHang> donHangGs;
 
-	public void setHoTen(String hoTen) {
-		this.hoTen = hoTen;
-	}
+    @OneToMany(mappedBy = "nhanVien", fetch = FetchType.EAGER)
+    private Collection<HoaDon> hoaDons;
 
-	public String getGioiTinh() {
-		return gioiTinh;
-	}
+    @OneToMany(mappedBy = "nhanVien", fetch = FetchType.EAGER)
+    private Collection<PhieuTra> phieuTras;
 
-	public void setGioiTinh(String gioiTinh) {
-		this.gioiTinh = gioiTinh;
-	}
+    @OneToMany(mappedBy = "nhanVien", fetch = FetchType.EAGER)
+    private Collection<PhieuDat> phieuDats;
 
-	public String getDiaChi() {
-		return diaChi;
-	}
+    @OneToMany(mappedBy = "nhanVien", fetch = FetchType.EAGER)
+    private Collection<PhieuNhap> phieuNhaps;
+    //
+    @OneToMany(mappedBy = "nhanVien", fetch = FetchType.EAGER)
+    private Collection<KhuyenMai> khuyenMais;
 
-	public void setDiaChi(String diaChi) {
-		this.diaChi = diaChi;
-	}
+    public NhanVien() {
 
-	public String getSdt() {
-		return sdt;
-	}
+    }
 
-	public void setSdt(String sdt) {
-		this.sdt = sdt;
-	}
+    public NhanVien(String maNV, String email, String hoTen, String gioiTinh, String diaChi, String sdt,
+                    TaiKhoan taiKhoan, Collection<DonHang> donHangDs, Collection<DonHang> donHangGs, Collection<HoaDon> hoaDons,
+                    Collection<PhieuTra> phieuTras, Collection<PhieuDat> phieuDats, Collection<PhieuNhap> phieuNhaps,
+                    Collection<KhuyenMai> khuyenMais) {
+        super();
+        this.maNV = maNV;
+        this.email = email;
+        this.hoTen = hoTen;
+        this.gioiTinh = gioiTinh;
+        this.diaChi = diaChi;
+        this.sdt = sdt;
+        this.taiKhoan = taiKhoan;
+        this.donHangDs = donHangDs;
+        this.donHangGs = donHangGs;
+        this.hoaDons = hoaDons;
+        this.phieuTras = phieuTras;
+        this.phieuDats = phieuDats;
+        this.phieuNhaps = phieuNhaps;
+        this.khuyenMais = khuyenMais;
+    }
 
-	public TaiKhoan getTaiKhoan() {
-		return taiKhoan;
-	}
+    public String getMaNV() {
+        return maNV;
+    }
 
-	public void setTaiKhoan(TaiKhoan taiKhoan) {
-		this.taiKhoan = taiKhoan;
-	}
+    public void setMaNV(String maNV) {
+        this.maNV = maNV;
+    }
 
-	public Collection<DonHang> getDonHangDs() {
-		return donHangDs;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public void setDonHangDs(Collection<DonHang> donHangDs) {
-		this.donHangDs = donHangDs;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public Collection<DonHang> getDonHangGs() {
-		return donHangGs;
-	}
+    public String getHoTen() {
+        return hoTen;
+    }
 
-	public void setDonHangGs(Collection<DonHang> donHangGs) {
-		this.donHangGs = donHangGs;
-	}
+    public void setHoTen(String hoTen) {
+        this.hoTen = hoTen;
+    }
 
-	public Collection<HoaDon> getHoaDons() {
-		return hoaDons;
-	}
+    public String getGioiTinh() {
+        return gioiTinh;
+    }
 
-	public void setHoaDons(Collection<HoaDon> hoaDons) {
-		this.hoaDons = hoaDons;
-	}
+    public void setGioiTinh(String gioiTinh) {
+        this.gioiTinh = gioiTinh;
+    }
 
-	public Collection<PhieuTra> getPhieuTras() {
-		return phieuTras;
-	}
+    public String getDiaChi() {
+        return diaChi;
+    }
 
-	public void setPhieuTras(Collection<PhieuTra> phieuTras) {
-		this.phieuTras = phieuTras;
-	}
+    public void setDiaChi(String diaChi) {
+        this.diaChi = diaChi;
+    }
 
-	public Collection<PhieuDat> getPhieuDats() {
-		return phieuDats;
-	}
+    public String getSdt() {
+        return sdt;
+    }
 
-	public void setPhieuDats(Collection<PhieuDat> phieuDats) {
-		this.phieuDats = phieuDats;
-	}
+    public void setSdt(String sdt) {
+        this.sdt = sdt;
+    }
 
-	public Collection<PhieuNhap> getPhieuNhaps() {
-		return phieuNhaps;
-	}
+    public TaiKhoan getTaiKhoan() {
+        return taiKhoan;
+    }
 
-	public void setPhieuNhaps(Collection<PhieuNhap> phieuNhaps) {
-		this.phieuNhaps = phieuNhaps;
-	}
+    public void setTaiKhoan(TaiKhoan taiKhoan) {
+        this.taiKhoan = taiKhoan;
+    }
 
-	public Collection<KhuyenMai> getKhuyenMais() {
-		return khuyenMais;
-	}
+    public Collection<DonHang> getDonHangDs() {
+        return donHangDs;
+    }
 
-	public void setKhuyenMais(Collection<KhuyenMai> khuyenMais) {
-		this.khuyenMais = khuyenMais;
-	}
-	
+    public void setDonHangDs(Collection<DonHang> donHangDs) {
+        this.donHangDs = donHangDs;
+    }
+
+    public Collection<DonHang> getDonHangGs() {
+        return donHangGs;
+    }
+
+    public void setDonHangGs(Collection<DonHang> donHangGs) {
+        this.donHangGs = donHangGs;
+    }
+
+    public Collection<HoaDon> getHoaDons() {
+        return hoaDons;
+    }
+
+    public void setHoaDons(Collection<HoaDon> hoaDons) {
+        this.hoaDons = hoaDons;
+    }
+
+    public Collection<PhieuTra> getPhieuTras() {
+        return phieuTras;
+    }
+
+    public void setPhieuTras(Collection<PhieuTra> phieuTras) {
+        this.phieuTras = phieuTras;
+    }
+
+    public Collection<PhieuDat> getPhieuDats() {
+        return phieuDats;
+    }
+
+    public void setPhieuDats(Collection<PhieuDat> phieuDats) {
+        this.phieuDats = phieuDats;
+    }
+
+    public Collection<PhieuNhap> getPhieuNhaps() {
+        return phieuNhaps;
+    }
+
+    public void setPhieuNhaps(Collection<PhieuNhap> phieuNhaps) {
+        this.phieuNhaps = phieuNhaps;
+    }
+
+    public Collection<KhuyenMai> getKhuyenMais() {
+        return khuyenMais;
+    }
+
+    public void setKhuyenMais(Collection<KhuyenMai> khuyenMais) {
+        this.khuyenMais = khuyenMais;
+    }
+
 }

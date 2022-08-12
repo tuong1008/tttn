@@ -1,88 +1,82 @@
 package com.ptithcm.tttn.entity;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Collection;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+@Entity
+@Table(name = "TAIKHOAN")
+public class TaiKhoan implements Serializable {
 
-@Entity @Table(name = "TAIKHOAN")
-public class TaiKhoan implements Serializable{
+    @Id
+    @Column(name = "TENDN")
+    private String tenDN;
 
-	@Id @Column(name = "TENDN")
-	private String tenDN;
-	
-	@Column(name = "MATKHAU")
-	private String matKhau;
-	
-	@ManyToOne @JoinColumn(name = "MAQUYEN")
-	private Quyen quyen;
-		
-	@OneToMany(mappedBy = "taiKhoan", fetch = FetchType.EAGER)
-	private Collection<KhachHang> khachHangs;
-	
-	@OneToMany(mappedBy = "taiKhoan", fetch = FetchType.EAGER)
-	private Collection<NhanVien> nhanViens;
-	
-	public TaiKhoan() {
-		
-	}
+    @Column(name = "MATKHAU")
+    private String matKhau;
 
-	public TaiKhoan(String tenDN, String matKhau, Quyen quyen, Collection<KhachHang> khachHangs,
-			Collection<NhanVien> nhanViens) {
-		super();
-		this.tenDN = tenDN;
-		this.matKhau = matKhau;
-		this.quyen = quyen;
-		this.khachHangs = khachHangs;
-		this.nhanViens = nhanViens;
-	}
+    @ManyToOne
+    @JoinColumn(name = "MAQUYEN")
+    private Quyen quyen;
 
-	public String getTenDN() {
-		return tenDN;
-	}
+    @OneToMany(mappedBy = "taiKhoan", fetch = FetchType.EAGER)
+    private Collection<KhachHang> khachHangs;
 
-	public void setTenDN(String tenDN) {
-		this.tenDN = tenDN;
-	}
+    @OneToMany(mappedBy = "taiKhoan", fetch = FetchType.EAGER)
+    private Collection<NhanVien> nhanViens;
 
-	public String getMatKhau() {
-		return matKhau;
-	}
+    public TaiKhoan() {
 
-	public void setMatKhau(String matKhau) {
-		this.matKhau = matKhau;
-	}
+    }
 
-	public Quyen getQuyen() {
-		return quyen;
-	}
+    public TaiKhoan(String tenDN, String matKhau, Quyen quyen, Collection<KhachHang> khachHangs,
+                    Collection<NhanVien> nhanViens) {
+        super();
+        this.tenDN = tenDN;
+        this.matKhau = matKhau;
+        this.quyen = quyen;
+        this.khachHangs = khachHangs;
+        this.nhanViens = nhanViens;
+    }
 
-	public void setQuyen(Quyen quyen) {
-		this.quyen = quyen;
-	}
+    public String getTenDN() {
+        return tenDN;
+    }
 
-	public Collection<KhachHang> getKhachHangs() {
-		return khachHangs;
-	}
+    public void setTenDN(String tenDN) {
+        this.tenDN = tenDN;
+    }
 
-	public void setKhachHangs(Collection<KhachHang> khachHangs) {
-		this.khachHangs = khachHangs;
-	}
+    public String getMatKhau() {
+        return matKhau;
+    }
 
-	public Collection<NhanVien> getNhanViens() {
-		return nhanViens;
-	}
+    public void setMatKhau(String matKhau) {
+        this.matKhau = matKhau;
+    }
 
-	public void setNhanViens(Collection<NhanVien> nhanViens) {
-		this.nhanViens = nhanViens;
-	}
+    public Quyen getQuyen() {
+        return quyen;
+    }
+
+    public void setQuyen(Quyen quyen) {
+        this.quyen = quyen;
+    }
+
+    public Collection<KhachHang> getKhachHangs() {
+        return khachHangs;
+    }
+
+    public void setKhachHangs(Collection<KhachHang> khachHangs) {
+        this.khachHangs = khachHangs;
+    }
+
+    public Collection<NhanVien> getNhanViens() {
+        return nhanViens;
+    }
+
+    public void setNhanViens(Collection<NhanVien> nhanViens) {
+        this.nhanViens = nhanViens;
+    }
 
 }

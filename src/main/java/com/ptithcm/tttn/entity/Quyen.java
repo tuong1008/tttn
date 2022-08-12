@@ -1,61 +1,57 @@
 package com.ptithcm.tttn.entity;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Collection;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+@Entity
+@Table(name = "QUYEN")
+public class Quyen implements Serializable {
 
-@Entity @Table(name = "QUYEN")
-public class Quyen implements Serializable{
+    @Id
+    @GeneratedValue
+    @Column(name = "MAQUYEN")
+    private int maQuyen;
 
-	@Id @GeneratedValue @Column(name = "MAQUYEN")
-	private int maQuyen;
-	
-	@Column(name = "TENQUYEN")
-	private String tenQuyen;
-	
-	@OneToMany(mappedBy = "quyen", fetch = FetchType.EAGER)
-	private Collection<TaiKhoan> taiKhoans;
-	
-	public Quyen() {
-		
-	}
+    @Column(name = "TENQUYEN")
+    private String tenQuyen;
 
-	public Quyen(int maQuyen, String tenQuyen, Collection<TaiKhoan> taiKhoans) {
-		super();
-		this.maQuyen = maQuyen;
-		this.tenQuyen = tenQuyen;
-		this.taiKhoans = taiKhoans;
-	}
+    @OneToMany(mappedBy = "quyen", fetch = FetchType.EAGER)
+    private Collection<TaiKhoan> taiKhoans;
 
-	public int getMaQuyen() {
-		return maQuyen;
-	}
+    public Quyen() {
 
-	public void setMaQuyen(int maQuyen) {
-		this.maQuyen = maQuyen;
-	}
+    }
 
-	public String getTenQuyen() {
-		return tenQuyen;
-	}
+    public Quyen(int maQuyen, String tenQuyen, Collection<TaiKhoan> taiKhoans) {
+        super();
+        this.maQuyen = maQuyen;
+        this.tenQuyen = tenQuyen;
+        this.taiKhoans = taiKhoans;
+    }
 
-	public void setTenQuyen(String tenQuyen) {
-		this.tenQuyen = tenQuyen;
-	}
+    public int getMaQuyen() {
+        return maQuyen;
+    }
 
-	public Collection<TaiKhoan> getTaiKhoans() {
-		return taiKhoans;
-	}
+    public void setMaQuyen(int maQuyen) {
+        this.maQuyen = maQuyen;
+    }
 
-	public void setTaiKhoans(Collection<TaiKhoan> taiKhoans) {
-		this.taiKhoans = taiKhoans;
-	}
-	
+    public String getTenQuyen() {
+        return tenQuyen;
+    }
+
+    public void setTenQuyen(String tenQuyen) {
+        this.tenQuyen = tenQuyen;
+    }
+
+    public Collection<TaiKhoan> getTaiKhoans() {
+        return taiKhoans;
+    }
+
+    public void setTaiKhoans(Collection<TaiKhoan> taiKhoans) {
+        this.taiKhoans = taiKhoans;
+    }
+
 }

@@ -1,12 +1,12 @@
 package com.ptithcm.tttn.DAO;
 
-import java.util.ArrayList;
-
+import com.ptithcm.tttn.entity.Quyen;
 import org.hibernate.SessionFactory;
 
-import com.ptithcm.tttn.entity.Quyen;
+import java.util.ArrayList;
 
 public interface QuyenDAO {
-	ArrayList<Quyen> getAllRole(SessionFactory factory);
-	Quyen getRole(SessionFactory factory, int idRole);
+    ArrayList<Quyen> getAllRole(SessionFactory factory);
+
+    Quyen getRole(SessionFactory factory, int idRole);
 }

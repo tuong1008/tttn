@@ -1,203 +1,201 @@
 package com.ptithcm.tttn.entity;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
-import org.springframework.format.annotation.DateTimeFormat;
+@Entity
+@Table(name = "DONHANG")
+public class DonHang implements Serializable {
 
+    @Id
+    @Column(name = "MADH")
+    private String maDH;
 
-@Entity @Table(name = "DONHANG")
-public class DonHang implements Serializable{
-	
-	@Id @Column(name = "MADH")
-	private String maDH;
-	
-	@Column(name = "TRANGTHAI")
-	private int trangThai;
-	
-	@Column(name = "HOTENNN")
-	private String hoTenNN;
-	
-	@Column(name = "DIACHINN")
-	private String diaChiNN;
-	
-	@Column(name = "SDTNN")
-	private String sdtNN;
-	
-	@Column(name = "EMAILNN")
-	private String emailNN;
-	
-	@Column(name = "NGAYTAO") @Temporal(TemporalType.DATE) @DateTimeFormat(pattern = "MM/dd/yyyy")
-	private Date ngayTao;
-	
-	@Column(name = "NGAYNHAN") @Temporal(TemporalType.DATE) @DateTimeFormat(pattern = "MM/dd/yyyy")
-	private Date ngayNhan;
-	
-	@Column(name = "TONGTIEN")
-	private long tongTien;
-	
-	@ManyToOne @JoinColumn(name = "MANVD")
-	private NhanVien nhanVienD;
-	
-	@ManyToOne @JoinColumn(name = "MANVG")
-	private NhanVien nhanVienG;
-	
-	@ManyToOne @JoinColumn(name = "MAKH")
-	private KhachHang khachHang;
-	
-	@OneToMany(mappedBy = "pk.donHang", fetch = FetchType.EAGER)
-	private Collection<CTDonHang> ctDonHangs;
+    @Column(name = "TRANGTHAI")
+    private int trangThai;
 
-	@OneToMany(mappedBy = "donHang", fetch = FetchType.EAGER)
-	private Collection<HoaDon> hoaDons;
-	
-	public DonHang() {
-		
-	}
+    @Column(name = "HOTENNN")
+    private String hoTenNN;
 
-	public DonHang(String maDH, int trangThai, String hoTenNN, String diaChiNN, String sdtNN, String emailNN,
-			Date ngayTao, Date ngayNhan, long tongTien, NhanVien nhanVienD, NhanVien nhanVienG, KhachHang khachHang,
-			Collection<CTDonHang> ctDonHangs, Collection<HoaDon> hoaDons) {
-		super();
-		this.maDH = maDH;
-		this.trangThai = trangThai;
-		this.hoTenNN = hoTenNN;
-		this.diaChiNN = diaChiNN;
-		this.sdtNN = sdtNN;
-		this.emailNN = emailNN;
-		this.ngayTao = ngayTao;
-		this.ngayNhan = ngayNhan;
-		this.tongTien = tongTien;
-		this.nhanVienD = nhanVienD;
-		this.nhanVienG = nhanVienG;
-		this.khachHang = khachHang;
-		this.ctDonHangs = ctDonHangs;
-		this.hoaDons = hoaDons;
-	}
+    @Column(name = "DIACHINN")
+    private String diaChiNN;
 
-	public String getMaDH() {
-		return maDH;
-	}
+    @Column(name = "SDTNN")
+    private String sdtNN;
 
-	public void setMaDH(String maDH) {
-		this.maDH = maDH;
-	}
+    @Column(name = "EMAILNN")
+    private String emailNN;
 
-	public int getTrangThai() {
-		return trangThai;
-	}
+    @Column(name = "NGAYTAO")
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "MM/dd/yyyy")
+    private Date ngayTao;
 
-	public void setTrangThai(int trangThai) {
-		this.trangThai = trangThai;
-	}
+    @Column(name = "NGAYNHAN")
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "MM/dd/yyyy")
+    private Date ngayNhan;
 
-	public String getHoTenNN() {
-		return hoTenNN;
-	}
+    @Column(name = "TONGTIEN")
+    private long tongTien;
 
-	public void setHoTenNN(String hoTenNN) {
-		this.hoTenNN = hoTenNN;
-	}
+    @ManyToOne
+    @JoinColumn(name = "MANVD")
+    private NhanVien nhanVienD;
 
-	public String getDiaChiNN() {
-		return diaChiNN;
-	}
+    @ManyToOne
+    @JoinColumn(name = "MANVG")
+    private NhanVien nhanVienG;
 
-	public void setDiaChiNN(String diaChiNN) {
-		this.diaChiNN = diaChiNN;
-	}
+    @ManyToOne
+    @JoinColumn(name = "MAKH")
+    private KhachHang khachHang;
 
-	public String getSdtNN() {
-		return sdtNN;
-	}
+    @OneToMany(mappedBy = "pk.donHang", fetch = FetchType.EAGER)
+    private Collection<CTDonHang> ctDonHangs;
 
-	public void setSdtNN(String sdtNN) {
-		this.sdtNN = sdtNN;
-	}
+    @OneToMany(mappedBy = "donHang", fetch = FetchType.EAGER)
+    private Collection<HoaDon> hoaDons;
 
-	public String getEmailNN() {
-		return emailNN;
-	}
+    public DonHang() {
 
-	public void setEmailNN(String emailNN) {
-		this.emailNN = emailNN;
-	}
+    }
 
-	public Date getNgayTao() {
-		return ngayTao;
-	}
+    public DonHang(String maDH, int trangThai, String hoTenNN, String diaChiNN, String sdtNN, String emailNN,
+                   Date ngayTao, Date ngayNhan, long tongTien, NhanVien nhanVienD, NhanVien nhanVienG, KhachHang khachHang,
+                   Collection<CTDonHang> ctDonHangs, Collection<HoaDon> hoaDons) {
+        super();
+        this.maDH = maDH;
+        this.trangThai = trangThai;
+        this.hoTenNN = hoTenNN;
+        this.diaChiNN = diaChiNN;
+        this.sdtNN = sdtNN;
+        this.emailNN = emailNN;
+        this.ngayTao = ngayTao;
+        this.ngayNhan = ngayNhan;
+        this.tongTien = tongTien;
+        this.nhanVienD = nhanVienD;
+        this.nhanVienG = nhanVienG;
+        this.khachHang = khachHang;
+        this.ctDonHangs = ctDonHangs;
+        this.hoaDons = hoaDons;
+    }
 
-	public void setNgayTao(Date ngayTao) {
-		this.ngayTao = ngayTao;
-	}
+    public String getMaDH() {
+        return maDH;
+    }
 
-	public Date getNgayNhan() {
-		return ngayNhan;
-	}
+    public void setMaDH(String maDH) {
+        this.maDH = maDH;
+    }
 
-	public void setNgayNhan(Date ngayNhan) {
-		this.ngayNhan = ngayNhan;
-	}
+    public int getTrangThai() {
+        return trangThai;
+    }
 
-	public long getTongTien() {
-		return tongTien;
-	}
+    public void setTrangThai(int trangThai) {
+        this.trangThai = trangThai;
+    }
 
-	public void setTongTien(long tongTien) {
-		this.tongTien = tongTien;
-	}
+    public String getHoTenNN() {
+        return hoTenNN;
+    }
 
-	public NhanVien getNhanVienD() {
-		return nhanVienD;
-	}
+    public void setHoTenNN(String hoTenNN) {
+        this.hoTenNN = hoTenNN;
+    }
 
-	public void setNhanVienD(NhanVien nhanVienD) {
-		this.nhanVienD = nhanVienD;
-	}
+    public String getDiaChiNN() {
+        return diaChiNN;
+    }
 
-	public NhanVien getNhanVienG() {
-		return nhanVienG;
-	}
+    public void setDiaChiNN(String diaChiNN) {
+        this.diaChiNN = diaChiNN;
+    }
 
-	public void setNhanVienG(NhanVien nhanVienG) {
-		this.nhanVienG = nhanVienG;
-	}
+    public String getSdtNN() {
+        return sdtNN;
+    }
 
-	public KhachHang getKhachHang() {
-		return khachHang;
-	}
+    public void setSdtNN(String sdtNN) {
+        this.sdtNN = sdtNN;
+    }
 
-	public void setKhachHang(KhachHang khachHang) {
-		this.khachHang = khachHang;
-	}
+    public String getEmailNN() {
+        return emailNN;
+    }
 
-	public Collection<CTDonHang> getCtDonHangs() {
-		return ctDonHangs;
-	}
+    public void setEmailNN(String emailNN) {
+        this.emailNN = emailNN;
+    }
 
-	public void setCtDonHangs(Collection<CTDonHang> ctDonHangs) {
-		this.ctDonHangs = ctDonHangs;
-	}
+    public Date getNgayTao() {
+        return ngayTao;
+    }
 
-	public Collection<HoaDon> getHoaDons() {
-		return hoaDons;
-	}
+    public void setNgayTao(Date ngayTao) {
+        this.ngayTao = ngayTao;
+    }
 
-	public void setHoaDons(Collection<HoaDon> hoaDons) {
-		this.hoaDons = hoaDons;
-	}
+    public Date getNgayNhan() {
+        return ngayNhan;
+    }
+
+    public void setNgayNhan(Date ngayNhan) {
+        this.ngayNhan = ngayNhan;
+    }
+
+    public long getTongTien() {
+        return tongTien;
+    }
+
+    public void setTongTien(long tongTien) {
+        this.tongTien = tongTien;
+    }
+
+    public NhanVien getNhanVienD() {
+        return nhanVienD;
+    }
+
+    public void setNhanVienD(NhanVien nhanVienD) {
+        this.nhanVienD = nhanVienD;
+    }
+
+    public NhanVien getNhanVienG() {
+        return nhanVienG;
+    }
+
+    public void setNhanVienG(NhanVien nhanVienG) {
+        this.nhanVienG = nhanVienG;
+    }
+
+    public KhachHang getKhachHang() {
+        return khachHang;
+    }
+
+    public void setKhachHang(KhachHang khachHang) {
+        this.khachHang = khachHang;
+    }
+
+    public Collection<CTDonHang> getCtDonHangs() {
+        return ctDonHangs;
+    }
+
+    public void setCtDonHangs(Collection<CTDonHang> ctDonHangs) {
+        this.ctDonHangs = ctDonHangs;
+    }
+
+    public Collection<HoaDon> getHoaDons() {
+        return hoaDons;
+    }
+
+    public void setHoaDons(Collection<HoaDon> hoaDons) {
+        this.hoaDons = hoaDons;
+    }
 
 }
