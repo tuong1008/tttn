@@ -1,16 +1,19 @@
-*{
+* {
     margin: 0 auto;
     padding: 0;
     box-sizing: border-box;
     z-index: 1;
 }
-li{
+
+li {
     list-style: none;
 }
-a{
+
+a {
     text-decoration: none;
 }
-.error{
+
+.error {
     margin-top: 4px;
     display: block;
     color: red;
