@@ -1,0 +1,14 @@
+# netbeans
+nbdist/
+nbbuild/
+
+# intellij
+.idea/
+
+# Eclipse
+.metadata
+.settings/
+
+# build
+target/
+build/
