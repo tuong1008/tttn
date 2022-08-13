@@ -1,21 +1,14 @@
 package com.ptithcm.tttn.DAOImpl;
 
+import com.ptithcm.tttn.DAO.AbstractDao;
 import com.ptithcm.tttn.DAO.LoaiSPDAO;
 import com.ptithcm.tttn.entity.LoaiSP;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class LoaiSPDAOImpl implements LoaiSPDAO {
-
+public class LoaiSPDAOImpl extends AbstractDao<LoaiSP> implements LoaiSPDAO {
     @Override
-    public ArrayList<LoaiSP> getListCategory(SessionFactory factory) {
-        Session session = factory.getCurrentSession();
-        String hql = "FROM LoaiSP";
-        Query query = session.createQuery(hql);
-        return (ArrayList<LoaiSP>) query.list();
+    public List<LoaiSP> getListCategory() {
+        return getFromQuery("FROM LoaiSP", LoaiSP.class);
     }
-
 }

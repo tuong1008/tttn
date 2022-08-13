@@ -1,10 +1,9 @@
 package com.ptithcm.tttn.DAO;
 
 import com.ptithcm.tttn.entity.LoaiSP;
-import org.hibernate.SessionFactory;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public interface LoaiSPDAO {
-    ArrayList<LoaiSP> getListCategory(SessionFactory factory);
+public interface LoaiSPDAO extends Dao<LoaiSP> {
+    List<LoaiSP> getListCategory();
 }

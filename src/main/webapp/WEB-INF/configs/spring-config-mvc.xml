@@ -9,8 +9,6 @@
 	   		http://www.springframework.org/schema/beans/spring-beans.xsd
 	   		http://www.springframework.org/schema/context
 	   		http://www.springframework.org/schema/context/spring-context.xsd
-
-
 			http://www.springframework.org/schema/mvc
 			http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
@@ -31,4 +29,13 @@
     <!-- Cấu hình package chứa các controller -->
     <context:component-scan base-package="com.ptithcm.tttn.controller"/>
 
+    <!--    cấu hình beans-->
+    <bean id="sanPhamDAO" class="com.ptithcm.tttn.DAOImpl.SanPhamDAOImpl"/>
+    <bean id="nhaCungCapDAO" class="com.ptithcm.tttn.DAOImpl.NhaCungCapDAOImpl"/>
+    <bean id="taiKhoanDAO" class="com.ptithcm.tttn.DAOImpl.TaiKhoanDAOImpl"/>
+    <bean id="khachHangDAO" class="com.ptithcm.tttn.DAOImpl.KhachHangDAOImpl"/>
+    <bean id="ctDonHangDAO" class="com.ptithcm.tttn.DAOImpl.CTDonHangDAOImpl"/>
+    <bean id="donHangDAO" class="com.ptithcm.tttn.DAOImpl.DonHangDAOImpl"/>
+    <bean id="chiTietKMDAO" class="com.ptithcm.tttn.DAOImpl.ChiTietKMDAOImpl"/>
+    <bean id="loaiSPDAO" class="com.ptithcm.tttn.DAOImpl.LoaiSPDAOImpl"/>
 </beans>
