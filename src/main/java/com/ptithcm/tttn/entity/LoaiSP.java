@@ -53,4 +53,11 @@ public class LoaiSP implements Serializable {
         this.sanPhams = sanPhams;
     }
 
+    @Override
+    public String toString() {
+        return "LoaiSP{" +
+                "maLoai='" + maLoai + '\'' +
+                ", tenLoai='" + tenLoai + '\'' +
+                '}';
+    }
 }

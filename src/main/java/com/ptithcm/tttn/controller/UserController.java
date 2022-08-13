@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @Transactional
@@ -53,32 +55,33 @@ public class UserController {
 
     @RequestMapping("home")
     public String index(HttpServletRequest request, HttpSession session, ModelMap model) {
-// TODO uncomment this
-//        session.setAttribute("brands", nhaCungCapDAOImpl.getSuppliers(factory));
-//        session.setAttribute("categorys", loaiSPDAOImpl.getListCategory(factory));
-//
-//        Map<SanPham, Integer> newProducts = new HashMap<SanPham, Integer>();
-//        for (SanPham s : sanPhamDAOImpl.getListNewProduct(factory)) {
-//            newProducts.put(s, chiTietKMDAOImpl.getDiscount( s.getMaSP()));
-//        }
-//
-//        Map<SanPham, Integer> hotProducts = new HashMap<SanPham, Integer>();
-//        for (SanPham s : sanPhamDAOImpl.getListHotProdduct( 5)) {
-//            hotProducts.put(s, chiTietKMDAOImpl.getDiscount( s.getMaSP()));
-//        }
-//
-//        Map<SanPham, Integer> hotSaleProducts = new HashMap<SanPham, Integer>();
-//        for (SanPham s : sanPhamDAOImpl.getListHotSaleProduct( 10)) {
-//            hotSaleProducts.put(s, chiTietKMDAOImpl.getDiscount( s.getMaSP()));
-//        }
-//
-//        session.setAttribute("newProducts", newProducts);
-//        session.setAttribute("hotProducts", hotProducts);
-//        session.setAttribute("hotSaleProducts", hotSaleProducts);
-//
-//        showProducts(request, model, sanPhamDAOImpl.getListProduct(factory));
+        // TODO uncomment this
+        System.out.println(loaiSPDAOImpl.searchByName("T"));
 
-        System.out.println(loaiSPDAOImpl.getListCategory());
+        session.setAttribute("brands", nhaCungCapDAOImpl.getSuppliers());
+        session.setAttribute("categorys", loaiSPDAOImpl.getListCategory());
+
+        Map<SanPham, Integer> newProducts = new HashMap<>();
+        for (SanPham s : sanPhamDAOImpl.getListNewProduct()) {
+            newProducts.put(s, chiTietKMDAOImpl.getDiscount(s.getMaSP()));
+        }
+
+        Map<SanPham, Integer> hotProducts = new HashMap<>();
+        for (SanPham s : sanPhamDAOImpl.getListHotProdduct(5)) {
+            hotProducts.put(s, chiTietKMDAOImpl.getDiscount(s.getMaSP()));
+        }
+
+        Map<SanPham, Integer> hotSaleProducts = new HashMap<>();
+        for (SanPham s : sanPhamDAOImpl.getListHotSaleProduct(10)) {
+            hotSaleProducts.put(s, chiTietKMDAOImpl.getDiscount(s.getMaSP()));
+        }
+
+        session.setAttribute("newProducts", newProducts);
+        session.setAttribute("hotProducts", hotProducts);
+        session.setAttribute("hotSaleProducts", hotSaleProducts);
+
+        showProducts(request, model, sanPhamDAOImpl.getListProduct());
+
         return "User/home";
     }
 

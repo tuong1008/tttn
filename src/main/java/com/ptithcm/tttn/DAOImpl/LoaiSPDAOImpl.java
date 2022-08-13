@@ -16,4 +16,9 @@ public class LoaiSPDAOImpl extends AbstractDao<LoaiSP> implements LoaiSPDAO {
     public List<LoaiSP> getListCategory() {
         return getFromQuery("FROM LoaiSP", LoaiSP.class);
     }
+
+    @Override
+    public List<LoaiSP> searchByName(String name) {
+        return getFromQuery("FROM LoaiSP a WHERE a.tenLoai LIKE ?", LoaiSP.class, "%" + name + "%");
+    }
 }

@@ -70,7 +70,6 @@ public abstract class AbstractDao<T> implements Dao<T> {
      */
     public <T> List<T> getFromQuery(String hql, Class<T> type, Object... params) {
 //        LOGGER.info("getFromQuery " + hql);
-        System.out.println(sessionFactory);
         List<T> list = new ArrayList<>();
         Transaction trans = null;
         Session session = null;
@@ -111,7 +110,7 @@ public abstract class AbstractDao<T> implements Dao<T> {
 
     public void setParameters(Query query, Object... params) {
         for (int i = 0; i < params.length; i++) {
-            query.setParameter(i + 1, params[i]);
+            query.setParameter(i, params[i]);
         }
     }
 }

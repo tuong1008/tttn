@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface LoaiSPDAO extends Dao<LoaiSP> {
     List<LoaiSP> getListCategory();
+
+    List<LoaiSP> searchByName(String name);
 }
