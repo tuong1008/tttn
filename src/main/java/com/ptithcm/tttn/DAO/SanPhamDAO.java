@@ -2,20 +2,20 @@ package com.ptithcm.tttn.DAO;
 
 import com.ptithcm.tttn.entity.SanPham;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface SanPhamDAO extends Dao<SanPham> {
-    ArrayList<SanPham> getListProduct();
+    List<SanPham> getListProduct();
 
-    ArrayList<SanPham> getListHotSaleProduct(int bigSaleOffPercent);
+    List<SanPham> getListHotSaleProduct(int bigSaleOffPercent);
 
-    ArrayList<SanPham> getListNewProduct();
+    List<SanPham> getListNewProduct();
 
-    ArrayList<SanPham> getListHotProdduct(int monthNumber);
+    List<SanPham> getListHotProdduct(int monthNumber);
 
-    ArrayList<SanPham> getListProductByName(String name);
+    List<SanPham> getListProductByName(String name);
 
-    ArrayList<SanPham> getListProductByNameBrand(String name);
+    List<SanPham> getListProductByNameBrand(String name);
 
     SanPham getProduct(String maSP);
 }

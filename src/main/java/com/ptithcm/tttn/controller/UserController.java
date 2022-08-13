@@ -55,9 +55,6 @@ public class UserController {
 
     @RequestMapping("home")
     public String index(HttpServletRequest request, HttpSession session, ModelMap model) {
-        // TODO uncomment this
-        System.out.println(loaiSPDAOImpl.searchByName("T"));
-
         session.setAttribute("brands", nhaCungCapDAOImpl.getSuppliers());
         session.setAttribute("categorys", loaiSPDAOImpl.getListCategory());
 
