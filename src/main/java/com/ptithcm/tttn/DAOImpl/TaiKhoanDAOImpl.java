@@ -17,12 +17,7 @@ public class TaiKhoanDAOImpl extends AbstractDao<TaiKhoan> implements TaiKhoanDA
 
     @Override
     public String getRole(String pass, String userName) {
-        Session session = sessionFactory.getCurrentSession();
-        String hql = "FROM TaiKhoan C WHERE C.tenDN = :id AND C.matKhau = :pass";
-        Query query = session.createQuery(hql);
-        query.setParameter("id", userName);
-        query.setParameter("pass", pass);
-        List<TaiKhoan> list = query.list();
+        List<TaiKhoan> list = getFromQuery("FROM TaiKhoan C WHERE C.tenDN = ? AND C.matKhau = ?", TaiKhoan.class, userName, pass);
         return list.isEmpty() ? "" : list.get(0).getQuyen().getTenQuyen();
     }
 
@@ -30,13 +25,17 @@ public class TaiKhoanDAOImpl extends AbstractDao<TaiKhoan> implements TaiKhoanDA
     public Integer updatePass(String newPass, String userName) {
         Session session = sessionFactory.getCurrentSession();
         try {
+            session.beginTransaction();
+
             String hql = "UPDATE TaiKhoan SET matKhau = :pass WHERE tenDN = :id";
             Query query = session.createQuery(hql);
             query.setParameter("pass", newPass);
             query.setParameter("id", userName);
             query.executeUpdate();
+
+            session.getTransaction().commit();
         } catch (Exception e) {
-            System.out.print(e);
+            e.printStackTrace();
             return 0;
         }
         return 1;
@@ -44,11 +43,7 @@ public class TaiKhoanDAOImpl extends AbstractDao<TaiKhoan> implements TaiKhoanDA
 
     @Override
     public TaiKhoan getAccount(String username) {
-        Session session = sessionFactory.getCurrentSession();
-        String hql = "FROM TaiKhoan C WHERE C.tenDN = :id";
-        Query query = session.createQuery(hql);
-        query.setParameter("id", username);
-        List<TaiKhoan> list = query.list();
+        List<TaiKhoan> list = getFromQuery("FROM TaiKhoan C WHERE C.tenDN = ?", TaiKhoan.class, username);
         return list.isEmpty() ? null : list.get(0);
     }
 

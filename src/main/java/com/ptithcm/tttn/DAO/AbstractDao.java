@@ -99,7 +99,6 @@ public abstract class AbstractDao<T> implements Dao<T> {
     public T getOne(Class<T> type, Object id) {
         try {
             Session session = sessionFactory.openSession();
-//            return session.get(type, (Serializable) id);
             return (T) session.get(type, (Serializable) id);
         } catch (HibernateException e) {
             e.printStackTrace();

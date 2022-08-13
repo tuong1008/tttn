@@ -8,7 +8,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class NhanVienDAOImpl extends AbstractDao<NhanVien> implements NhanVienDAO {
@@ -17,46 +16,37 @@ public class NhanVienDAOImpl extends AbstractDao<NhanVien> implements NhanVienDA
 
     @Override
     public NhanVien getStaff(String username) {
-        Session session = factory.getCurrentSession();
-        String hql = "FROM NhanVien where tenDN = :id";
-        Query query = session.createQuery(hql);
-        query.setParameter("id", username);
-        return (NhanVien) query.list().get(0);
+        List<NhanVien> list = getFromQuery("FROM NhanVien n where n.tenDN = ?", NhanVien.class, username);
+        return list.isEmpty() ? null : list.get(0);
     }
 
     public NhanVien getStaffByID(String id) {
-        Session session = factory.getCurrentSession();
-        String hql = "FROM NhanVien where maNV = :id";
-        Query query = session.createQuery(hql);
-        query.setParameter("id", id);
-        return (NhanVien) query.list().get(0);
+        List<NhanVien> list = getFromQuery("FROM NhanVien n where n.maNV = ?", NhanVien.class, id);
+        return list.isEmpty() ? null : list.get(0);
     }
 
     @Override
-    public ArrayList<NhanVien> getAllStaff(SessionFactory factory) {
-        Session session = factory.getCurrentSession();
-        String hql = "FROM NhanVien";
-        Query query = session.createQuery(hql);
-        return (ArrayList<NhanVien>) query.list();
+    public List<NhanVien> getAllStaff() {
+        return getFromQuery("FROM NhanVien", NhanVien.class);
     }
 
     @Override
-    public ArrayList<NhanVien> searchAllStaff(String hoTen) {
-        Session session = factory.getCurrentSession();
-        String hql = "FROM NhanVien Where hoTen like '%" + hoTen + "%'";
-        Query query = session.createQuery(hql);
-        return (ArrayList<NhanVien>) query.list();
+    public List<NhanVien> searchAllStaff(String hoTen) {
+        return getFromQuery("FROM NhanVien n Where n.hoTen like ?", NhanVien.class, "%" + hoTen + "%");
     }
-
 
     @Override
     public Integer getMaxNumberByName(String username) {
         Session session = factory.getCurrentSession();
+        session.beginTransaction();
+
         String hql = "SELECT max(substring(tenDN,length(tenDN),length(tenDN))) FROM NhanVien WHERE substring(tenDN,1,length(tenDN)-1) =:name";
         Query query = session.createQuery(hql);
         query.setParameter("name", username);
+
         List<String> list = query.list();
-        System.out.println(list);
+        session.getTransaction().commit();
+
         return list.isEmpty() ? 0 : Integer.parseInt(list.get(0));
     }
 

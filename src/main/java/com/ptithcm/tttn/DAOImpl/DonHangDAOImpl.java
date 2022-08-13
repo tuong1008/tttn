@@ -19,26 +19,18 @@ public class DonHangDAOImpl extends AbstractDao<DonHang> implements DonHangDAO {
 
     @Override
     public DonHang getBillUnBuy(String idCustomer) {
-        Session session = factory.getCurrentSession();
-        String hql = "FROM DonHang D WHERE D.khachHang.maKH =:idCustomer AND D.trangThai = 0";
-        Query query = session.createQuery(hql);
-        query.setParameter("idCustomer", idCustomer);
-        List<DonHang> list = query.list();
-        return list.get(0);
+        List<DonHang> list = getFromQuery("FROM DonHang D WHERE D.khachHang.maKH = ? AND D.trangThai = 0", DonHang.class, idCustomer);
+        return list.isEmpty() ? null : list.get(0);
     }
 
     @Override
     public List<DonHang> getBills(String idCustomer) {
-        Session session = factory.getCurrentSession();
-        String hql = "FROM DonHang D WHERE (D.trangThai = 1 OR D.trangThai = 2) AND D.khachHang.maKH =:idCustomer";
-        Query query = session.createQuery(hql);
-        query.setParameter("idCustomer", idCustomer);
-        List<DonHang> list = query.list();
-        return list;
+        return getFromQuery("FROM DonHang D WHERE (D.trangThai = 1 OR D.trangThai = 2) AND D.khachHang.maKH = ?", DonHang.class, idCustomer);
     }
 
     @Override
     public int insert(KhachHang k) {
+        // TODO: set ma don hang cứng?
         DonHang dh = new DonHang("DH005", 0, k.getHoTen(), k.getDiaChi(), k.getSdt(), k.getEmail(), new Date(), null, 0,
                 null, null, k, null, null);
         Session session = factory.openSession();
@@ -48,7 +40,7 @@ public class DonHangDAOImpl extends AbstractDao<DonHang> implements DonHangDAO {
             t.commit();
         } catch (Exception e) {
             t.rollback();
-            System.out.println(e);
+            e.printStackTrace();
             return 0;
         } finally {
             session.close();

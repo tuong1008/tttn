@@ -4,7 +4,7 @@ import com.ptithcm.tttn.entity.KhachHang;
 import com.ptithcm.tttn.entity.TaiKhoan;
 import org.hibernate.SessionFactory;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface KhachHangDAO extends Dao<KhachHang> {
     KhachHang getCustomer(String username);
@@ -13,5 +13,5 @@ public interface KhachHangDAO extends Dao<KhachHang> {
 
     Integer insertCustomer(KhachHang customer, TaiKhoan taiKhoan);
 
-    ArrayList<KhachHang> getAllCustomer(SessionFactory factory);
+    List<KhachHang> getAllCustomer(SessionFactory factory);
 }

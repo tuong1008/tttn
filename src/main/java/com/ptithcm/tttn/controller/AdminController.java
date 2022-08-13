@@ -112,7 +112,7 @@ public class AdminController {
     @RequestMapping("staff")
     public String staff(HttpServletRequest request, ModelMap model, HttpSession session) {
 
-        showStaffs(request, model, nhanVienDAO.getAllStaff(factory));
+        showStaffs(request, model, nhanVienDAO.getAllStaff());
 
         model.addAttribute("btnStatus", "btnAdd");
         model.addAttribute("staff", new NhanVien());
@@ -150,7 +150,7 @@ public class AdminController {
             }
         }
         model.addAttribute("btnStatus", "btnAdd");
-        showStaffs(request, model, nhanVienDAO.getAllStaff(factory));
+        showStaffs(request, model, nhanVienDAO.getAllStaff());
 
         return "Admin/staff";
     }
@@ -160,7 +160,7 @@ public class AdminController {
                             BindingResult errors) {
         if (!validateStaff(request, staff, errors)) {
             System.out.println("Chao edit post");
-            showStaffs(request, model, nhanVienDAO.getAllStaff(factory));
+            showStaffs(request, model, nhanVienDAO.getAllStaff());
             return "Admin/staff";
         }
         System.out.println("Dia Chi: " + staff.getDiaChi());
@@ -175,13 +175,13 @@ public class AdminController {
             model.addAttribute("message", "Sửa thất bại" + staff);
             model.addAttribute("btnStatus", "btnEdit");
         }
-        showStaffs(request, model, nhanVienDAO.getAllStaff(factory));
+        showStaffs(request, model, nhanVienDAO.getAllStaff());
         return "Admin/staff";
     }
 
     @RequestMapping(value = "staff/{id}.htm", params = "linkEdit")
     public String editStaff(HttpServletRequest request, ModelMap model, @PathVariable("id") String id) {
-        showStaffs(request, model, nhanVienDAO.getAllStaff(factory));
+        showStaffs(request, model, nhanVienDAO.getAllStaff());
         System.out.println("Chao edit");
         model.addAttribute("btnStatus", "btnEdit");
         NhanVien s = nhanVienDAO.getStaffByID(id);
@@ -222,7 +222,7 @@ public class AdminController {
 
         model.addAttribute("staff", new NhanVien());
         model.addAttribute("btnStatus", "btnAdd");
-        showStaffs(request, model, nhanVienDAO.getAllStaff(factory));
+        showStaffs(request, model, nhanVienDAO.getAllStaff());
 
         return "Admin/staff";
     }

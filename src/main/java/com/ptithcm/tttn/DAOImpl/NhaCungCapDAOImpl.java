@@ -13,11 +13,6 @@ public class NhaCungCapDAOImpl extends AbstractDao<NhaCungCap> implements NhaCun
     SessionFactory sessionFactory;
 
     public List<NhaCungCap> getSuppliers() {
-//        Session session = sessionFactory.getCurrentSession();
-//        String hql = "FROM NhaCungCap";
-//        Query query = session.createQuery(hql);
-//        return (ArrayList<NhaCungCap>) query.list();
         return getFromQuery("FROM NhaCungCap", NhaCungCap.class);
     }
-
 }

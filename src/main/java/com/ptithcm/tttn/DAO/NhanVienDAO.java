@@ -2,9 +2,8 @@ package com.ptithcm.tttn.DAO;
 
 
 import com.ptithcm.tttn.entity.NhanVien;
-import org.hibernate.SessionFactory;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface NhanVienDAO extends Dao<NhanVien> {
     NhanVien getStaff(String username);
@@ -13,8 +12,8 @@ public interface NhanVienDAO extends Dao<NhanVien> {
 
     NhanVien getStaffByID(String id);
 
-    ArrayList<NhanVien> getAllStaff(SessionFactory factory);
+    List<NhanVien> getAllStaff();
 
-    ArrayList<NhanVien> searchAllStaff(String hoTen);
+    List<NhanVien> searchAllStaff(String hoTen);
 
 }

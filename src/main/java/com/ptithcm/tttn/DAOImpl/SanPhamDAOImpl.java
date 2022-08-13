@@ -8,7 +8,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SanPhamDAOImpl extends AbstractDao<SanPham> implements SanPhamDAO {
@@ -28,6 +27,7 @@ public class SanPhamDAOImpl extends AbstractDao<SanPham> implements SanPhamDAO {
         SQLQuery sqlQuery = session.createSQLQuery("EXEC KhuyenMaiKhung ?").addEntity(SanPham.class);
         sqlQuery.setInteger(0, bigSaleOffPercent);
         List<SanPham> list = sqlQuery.list();
+
         session.getTransaction().commit();
         return list;
     }
@@ -52,6 +52,7 @@ public class SanPhamDAOImpl extends AbstractDao<SanPham> implements SanPhamDAO {
         sqlQuery.setInteger(0, monthNumber);
 
         List<SanPham> list = sqlQuery.list();
+
         session.getTransaction().commit();
         return list;
     }
@@ -60,9 +61,11 @@ public class SanPhamDAOImpl extends AbstractDao<SanPham> implements SanPhamDAO {
     public List<SanPham> getListProductByName(String name) {
         Session session = factory.getCurrentSession();
         session.beginTransaction();
+
         SQLQuery sqlQuery = session.createSQLQuery("EXEC TimKiemSPTheoTen ?").addEntity(SanPham.class);
         sqlQuery.setString(0, name);
         List<SanPham> list = sqlQuery.list();
+
         session.getTransaction().commit();
         return list;
     }
@@ -74,7 +77,7 @@ public class SanPhamDAOImpl extends AbstractDao<SanPham> implements SanPhamDAO {
 
     @Override
     public SanPham getProduct(String maSP) {
-        List<SanPham> list = getFromQuery("FROM SanPham S WHERE S.nhaCungCap.tenNCC=?", SanPham.class, maSP);
+        List<SanPham> list = getFromQuery("FROM SanPham S WHERE S.maSP = ?", SanPham.class, maSP);
         return list.isEmpty() ? null : list.get(0);
     }
 
