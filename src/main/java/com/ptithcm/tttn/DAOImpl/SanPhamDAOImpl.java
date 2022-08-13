@@ -1,15 +1,22 @@
 package com.ptithcm.tttn.DAOImpl;
 
+import com.ptithcm.tttn.DAO.AbstractDao;
 import com.ptithcm.tttn.DAO.SanPhamDAO;
 import com.ptithcm.tttn.entity.SanPham;
-import org.hibernate.*;
+import org.hibernate.Query;
+import org.hibernate.SQLQuery;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 
-public class SanPhamDAOImpl implements SanPhamDAO {
+public class SanPhamDAOImpl extends AbstractDao<SanPham> implements SanPhamDAO {
+    @Autowired
+    SessionFactory factory;
 
     @Override
-    public ArrayList<SanPham> getListProduct(SessionFactory factory) {
+    public ArrayList<SanPham> getListProduct() {
         Session session = factory.getCurrentSession();
         String hql = "FROM SanPham";
         Query query = session.createQuery(hql);
@@ -17,7 +24,7 @@ public class SanPhamDAOImpl implements SanPhamDAO {
     }
 
     @Override
-    public ArrayList<SanPham> getListHotSaleProduct(SessionFactory factory, int bigSaleOffPercent) {
+    public ArrayList<SanPham> getListHotSaleProduct(int bigSaleOffPercent) {
         Session session = factory.getCurrentSession();
         SQLQuery sqlQuery = session.createSQLQuery("EXEC KhuyenMaiKhung ?").addEntity(SanPham.class);
         sqlQuery.setInteger(0, bigSaleOffPercent);
@@ -25,14 +32,14 @@ public class SanPhamDAOImpl implements SanPhamDAO {
     }
 
     @Override
-    public ArrayList<SanPham> getListNewProduct(SessionFactory factory) {
+    public ArrayList<SanPham> getListNewProduct() {
         Session session = factory.getCurrentSession();
         SQLQuery sqlQuery = session.createSQLQuery("EXEC SPMOI").addEntity(SanPham.class);
         return (ArrayList<SanPham>) sqlQuery.list();
     }
 
     @Override
-    public ArrayList<SanPham> getListHotProdduct(SessionFactory factory, int monthNumber) {
+    public ArrayList<SanPham> getListHotProdduct(int monthNumber) {
         Session session = factory.getCurrentSession();
         SQLQuery sqlQuery = session.createSQLQuery("EXEC SPHot ?").addEntity(SanPham.class);
         sqlQuery.setInteger(0, monthNumber);
@@ -40,7 +47,7 @@ public class SanPhamDAOImpl implements SanPhamDAO {
     }
 
     @Override
-    public ArrayList<SanPham> getListProductByName(SessionFactory factory, String name) {
+    public ArrayList<SanPham> getListProductByName(String name) {
         Session session = factory.getCurrentSession();
         SQLQuery sqlQuery = session.createSQLQuery("EXEC TimKiemSPTheoTen ?").addEntity(SanPham.class);
         sqlQuery.setString(0, name);
@@ -48,7 +55,7 @@ public class SanPhamDAOImpl implements SanPhamDAO {
     }
 
     @Override
-    public ArrayList<SanPham> getListProductByNameBrand(SessionFactory factory, String name) {
+    public ArrayList<SanPham> getListProductByNameBrand(String name) {
         Session session = factory.getCurrentSession();
         String hql = "FROM SanPham S WHERE S.nhaCungCap.tenNCC =:name";
         Query query = session.createQuery(hql);
@@ -57,29 +64,12 @@ public class SanPhamDAOImpl implements SanPhamDAO {
     }
 
     @Override
-    public SanPham getProduct(SessionFactory factory, String maSP) {
+    public SanPham getProduct(String maSP) {
         Session session = factory.getCurrentSession();
         String hql = "FROM SanPham S WHERE S.maSP =:name";
         Query query = session.createQuery(hql);
         query.setParameter("name", maSP);
         return (SanPham) query.list().get(0);
-    }
-
-    @Override
-    public int update(SessionFactory factory, SanPham p) {
-        Session session = factory.openSession();
-        Transaction t = session.beginTransaction();
-        try {
-            session.update(p);
-            t.commit();
-        } catch (Exception e) {
-            System.out.println(e);
-            t.rollback();
-            return 0;
-        } finally {
-            session.close();
-        }
-        return 1;
     }
 
 }

@@ -2,13 +2,11 @@ package com.ptithcm.tttn.DAO;
 
 import org.hibernate.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Transactional
 public abstract class AbstractDao<T> implements Dao<T> {
     @Autowired
     SessionFactory sessionFactory;
@@ -31,7 +29,7 @@ public abstract class AbstractDao<T> implements Dao<T> {
     /**
      * @param t    object to persist in the database
      * @param crud 1 for save, 2 for update, 3 for delete
-     * @return error result message. "" = success
+     * @return String. error result message. "" = success
      */
     public String action(T t, int crud) {
         Transaction trans = null;

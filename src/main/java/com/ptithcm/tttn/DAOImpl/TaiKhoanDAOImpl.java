@@ -1,20 +1,23 @@
 package com.ptithcm.tttn.DAOImpl;
 
+import com.ptithcm.tttn.DAO.AbstractDao;
 import com.ptithcm.tttn.DAO.TaiKhoanDAO;
 import com.ptithcm.tttn.entity.TaiKhoan;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 
-public class TaiKhoanDAOImpl implements TaiKhoanDAO {
+public class TaiKhoanDAOImpl extends AbstractDao<TaiKhoan> implements TaiKhoanDAO {
+    @Autowired
+    SessionFactory sessionFactory;
 
     @Override
-    public String getRole(SessionFactory factory, String pass, String userName) {
-        Session session = factory.getCurrentSession();
+    public String getRole(String pass, String userName) {
+        Session session = sessionFactory.getCurrentSession();
         String hql = "FROM TaiKhoan C WHERE C.tenDN = :id AND C.matKhau = :pass";
         Query query = session.createQuery(hql);
         query.setParameter("id", userName);
@@ -24,8 +27,8 @@ public class TaiKhoanDAOImpl implements TaiKhoanDAO {
     }
 
     @Override
-    public Integer updatePass(SessionFactory factory, String newPass, String userName) {
-        Session session = factory.getCurrentSession();
+    public Integer updatePass(String newPass, String userName) {
+        Session session = sessionFactory.getCurrentSession();
         try {
             String hql = "UPDATE TaiKhoan SET matKhau = :pass WHERE tenDN = :id";
             Query query = session.createQuery(hql);
@@ -40,42 +43,8 @@ public class TaiKhoanDAOImpl implements TaiKhoanDAO {
     }
 
     @Override
-    public Integer deleteAccount(SessionFactory factory, TaiKhoan taiKhoan) {
-        Session session = factory.openSession();
-        Transaction t = session.beginTransaction();
-        try {
-            session.delete(taiKhoan);
-            t.commit();
-        } catch (Exception e) {
-            t.rollback();
-            System.out.print(e);
-            return 0;
-        } finally {
-            session.close();
-        }
-        return 1;
-    }
-
-    @Override
-    public Integer insertAccount(SessionFactory factory, TaiKhoan taiKhoan) {
-        Session session = factory.openSession();
-        Transaction t = session.beginTransaction();
-        try {
-            session.save(taiKhoan);
-            t.commit();
-        } catch (Exception e) {
-            t.rollback();
-            System.out.print(e);
-            return 0;
-        } finally {
-            session.close();
-        }
-        return 1;
-    }
-
-    @Override
-    public TaiKhoan getAccount(SessionFactory factory, String username) {
-        Session session = factory.getCurrentSession();
+    public TaiKhoan getAccount(String username) {
+        Session session = sessionFactory.getCurrentSession();
         String hql = "FROM TaiKhoan C WHERE C.tenDN = :id";
         Query query = session.createQuery(hql);
         query.setParameter("id", username);

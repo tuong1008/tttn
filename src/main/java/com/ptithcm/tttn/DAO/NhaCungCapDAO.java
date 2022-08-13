@@ -1,12 +1,11 @@
 package com.ptithcm.tttn.DAO;
 
 import com.ptithcm.tttn.entity.NhaCungCap;
-import org.hibernate.SessionFactory;
 
 import java.util.ArrayList;
 
-public interface NhaCungCapDAO {
+public interface NhaCungCapDAO extends Dao<NhaCungCap> {
 
-    ArrayList<NhaCungCap> getSuppliers(SessionFactory factory);
+    ArrayList<NhaCungCap> getSuppliers();
 
 }

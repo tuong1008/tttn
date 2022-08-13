@@ -1,16 +1,20 @@
 package com.ptithcm.tttn.DAOImpl;
 
+import com.ptithcm.tttn.DAO.AbstractDao;
 import com.ptithcm.tttn.DAO.KhachHangDAO;
 import com.ptithcm.tttn.entity.KhachHang;
 import com.ptithcm.tttn.entity.TaiKhoan;
 import org.hibernate.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 
-public class KhachHangDAOImpl implements KhachHangDAO {
+public class KhachHangDAOImpl extends AbstractDao<KhachHang> implements KhachHangDAO {
+    @Autowired
+    SessionFactory factory;
 
     @Override
-    public KhachHang getCustomer(SessionFactory factory, String username) {
+    public KhachHang getCustomer(String username) {
         Session session = factory.getCurrentSession();
         String hql = "FROM KhachHang where tenDN = :id";
         Query query = session.createQuery(hql);
@@ -19,7 +23,7 @@ public class KhachHangDAOImpl implements KhachHangDAO {
     }
 
     @Override
-    public Integer updateCustomer(SessionFactory factory, KhachHang customer) {
+    public Integer updateCustomer(KhachHang customer) {
         Session session = factory.openSession();
         Transaction t = session.beginTransaction();
         try {
@@ -36,7 +40,7 @@ public class KhachHangDAOImpl implements KhachHangDAO {
     }
 
     @Override
-    public Integer insertCustomer(SessionFactory factory, KhachHang customer, TaiKhoan taiKhoan) {
+    public Integer insertCustomer(KhachHang customer, TaiKhoan taiKhoan) {
         Session session = factory.openSession();
         Transaction t = session.beginTransaction();
         try {

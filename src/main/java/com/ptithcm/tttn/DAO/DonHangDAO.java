@@ -6,12 +6,10 @@ import org.hibernate.SessionFactory;
 
 import java.util.List;
 
-public interface DonHangDAO {
-    DonHang getBillUnBuy(SessionFactory factory, String idCustomer);
+public interface DonHangDAO extends Dao<DonHang> {
+    DonHang getBillUnBuy(String idCustomer);
 
-    List<DonHang> getBills(SessionFactory factory, String idCustomer);
+    List<DonHang> getBills(String idCustomer);
 
-    int update(SessionFactory factory, DonHang donHang);
-
-    int insert(SessionFactory factory, KhachHang khachHang);
+    int insert(KhachHang khachHang);
 }

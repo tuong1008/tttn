@@ -12,7 +12,7 @@ public class Utils {
         for (int i = 0; i < temp.length - 1; i++) {
             res += temp[i].charAt(0);
         }
-        int number = new NhanVienDAOImpl().getMaxNumberByName(factory, res) + 1;
+        int number = new NhanVienDAOImpl().getMaxNumberByName(res) + 1;
         res += number;
         return res.toUpperCase();
     }

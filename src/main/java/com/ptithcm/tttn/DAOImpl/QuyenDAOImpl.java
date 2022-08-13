@@ -1,17 +1,21 @@
 package com.ptithcm.tttn.DAOImpl;
 
+import com.ptithcm.tttn.DAO.AbstractDao;
 import com.ptithcm.tttn.DAO.QuyenDAO;
 import com.ptithcm.tttn.entity.Quyen;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 
-public class QuyenDAOImpl implements QuyenDAO {
+public class QuyenDAOImpl extends AbstractDao<Quyen> implements QuyenDAO {
+    @Autowired
+    SessionFactory factory;
 
     @Override
-    public ArrayList<Quyen> getAllRole(SessionFactory factory) {
+    public ArrayList<Quyen> getAllRole() {
         Session session = factory.getCurrentSession();
         String hql = "FROM Quyen";
         Query query = session.createQuery(hql);
@@ -19,7 +23,7 @@ public class QuyenDAOImpl implements QuyenDAO {
     }
 
     @Override
-    public Quyen getRole(SessionFactory factory, int idRole) {
+    public Quyen getRole(int idRole) {
         Session session = factory.getCurrentSession();
         String hql = "FROM Quyen Where maQuyen =:id";
         Query query = session.createQuery(hql);

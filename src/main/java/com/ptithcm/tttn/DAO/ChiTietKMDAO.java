@@ -1,7 +1,7 @@
 package com.ptithcm.tttn.DAO;
 
-import org.hibernate.SessionFactory;
+import com.ptithcm.tttn.entity.ChiTietKM;
 
-public interface ChiTietKMDAO {
-    Integer getDiscount(SessionFactory factory, String maSP);
+public interface ChiTietKMDAO extends Dao<ChiTietKM> {
+    Integer getDiscount(String maSP);
 }

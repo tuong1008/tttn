@@ -1,18 +1,21 @@
 package com.ptithcm.tttn.DAOImpl;
 
+import com.ptithcm.tttn.DAO.AbstractDao;
 import com.ptithcm.tttn.DAO.CTDonHangDAO;
 import com.ptithcm.tttn.entity.CTDonHang;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-public class CTDonHangDAOImpl implements CTDonHangDAO {
+public class CTDonHangDAOImpl extends AbstractDao<CTDonHang> implements CTDonHangDAO {
+    @Autowired
+    SessionFactory factory;
 
     @Override
-    public List<CTDonHang> getDetailBills(SessionFactory factory, String id) {
+    public List<CTDonHang> getDetailBills(String id) {
         Session session = factory.getCurrentSession();
         String hql = "FROM CTDonHang C WHERE C.pk.donHang.maDH =:id";
         Query query = session.createQuery(hql);
@@ -21,54 +24,7 @@ public class CTDonHangDAOImpl implements CTDonHangDAO {
     }
 
     @Override
-    public int deleteDetailBill(SessionFactory factory, CTDonHang ctDonHang) {
-        Session session = factory.openSession();
-        Transaction t = session.beginTransaction();
-        try {
-            session.delete(ctDonHang);
-            t.commit();
-        } catch (Exception e) {
-            t.rollback();
-            return 0;
-        } finally {
-            session.close();
-        }
-        return 1;
-    }
-
-    @Override
-    public int insertDetailBill(SessionFactory factory, CTDonHang ctDonHang) {
-        Session session = factory.openSession();
-        Transaction t = session.beginTransaction();
-        try {
-            session.save(ctDonHang);
-            t.commit();
-        } catch (Exception e) {
-            t.rollback();
-            return 0;
-        } finally {
-            session.close();
-        }
-        return 1;
-    }
-
-    public int updateDetailBill(SessionFactory factory, CTDonHang ctDonHang) {
-        Session session = factory.openSession();
-        Transaction t = session.beginTransaction();
-        try {
-            session.update(ctDonHang);
-            t.commit();
-        } catch (Exception e) {
-            t.rollback();
-            return 0;
-        } finally {
-            session.close();
-        }
-        return 1;
-    }
-
-    @Override
-    public CTDonHang getDetailBill(SessionFactory factory, String idBill, String idProduct) {
+    public CTDonHang getDetailBill(String idBill, String idProduct) {
         Session session = factory.getCurrentSession();
         String hql = "FROM CTDonHang D WHERE D.pk.donHang.maDH =:idBill AND D.pk.sanPham.maSP =:idProduct";
         Query query = session.createQuery(hql);

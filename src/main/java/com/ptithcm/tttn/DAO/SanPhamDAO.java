@@ -1,24 +1,21 @@
 package com.ptithcm.tttn.DAO;
 
 import com.ptithcm.tttn.entity.SanPham;
-import org.hibernate.SessionFactory;
 
 import java.util.ArrayList;
 
-public interface SanPhamDAO {
-    ArrayList<SanPham> getListProduct(SessionFactory factory);
+public interface SanPhamDAO extends Dao<SanPham> {
+    ArrayList<SanPham> getListProduct();
 
-    ArrayList<SanPham> getListHotSaleProduct(SessionFactory factory, int bigSaleOffPercent);
+    ArrayList<SanPham> getListHotSaleProduct(int bigSaleOffPercent);
 
-    ArrayList<SanPham> getListNewProduct(SessionFactory factory);
+    ArrayList<SanPham> getListNewProduct();
 
-    ArrayList<SanPham> getListHotProdduct(SessionFactory factory, int monthNumber);
+    ArrayList<SanPham> getListHotProdduct(int monthNumber);
 
-    ArrayList<SanPham> getListProductByName(SessionFactory factory, String name);
+    ArrayList<SanPham> getListProductByName(String name);
 
-    ArrayList<SanPham> getListProductByNameBrand(SessionFactory factory, String name);
+    ArrayList<SanPham> getListProductByNameBrand(String name);
 
-    SanPham getProduct(SessionFactory factory, String maSP);
-
-    int update(SessionFactory factory, SanPham p);
+    SanPham getProduct(String maSP);
 }

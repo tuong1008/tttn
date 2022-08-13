@@ -1,10 +1,6 @@
 package com.ptithcm.tttn.controller;
 
-import com.ptithcm.tttn.DAO.KhachHangDAO;
-import com.ptithcm.tttn.DAOImpl.KhachHangDAOImpl;
-import com.ptithcm.tttn.DAOImpl.NhanVienDAOImpl;
-import com.ptithcm.tttn.DAOImpl.QuyenDAOImpl;
-import com.ptithcm.tttn.DAOImpl.TaiKhoanDAOImpl;
+import com.ptithcm.tttn.DAO.*;
 import com.ptithcm.tttn.entity.KhachHang;
 import com.ptithcm.tttn.entity.NhanVien;
 import com.ptithcm.tttn.entity.TaiKhoan;
@@ -29,15 +25,26 @@ import java.util.List;
 @Controller
 @RequestMapping("Admin/")
 public class AdminController {
-
     @Autowired
     SessionFactory factory;
 
-    TaiKhoanDAOImpl taiKhoanDAOImpl = new TaiKhoanDAOImpl();
-    NhanVienDAOImpl nhanVienDAOImpl = new NhanVienDAOImpl();
-    KhachHangDAO khachHangDAO = new KhachHangDAOImpl();
-    QuyenDAOImpl quyenDAOImpl = new QuyenDAOImpl();
+    @Autowired
+    TaiKhoanDAO taiKhoanDAOImpl;
 
+    @Autowired
+    KhachHangDAO khachHangDAO;
+
+    @Autowired
+    ChiTietKMDAO chiTietKMDAO;
+
+    @Autowired
+    LoaiSPDAO loaiSPDAO;
+
+    @Autowired
+    NhanVienDAO nhanVienDAO;
+
+    @Autowired
+    QuyenDAO quyenDAO;
 
     @RequestMapping("login")
     public String login(HttpSession session) {
@@ -49,9 +56,9 @@ public class AdminController {
     public String login(HttpServletRequest request, ModelMap model, HttpSession session) {
         String idAdmin = request.getParameter("name");
         String passAdmin = request.getParameter("password");
-        String role = taiKhoanDAOImpl.getRole(factory, passAdmin, idAdmin);
+        String role = taiKhoanDAOImpl.getRole(passAdmin, idAdmin);
         if (!role.equals("") && !role.equals("customer")) {
-            session.setAttribute("staff", nhanVienDAOImpl.getStaff(factory, idAdmin));
+            session.setAttribute("staff", nhanVienDAO.getStaff(idAdmin));
             return "redirect:/Admin/info.htm";
         } else {
             model.addAttribute("message", "Đăng nhập thất bại, vui lòng điền đúng thông tin đăng nhập!");
@@ -94,7 +101,7 @@ public class AdminController {
             model.addAttribute("newPassReset", newPassReset);
             return "Admin/changePass";
         }
-        Integer temp = taiKhoanDAOImpl.updatePass(factory, newPass, nv.getTaiKhoan().getTenDN());
+        Integer temp = taiKhoanDAOImpl.updatePass(newPass, nv.getTaiKhoan().getTenDN());
         if (temp == 0) {
             model.addAttribute("message", "Thay đổi mật khẩu thất bại");
         }
@@ -105,17 +112,17 @@ public class AdminController {
     @RequestMapping("staff")
     public String staff(HttpServletRequest request, ModelMap model, HttpSession session) {
 
-        showStaffs(request, model, nhanVienDAOImpl.getAllStaff(factory));
+        showStaffs(request, model, nhanVienDAO.getAllStaff(factory));
 
         model.addAttribute("btnStatus", "btnAdd");
         model.addAttribute("staff", new NhanVien());
-        session.setAttribute("roles", quyenDAOImpl.getAllRole(factory));
+        session.setAttribute("roles", quyenDAO.getAllRole());
         return "Admin/staff";
     }
 
     @RequestMapping(value = "staff", params = "btnSearch")
     public String searchStaff(HttpServletRequest request, ModelMap model) {
-        showStaffs(request, model, nhanVienDAOImpl.searchAllStaff(factory, request.getParameter("name").trim()));
+        showStaffs(request, model, nhanVienDAO.searchAllStaff(request.getParameter("name").trim()));
         model.addAttribute("btnStatus", "btnAdd");
         model.addAttribute("staff", new NhanVien());
 
@@ -127,20 +134,23 @@ public class AdminController {
                            BindingResult errors) {
         int maQuyen = Integer.parseInt(request.getParameter("quyen"));
         if (validateStaff(request, staff, errors)) {
-            TaiKhoan k = new TaiKhoan("345", "1111", quyenDAOImpl.getRole(factory, maQuyen), null, null);
-            Integer temp = taiKhoanDAOImpl.insertAccount(factory, k);
+            TaiKhoan k = new TaiKhoan("345", "1111", quyenDAO.getRole(maQuyen), null, null);
+
+            String temp = taiKhoanDAOImpl.save(k);
+
             staff.setTaiKhoan(k);
-            Integer temp1 = nhanVienDAOImpl.insertStaff(factory, staff);
-            if (temp1 != 0) {
+
+            String temp1 = nhanVienDAO.save(staff);
+
+            if (temp1.isEmpty()) {
                 model.addAttribute("message", "Thêm thành công");
                 model.addAttribute("staff", new NhanVien());
-
             } else {
                 model.addAttribute("message", "Thêm thất bại, vui lòng kiểm tra lại thông tin" + staff);
             }
         }
         model.addAttribute("btnStatus", "btnAdd");
-        showStaffs(request, model, nhanVienDAOImpl.getAllStaff(factory));
+        showStaffs(request, model, nhanVienDAO.getAllStaff(factory));
 
         return "Admin/staff";
     }
@@ -150,13 +160,14 @@ public class AdminController {
                             BindingResult errors) {
         if (!validateStaff(request, staff, errors)) {
             System.out.println("Chao edit post");
-            showStaffs(request, model, nhanVienDAOImpl.getAllStaff(factory));
+            showStaffs(request, model, nhanVienDAO.getAllStaff(factory));
             return "Admin/staff";
         }
         System.out.println("Dia Chi: " + staff.getDiaChi());
         System.out.println("Quyen: " + staff.getTaiKhoan().getTenDN());
-        Integer temp = nhanVienDAOImpl.updateStaff(factory, staff);
-        if (temp != 0) {
+        String temp = nhanVienDAO.update(staff);
+
+        if (temp.isEmpty()) {
             model.addAttribute("message", "Sửa thành công");
             model.addAttribute("staff", new NhanVien());
             model.addAttribute("btnStatus", "btnAdd");
@@ -164,16 +175,16 @@ public class AdminController {
             model.addAttribute("message", "Sửa thất bại" + staff);
             model.addAttribute("btnStatus", "btnEdit");
         }
-        showStaffs(request, model, nhanVienDAOImpl.getAllStaff(factory));
+        showStaffs(request, model, nhanVienDAO.getAllStaff(factory));
         return "Admin/staff";
     }
 
     @RequestMapping(value = "staff/{id}.htm", params = "linkEdit")
     public String editStaff(HttpServletRequest request, ModelMap model, @PathVariable("id") String id) {
-        showStaffs(request, model, nhanVienDAOImpl.getAllStaff(factory));
+        showStaffs(request, model, nhanVienDAO.getAllStaff(factory));
         System.out.println("Chao edit");
         model.addAttribute("btnStatus", "btnEdit");
-        NhanVien s = nhanVienDAOImpl.getStaffByID(factory, id);
+        NhanVien s = nhanVienDAO.getStaffByID(id);
         model.addAttribute("staff", s);
 
         return "Admin/staff";
@@ -182,12 +193,16 @@ public class AdminController {
     @RequestMapping(value = "staff/{id}.htm", params = "linkDelete")
     public String deleteStaff(HttpServletRequest request, ModelMap model, @ModelAttribute("staff") NhanVien staff,
                               @PathVariable("id") String id) {
-        NhanVien nhanVien = nhanVienDAOImpl.getStaffByID(factory, id);
-        TaiKhoan taiKhoan = taiKhoanDAOImpl.getAccount(factory, nhanVien.getTaiKhoan().getTenDN());
-        Integer temp = nhanVienDAOImpl.deleteStaff(factory, nhanVien);
+        NhanVien nhanVien = nhanVienDAO.getStaffByID(id);
+        TaiKhoan taiKhoan = taiKhoanDAOImpl.getAccount(nhanVien.getTaiKhoan().getTenDN());
+
+        String temp = nhanVienDAO.delete(nhanVien);
+
         System.out.println("xoa toi day");
-        Integer temp1 = taiKhoanDAOImpl.deleteAccount(factory, taiKhoan);
-        if (temp != 0 && temp1 != 0) {
+
+        String temp1 = taiKhoanDAOImpl.delete(taiKhoan);
+
+        if (temp.isEmpty() && temp1.isEmpty()) {
             model.addAttribute("message", "Xóa thành công");
         } else {
             model.addAttribute("message", "Xóa thất bại");
@@ -197,7 +212,7 @@ public class AdminController {
 
     @RequestMapping(value = "staff/{id}.htm", params = "linkReset")
     public String resetStaff(HttpServletRequest request, ModelMap model, @PathVariable("id") String id) {
-        Integer temp = taiKhoanDAOImpl.updatePass(factory, "1111", nhanVienDAOImpl.getStaffByID(factory, id).getTaiKhoan().getTenDN());
+        Integer temp = taiKhoanDAOImpl.updatePass("1111", nhanVienDAO.getStaffByID(id).getTaiKhoan().getTenDN());
         if (temp != 0) {
             model.addAttribute("message", "Reset thành công");
 
@@ -207,7 +222,7 @@ public class AdminController {
 
         model.addAttribute("staff", new NhanVien());
         model.addAttribute("btnStatus", "btnAdd");
-        showStaffs(request, model, nhanVienDAOImpl.getAllStaff(factory));
+        showStaffs(request, model, nhanVienDAO.getAllStaff(factory));
 
         return "Admin/staff";
     }
@@ -218,17 +233,17 @@ public class AdminController {
         String checkemail = "^[A-Za-z0-9+_.-]+@(.+)$";
         String checkaddress = "([\\p{L}\\s\\d\\,]+){1,100}";
 
-        if (staff.getHoTen().trim().matches(checkname) == false) {
+        if (!staff.getHoTen().trim().matches(checkname)) {
             errors.rejectValue("hoTen", "staff",
                     "Họ tên không được để trống, chứa ký tự đặc biệt hoặc quá 50 ký tự!");
         }
-        if (staff.getSdt().trim().matches(checkphone) == false) {
+        if (!staff.getSdt().trim().matches(checkphone)) {
             errors.rejectValue("sdt", "staff", "số điện thoại không đúng!");
         }
-        if (staff.getEmail().trim().matches(checkemail) == false) {
+        if (!staff.getEmail().trim().matches(checkemail)) {
             errors.rejectValue("email", "staff", "email không đúng định dạng!");
         }
-        if (staff.getDiaChi().trim().matches(checkaddress) == false) {
+        if (!staff.getDiaChi().trim().matches(checkaddress)) {
             errors.rejectValue("diaChi", "staff",
                     "Địa chỉ không được để trống, chứa ký tự đặc biệt hoặc quá 100 ký tự!");
         }

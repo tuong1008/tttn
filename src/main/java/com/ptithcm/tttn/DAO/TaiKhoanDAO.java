@@ -1,16 +1,11 @@
 package com.ptithcm.tttn.DAO;
 
 import com.ptithcm.tttn.entity.TaiKhoan;
-import org.hibernate.SessionFactory;
 
-public interface TaiKhoanDAO {
-    String getRole(SessionFactory factory, String pass, String userName);
+public interface TaiKhoanDAO extends Dao<TaiKhoan> {
+    String getRole(String pass, String userName);
 
-    TaiKhoan getAccount(SessionFactory factory, String username);
+    TaiKhoan getAccount(String username);
 
-    Integer updatePass(SessionFactory factory, String newPass, String userName);
-
-    Integer deleteAccount(SessionFactory factory, TaiKhoan taiKhoan);
-
-    Integer insertAccount(SessionFactory factory, TaiKhoan taiKhoan);
+    Integer updatePass(String newPass, String userName);
 }
