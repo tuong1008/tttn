@@ -1,0 +1,34 @@
+- Thêm trước Loại SP, Nhà cung cấp, Nhan vien Admin, NV giao hang, quyen
++ Loại SP CRUD
++ Nhacungcap CRUD
++ Tạo SanPham giá=0, slt=0 thì có chọn Nha cung cấp, chọn loại sản phầm
+- Tạo phiếu đặt trả về JSP form có combobox chọn nhà cung cấp
+ + có dấu + bấm vô là có combobox chọn sản phẩm và số lượng
+ + submit là lưu vô phiếu đặt và chi tiết phiếu đặt
+- Tạo phiếu nhập trong giao diện chi tiết phiếu đặt, phiếu đặt mà đã có phiếu nhập thì nút này sẽ ẩn, Hiện form tất cả sp trong phiếu đặt, có chỉnh số lượng
+ + lưu phiếu nhập sẽ cập nhật số lượng tồn trong sản phẩm, giá trong bảng SP sẽ = 120% (giảm giá sẽ tạo trong Khuyến mãi, chứ sửa giá trực tiếp trong sp dễ nổ)
+- Khuyến mãi thêm trước sản phẩm, tạo khuyến mãi có thông tin cơ bản của khuyến mãi
+ + có dấu + bấm vô là có combobox chọn sản phẩm và số lượng
+ + submit là lưu vô khuyến mãi và chi tiết khuyến mãi
+ + combobox chọn sp không trùng (xử lý sau)
+
+
+1 Admin: toàn quyền.
+2 Manager: gồm các quyền của Approver, quyền xem các thống kê, quản lý chương trình khuyến mãi, quản lý phân công.
+3 Approver: Quản lý duyệt đơn hàng, quản lý sản phẩm, quản lý loại sản phẩm, quản lý đặt hàng, quản lý nhập hàng, quản lý nhà cung cấp.
+4 Shipper: Quản lý đơn hàng được phân công và giao hàng.
+
+-Thêm NV có combobox chọn quyền, thì Tạo TK mã nv tự tăng bằng cách set default = function(), tên đăng nhập đã xử lý HQL, set mật khẩu mặc định vì người người tạo là admin, nhập các field trong bảng Nhân viên, rồi lưu tất cả vào 2 bảng TK và NV
+-Xem tất cả nhân viên thì k xóa được chính mình
+
+-có nút đăng ký ở trang đăng nhập, đăng ký thì như form tạo nhân viên, có 2 trạng thái 0, 1 mặc định là 1
+
+-Trang chọn sản phẩm để mua, viết sp lấy tất cả idsp, sp, giá gốc,id khuyến mãi, giá khuyến mãi
+-Tạo hàng thì generate id DH
+
+-nhân viên quản lý đơn hàng có -1 hủy 0 giỏ hàng 1 đã đặt
+-nhân viên duyệt đơn hàng sẽ chọn luôn nhân viên giao
+-nhân viên giao hàng cập nhật trạng thái đơn hàng thì cập nhật ngày nhận
+-nhân viên lập phiếu trả, mượn table quản lý đơn hàng ở trạng thái đã nhận, có nút lập phiếu trả ở từng dòng trong table, hiện form chi tiết đơn hàng chọn số lượng trả từng sản phẩm, lưu vào phiếu trả, chi tiết đơn hàng
+-hóa đơn và mã số thuế tự động lập sau khi nhân viên giao hàng xg
+-thống kê thì thống kê tất cả đơn hàng trạng thái 1 từ ngày tháng năm nào đến ngày tháng năm nào, theo ngày tạo, sp sẽ có tất cả các tháng
