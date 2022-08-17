@@ -168,7 +168,7 @@
 
 <div class="phone-app">
     <h1 class="phone__name">${p.tenSP}</h1>
-    <hr>
+    <hr>    
     <div class="phone-wrap">
         <form:form class="phone-left phone__item" action="User/product.htm" modelAttribute="detailBill">
             <div class="slide">

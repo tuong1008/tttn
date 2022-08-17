@@ -16,6 +16,8 @@ public interface SanPhamDAO extends Dao<SanPham> {
     List<SanPham> getListProductByName(String name);
 
     List<SanPham> getListProductByNameBrand(String name);
+    
+    List<SanPham> getListProductByIDBrand(String id);
 
     SanPham getProduct(String maSP);
 }

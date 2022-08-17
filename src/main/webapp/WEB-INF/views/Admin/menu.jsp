@@ -46,15 +46,7 @@
                 </ul>
             </li>
             <li class="task__item">
-                <a href="Admin/productList.htm"> <i class="fab fa-product-hunt"></i> Quản lí nhà cung cấp </a>
-                <ul class="list__sub-task">
-                    <li class="sub-task__item">
-                        <a href="Admin/productList.htm">Danh sách nhà cung cấp</a>
-                    </li>
-                    <li class="sub-task__item">
-                        <a href="Admin/productInsert.htm">Thêm nhà cung cấp</a>
-                    </li>
-                </ul>
+                <a href="Admin/supplier.htm"> <i class="fab fa-product-hunt"></i> Quản lí nhà cung cấp </a>
             </li>
             <li class="task__item">
                 <a href="Admin/billUnConfirm.htm"> <i class="fas fa-file-invoice-dollar"></i> Quản lí hóa đơn</a>
@@ -78,41 +70,11 @@
                     </li>
                 </ul>
             </li>
-            <li class="task__item">
-                <a href="Admin/billUnConfirm.htm"> <i class="fas fa-file-invoice-dollar"></i> Quản lí nhập hàng</a>
-                <ul class="list__sub-task">
-                    <li class="sub-task__item">
-                        <a href="Admin/billUnConfirm.htm">Danh sách nhập hàng</a>
-                    </li>
-                    <li class="sub-task__item">
-                        <a href="Admin/billConfirm.htm">Phiếu nhập</a>
-                    </li>
-                </ul>
-            </li>
         </c:if>
 
         <c:if test="${sessionScope.staff.taiKhoan.quyen.maQuyen!=4 && sessionScope.staff.taiKhoan.quyen.maQuyen!=3}">
             <li class="task__item">
                 <a href="Admin/billUnConfirm.htm"> <i class="fas fa-file-invoice-dollar"></i> Quản lí khuyến mãi</a>
-                <ul class="list__sub-task">
-                    <li class="sub-task__item">
-                        <a href="Admin/billUnConfirm.htm">Danh sách khuyến mãi</a>
-                    </li>
-                    <li class="sub-task__item">
-                        <a href="Admin/billConfirm.htm">Thêm khuyến mãi</a>
-                    </li>
-                </ul>
-            </li>
-            <li class="task__item">
-                <a href="Admin/billUnConfirm.htm"> <i class="fas fa-file-invoice-dollar"></i> Quản lí phân công</a>
-                <ul class="list__sub-task">
-                    <li class="sub-task__item">
-                        <a href="Admin/billUnConfirm.htm">Danh sách đơn hàng được phân công</a>
-                    </li>
-                    <li class="sub-task__item">
-                        <a href="Admin/billConfirm.htm"></a>
-                    </li>
-                </ul>
             </li>
             <li class="task__item">
                 <a href="Admin/statistic.htm"> <i class="fas fa-chart-area"></i> Thống kê </a>

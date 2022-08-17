@@ -16,7 +16,7 @@ public class NhanVienDAOImpl extends AbstractDao<NhanVien> implements NhanVienDA
 
     @Override
     public NhanVien getStaff(String username) {
-        List<NhanVien> list = getFromQuery("FROM NhanVien n where n.tenDN = ?", NhanVien.class, username);
+        List<NhanVien> list = getFromQuery("FROM NhanVien n where n.taiKhoan.tenDN = ?", NhanVien.class, username);
         return list.isEmpty() ? null : list.get(0);
     }
 

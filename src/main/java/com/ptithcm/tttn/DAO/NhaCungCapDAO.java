@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface NhaCungCapDAO extends Dao<NhaCungCap> {
 
-    List<NhaCungCap> getSuppliers();
+    List<NhaCungCap> getSuppliers();    
 
 }

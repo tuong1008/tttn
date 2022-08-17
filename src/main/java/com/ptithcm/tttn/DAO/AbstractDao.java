@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractDao<T> implements Dao<T> {
+public class AbstractDao<T> implements Dao<T> {
     @Autowired
     SessionFactory sessionFactory;
 
@@ -31,6 +31,7 @@ public abstract class AbstractDao<T> implements Dao<T> {
      * @param crud 1 for save, 2 for update, 3 for delete
      * @return String. error result message. "" = success
      */
+    @Override
     public String action(T t, int crud) {
         Transaction trans = null;
         Session session;
@@ -68,6 +69,7 @@ public abstract class AbstractDao<T> implements Dao<T> {
      * @param params parameters
      * @return list
      */
+    @Override
     public <T> List<T> getFromQuery(String hql, Class<T> type, Object... params) {
 //        LOGGER.info("getFromQuery " + hql);
         List<T> list = new ArrayList<>();
@@ -96,6 +98,7 @@ public abstract class AbstractDao<T> implements Dao<T> {
         return list;
     }
 
+    @Override
     public T getOne(Class<T> type, Object id) {
         try {
             Session session = sessionFactory.openSession();
@@ -107,6 +110,7 @@ public abstract class AbstractDao<T> implements Dao<T> {
         return null;
     }
 
+    @Override
     public void setParameters(Query query, Object... params) {
         for (int i = 0; i < params.length; i++) {
             query.setParameter(i, params[i]);

@@ -2,8 +2,12 @@ package com.ptithcm.tttn.controller;
 
 import com.ptithcm.tttn.DAO.*;
 import com.ptithcm.tttn.entity.KhachHang;
+import com.ptithcm.tttn.entity.NhaCungCap;
 import com.ptithcm.tttn.entity.NhanVien;
+import com.ptithcm.tttn.entity.SanPham;
 import com.ptithcm.tttn.entity.TaiKhoan;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
@@ -20,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.util.List;
+import javax.servlet.http.HttpServletResponse;
 
 @Transactional
 @Controller
@@ -45,11 +50,18 @@ public class AdminController {
 
     @Autowired
     QuyenDAO quyenDAO;
+    
+    @Autowired
+    NhaCungCapDAO nhaCungCapDAO;
+    
+    @Autowired
+    SanPhamDAO sanPhamDAO;
 
     @RequestMapping("login")
     public String login(HttpSession session) {
         session.removeAttribute("staff");
         return "Admin/login";
+
     }
 
     @RequestMapping(value = "login", method = RequestMethod.POST)
@@ -88,6 +100,7 @@ public class AdminController {
             flag = false;
         }
         if (newPass.equals("")) {
+            
             model.addAttribute("newPassEr", "Vui lòng nhập mật khẩu mới");
             flag = false;
         }
@@ -118,6 +131,24 @@ public class AdminController {
         model.addAttribute("staff", new NhanVien());
         session.setAttribute("roles", quyenDAO.getAllRole());
         return "Admin/staff";
+    }
+    
+    @RequestMapping("supplier")
+    public String supplier(HttpServletRequest request, ModelMap model, HttpSession session) {
+        showSupplier(request, model, nhaCungCapDAO.getSuppliers());
+
+        model.addAttribute("btnStatus", "btnAdd");
+        model.addAttribute("supplier", new NhaCungCap());
+        return "Admin/supplier";
+    }
+    
+    @RequestMapping("order")
+    public String addOrder(HttpServletRequest request, ModelMap model, HttpSession session) {
+        showSupplier(request, model, nhaCungCapDAO.getSuppliers());
+
+        model.addAttribute("btnStatus", "btnAdd");
+        model.addAttribute("supplier", new NhaCungCap());
+        return "Admin/supplier";
     }
 
     @RequestMapping(value = "staff", params = "btnSearch")
@@ -153,6 +184,24 @@ public class AdminController {
         showStaffs(request, model, nhanVienDAO.getAllStaff());
 
         return "Admin/staff";
+    }
+    
+    @RequestMapping(value = "supplier", params = "btnAdd", method = RequestMethod.POST)
+    public String addSupplier(HttpServletRequest request, ModelMap model, @ModelAttribute("supplier") NhaCungCap ncc,
+                           BindingResult errors) {
+        System.out.println("com.ptithcm.tttn.controller.AdminController.addSupplier()");
+        String temp1 = nhaCungCapDAO.save(ncc);
+
+            if (temp1.isEmpty()) {
+                model.addAttribute("message", "Thêm thành công");
+                model.addAttribute("staff", new NhanVien());
+            } else {
+                model.addAttribute("message", "Thêm thất bại, vui lòng kiểm tra lại thông tin" + ncc);
+            }
+        model.addAttribute("btnStatus", "btnAdd");
+        showSupplier(request, model, nhaCungCapDAO.getSuppliers());
+
+        return "Admin/supplier";
     }
 
     @RequestMapping(value = "staff", params = "btnEdit", method = RequestMethod.POST)
@@ -258,11 +307,32 @@ public class AdminController {
         pagedListHolder.setPageSize(5);
         model.addAttribute("pagedListHolder", pagedListHolder);
     }
+    
+    public void showSupplier(HttpServletRequest request, ModelMap model, List<NhaCungCap> suppliers) {
+        PagedListHolder pagedListHolder = new PagedListHolder(suppliers);
+        int page = ServletRequestUtils.getIntParameter(request, "p", 0);
+        pagedListHolder.setPage(page);
+        pagedListHolder.setMaxLinkedPages(5);
+        pagedListHolder.setPageSize(5);
+        model.addAttribute("pagedListHolder", pagedListHolder);
+    }
 
     @RequestMapping("customer")
     public String customer(HttpServletRequest request, ModelMap model) {
         showCustomer(request, model, khachHangDAO.getAllCustomer(factory));
         return "Admin/customer";
+    }
+    
+    @RequestMapping("product-supplier")
+    public void getProductsOfSupplier(HttpServletRequest request, ModelMap model, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json");
+        String maNCC = request.getParameter("maNCC");
+        List<SanPham> products = sanPhamDAO.getListProductByIDBrand(maNCC);
+        
+        mapper.writeValue(response.getOutputStream(), products);
+            
     }
 
     public void showCustomer(HttpServletRequest request, ModelMap model, List<KhachHang> customers) {

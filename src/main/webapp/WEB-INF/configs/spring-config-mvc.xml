@@ -39,5 +39,10 @@
     <bean id="nhanVienDAO" class="com.ptithcm.tttn.DAOImpl.NhanVienDAOImpl"/>
     <bean id="quyenDAO" class="com.ptithcm.tttn.DAOImpl.QuyenDAOImpl"/>
     <bean id="sanPhamDAO" class="com.ptithcm.tttn.DAOImpl.SanPhamDAOImpl"/>
-    <bean id="taiKhoanDAO" class="com.ptithcm.tttn.DAOImpl.TaiKhoanDAOImpl"/>
+    <bean id="taiKhoanDAO" class="com.ptithcm.tttn.DAOImpl.TaiKhoanDAOImpl"/>    
+    <bean id="phieuDatDAO" class="com.ptithcm.tttn.DAOImpl.PhieuDatDAOImpl"/>
+    <bean id="ctPhieuDatDAO" class="com.ptithcm.tttn.DAOImpl.CTPhieuDatDAOImpl"/>
+    <bean id="phieuNhapDAO" class="com.ptithcm.tttn.DAOImpl.PhieuNhapDAOImpl"/>
+    <bean id="ctPhieuNhapDAO" class="com.ptithcm.tttn.DAOImpl.CTPhieuNhapDAOImpl"/>
+    <bean id="khuyenMaiDAO" class="com.ptithcm.tttn.DAOImpl.KhuyenMaiDAOImpl"/>
 </beans>
