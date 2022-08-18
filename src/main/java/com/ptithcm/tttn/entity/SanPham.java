@@ -1,7 +1,9 @@
 package com.ptithcm.tttn.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
@@ -47,16 +49,20 @@ public class SanPham implements Serializable {
     @JoinColumn(name = "MANCC")
     private NhaCungCap nhaCungCap;
 
-    @OneToMany(mappedBy = "pk.sanPham", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "pk.sanPham", fetch = FetchType.LAZY)
+    @JsonBackReference
     private Collection<CTPhieuDat> ctPhieuDats;
 
-    @OneToMany(mappedBy = "pk.sanPham", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "pk.sanPham", fetch = FetchType.LAZY)
+    @JsonBackReference
     private Collection<CTDonHang> ctDonHangs;
     //
-    @OneToMany(mappedBy = "pk.sanPham", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "pk.sanPham", fetch = FetchType.LAZY)
+    @JsonBackReference
     private Collection<CTPhieuNhap> ctPhieuNhaps;
 
-    @OneToMany(mappedBy = "pk.sanPham", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "pk.sanPham", fetch = FetchType.LAZY)
+    @JsonBackReference
     private Collection<ChiTietKM> chiTietKMs;
 
     public SanPham() {

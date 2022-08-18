@@ -56,10 +56,10 @@ public class DonHang implements Serializable {
     @JoinColumn(name = "MAKH")
     private KhachHang khachHang;
 
-    @OneToMany(mappedBy = "pk.donHang", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "pk.donHang", fetch = FetchType.LAZY)
     private Collection<CTDonHang> ctDonHangs;
 
-    @OneToMany(mappedBy = "donHang", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "donHang", fetch = FetchType.LAZY)
     private Collection<HoaDon> hoaDons;
 
     public DonHang() {

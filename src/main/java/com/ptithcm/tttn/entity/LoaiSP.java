@@ -1,5 +1,6 @@
 package com.ptithcm.tttn.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Collection;
@@ -15,7 +16,8 @@ public class LoaiSP implements Serializable {
     @Column(name = "TENLOAI")
     private String tenLoai;
 
-    @OneToMany(mappedBy = "loaiSP", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "loaiSP", fetch = FetchType.LAZY)
+    @JsonBackReference
     private Collection<SanPham> sanPhams;
 
     public LoaiSP() {

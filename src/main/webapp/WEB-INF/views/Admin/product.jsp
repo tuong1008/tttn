@@ -20,9 +20,8 @@
         <form:input path="moTa" class="form-control" placeholder="Enter moTa"
                     id="moTa"/>
         <form:errors path="moTa" cssClass="text-danger"/>
-        <form:input type="file" path="hinhAnh" class="form-control" placeholder="Enter hinhAnh"
+        <input type="file" name="hinhAnh" class="form-control" placeholder="Enter hinhAnh"
                     id="hinhAnh"/>
-        <form:errors path="hinhAnh" cssClass="text-danger"/>
         <form:input path="gia" class="form-control" placeholder="Enter gia"
                     id="gia"/>
         <form:errors path="gia" cssClass="text-danger"/>
@@ -31,14 +30,13 @@
         <form:errors path="slt" cssClass="text-danger"/>
 
         <form:select path="loaiSP">
-            <form:options items="${categories}"/>
+            <form:options itemValue="maLoai" itemLabel="tenLoai" path="loaiSP" items="${categories}"/>
         </form:select>
-        <form:errors path="loaiSP" cssClass="text-danger"/>
         
         <form:select path="nhaCungCap">
-            <form:options items="${suppliers}"/>
+            <form:options itemValue="maNCC" itemLabel="tenNCC" items="${suppliers}"/>
         </form:select>
-        <form:errors path="productCategory" cssClass="text-danger"/>
+        
         <button name="${btnStatus}">Lưu</button>
     </form:form>
     <h2>DANH SÁCH SẢN PHẨM</h2>
@@ -77,10 +75,10 @@
                 <td>${s.loaiSP.tenLoai}</td>
                 <td>${s.nhaCungCap.maNCC}</td>
                 <td>
-                    <a href="Admin/supplier/${s.maNCC}.htm?linkDelete">Xóa</a>
+                    <a href="Admin/product/${s.maSP}.htm?linkDelete">Xóa</a>
                 </td>
-                <td><a href="Admin/supplier/${s.maNCC}.htm?linkEdit">Sửa</a></td>
-                <td><a href="Admin/supplier/${s.maNCC}.htm?linkReset">Reset</a></td>
+                <td><a href="Admin/product/${s.maSP}.htm?linkEdit">Sửa</a></td>
+                <td><a href="Admin/product/${s.maSP}.htm?linkReset">Reset</a></td>
             </tr>
         </c:forEach>
     </table>

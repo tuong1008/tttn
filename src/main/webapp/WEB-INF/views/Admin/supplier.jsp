@@ -30,7 +30,7 @@
         <form:errors path="email" cssClass="text-danger"/>
         <button name="${btnStatus}">Lưu</button>
     </form:form>
-               <h2>DANH SÁCH S?N PH?M</h2>
+               <h2>DANH SÁCH NHÀ CUNG C?P</h2>
     <jsp:useBean id="pagedListHolder" scope="request"
                  type="org.springframework.beans.support.PagedListHolder"/>
     <c:url value="Admin/supplier.htm" var="pagedLink">

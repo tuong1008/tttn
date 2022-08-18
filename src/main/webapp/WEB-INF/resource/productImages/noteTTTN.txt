@@ -6,8 +6,7 @@
  + có dấu + bấm vô là có combobox chọn sản phẩm và số lượng
  + submit là lưu vô phiếu đặt và chi tiết phiếu đặt
 - Tạo phiếu nhập trong giao diện chi tiết phiếu đặt, phiếu đặt mà đã có phiếu nhập thì nút này sẽ ẩn, Hiện form tất cả sp trong phiếu đặt, có chỉnh số lượng
- + lưu phiếu nhập sẽ cập nhật số lượng tồn trong sản phẩm, giá trong bảng SP sẽ = 120% (giảm giá sẽ tạo trong Khuyến mãi, chứ sửa giá trực tiếp trong sp dễ nổ),
- + giá đặt được nhập nhưng phải <= giá sản phẩm, giá sản phẩm k thay đổi được vì sửa được thì cần gì bảng khuyến mãi, muốn thay đổi thì thêm sản phẩm mới cùng tên
+ + lưu phiếu nhập sẽ cập nhật số lượng tồn trong sản phẩm, giá trong bảng SP sẽ = 120% (giảm giá sẽ tạo trong Khuyến mãi, chứ sửa giá trực tiếp trong sp dễ nổ), cho nhập bao nhiêu %
 - Khuyến mãi thêm trước sản phẩm, tạo khuyến mãi có thông tin cơ bản của khuyến mãi
  + có dấu + bấm vô là có combobox chọn sản phẩm và số lượng
  + submit là lưu vô khuyến mãi và chi tiết khuyến mãi

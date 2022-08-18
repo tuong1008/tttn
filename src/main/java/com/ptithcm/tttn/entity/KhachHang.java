@@ -34,7 +34,7 @@ public class KhachHang implements Serializable {
     @JoinColumn(name = "TENDN")
     private TaiKhoan taiKhoan;
 
-    @OneToMany(mappedBy = "khachHang", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "khachHang", fetch = FetchType.LAZY)
     private Collection<DonHang> donHangs;
 
     public KhachHang() {

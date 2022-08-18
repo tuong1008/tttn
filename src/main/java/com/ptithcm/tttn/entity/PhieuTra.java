@@ -28,7 +28,7 @@ public class PhieuTra implements Serializable {
     @JoinColumn(name = "MANV")
     private NhanVien nhanVien;
 
-    @OneToMany(mappedBy = "phieuTra", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "phieuTra", fetch = FetchType.LAZY)
     private Collection<CTDonHang> ctDonHangs;
 
     public PhieuTra() {

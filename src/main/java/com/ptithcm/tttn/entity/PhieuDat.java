@@ -29,10 +29,10 @@ public class PhieuDat implements Serializable {
     @JoinColumn(name = "MANV")
     private NhanVien nhanVien;
 
-    @OneToMany(mappedBy = "pk.phieuDat", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "pk.phieuDat", fetch = FetchType.LAZY)
     private Collection<CTPhieuDat> ctPhieuDats;
 
-    @OneToMany(mappedBy = "phieuDat", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "phieuDat", fetch = FetchType.LAZY)
     private Collection<PhieuNhap> phieuNhaps;
 
     public PhieuDat() {

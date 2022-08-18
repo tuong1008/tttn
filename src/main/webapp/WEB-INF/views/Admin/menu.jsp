@@ -35,13 +35,16 @@
         </c:if>
         <c:if test="${sessionScope.staff.taiKhoan.quyen.maQuyen!=4}">
             <li class="task__item">
+                <a href="Admin/product-type.htm"> <i class="fab fa-product-hunt"></i> Quản lí lo?i s?n ph?m </a>
+            </li>
+            <li class="task__item">
                 <a href="Admin/productList.htm"> <i class="fab fa-product-hunt"></i> Quản lí sản phẩm </a>
                 <ul class="list__sub-task">
                     <li class="sub-task__item">
                         <a href="Admin/productList.htm">Danh sách sản phẩm</a>
                     </li>
                     <li class="sub-task__item">
-                        <a href="Admin/productInsert.htm">Thêm sản phẩm</a>
+                        <a href="Admin/product.htm">Thêm sản phẩm</a>
                     </li>
                 </ul>
             </li>
@@ -60,13 +63,10 @@
                 </ul>
             </li>
             <li class="task__item">
-                <a href="Admin/billUnConfirm.htm"> <i class="fas fa-file-invoice-dollar"></i> Quản lí đặt hàng</a>
+                <a href=""> <i class="fas fa-file-invoice-dollar"></i> Quản lí đặt hàng</a>
                 <ul class="list__sub-task">
                     <li class="sub-task__item">
-                        <a href="Admin/billUnConfirm.htm">Danh sách đặt hàng</a>
-                    </li>
-                    <li class="sub-task__item">
-                        <a href="Admin/billConfirm.htm">Phiếu đặt</a>
+                        <a href="Admin/order.htm">Phiếu đặt</a>
                     </li>
                 </ul>
             </li>

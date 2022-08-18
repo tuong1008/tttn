@@ -32,7 +32,7 @@ public class HoaDon implements Serializable {
     @JoinColumn(name = "MADH", unique = true)
     private DonHang donHang;
 
-    @OneToMany(mappedBy = "hoaDon", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "hoaDon", fetch = FetchType.LAZY)
     private Collection<PhieuTra> phieuTras;
 
     public HoaDon() {

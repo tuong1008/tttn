@@ -1,5 +1,6 @@
 package com.ptithcm.tttn.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Collection;
@@ -24,10 +25,12 @@ public class NhaCungCap implements Serializable {
     @Column(name = "EMAIL")
     private String email;
 
-    @OneToMany(mappedBy = "nhaCungCap", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "nhaCungCap", fetch = FetchType.LAZY)
+    @JsonBackReference
     private Collection<PhieuDat> phieuDats;
 
-    @OneToMany(mappedBy = "nhaCungCap", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "nhaCungCap", fetch = FetchType.LAZY)
+    @JsonBackReference
     private Collection<SanPham> sanPhams;
 
     public NhaCungCap() {

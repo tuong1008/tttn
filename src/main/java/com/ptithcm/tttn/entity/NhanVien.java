@@ -31,25 +31,25 @@ public class NhanVien implements Serializable {
     @JoinColumn(name = "TENDN")
     private TaiKhoan taiKhoan;
 
-    @OneToMany(mappedBy = "nhanVienD", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "nhanVienD", fetch = FetchType.LAZY)
     private Collection<DonHang> donHangDs;
 
-    @OneToMany(mappedBy = "nhanVienG", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "nhanVienG", fetch = FetchType.LAZY)
     private Collection<DonHang> donHangGs;
 
-    @OneToMany(mappedBy = "nhanVien", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "nhanVien", fetch = FetchType.LAZY)
     private Collection<HoaDon> hoaDons;
 
-    @OneToMany(mappedBy = "nhanVien", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "nhanVien", fetch = FetchType.LAZY)
     private Collection<PhieuTra> phieuTras;
 
-    @OneToMany(mappedBy = "nhanVien", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "nhanVien", fetch = FetchType.LAZY)
     private Collection<PhieuDat> phieuDats;
 
-    @OneToMany(mappedBy = "nhanVien", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "nhanVien", fetch = FetchType.LAZY)
     private Collection<PhieuNhap> phieuNhaps;
     //
-    @OneToMany(mappedBy = "nhanVien", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "nhanVien", fetch = FetchType.LAZY)
     private Collection<KhuyenMai> khuyenMais;
 
     public NhanVien() {

@@ -16,7 +16,7 @@ public class Quyen implements Serializable {
     @Column(name = "TENQUYEN")
     private String tenQuyen;
 
-    @OneToMany(mappedBy = "quyen", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "quyen", fetch = FetchType.LAZY)
     private Collection<TaiKhoan> taiKhoans;
 
     public Quyen() {

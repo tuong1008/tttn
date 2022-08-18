@@ -1,13 +1,22 @@
 package com.ptithcm.tttn.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ptithcm.tttn.DAO.*;
+import com.ptithcm.tttn.entity.CTPhieuDat;
+import com.ptithcm.tttn.entity.CTPhieuDatPK;
 import com.ptithcm.tttn.entity.KhachHang;
+import com.ptithcm.tttn.entity.LoaiSP;
 import com.ptithcm.tttn.entity.NhaCungCap;
 import com.ptithcm.tttn.entity.NhanVien;
+import com.ptithcm.tttn.entity.PhieuDat;
 import com.ptithcm.tttn.entity.SanPham;
 import com.ptithcm.tttn.entity.TaiKhoan;
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Date;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
@@ -25,11 +34,14 @@ import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 @Transactional
 @Controller
 @RequestMapping("Admin/")
 public class AdminController {
+
     @Autowired
     SessionFactory factory;
 
@@ -50,12 +62,19 @@ public class AdminController {
 
     @Autowired
     QuyenDAO quyenDAO;
-    
+
     @Autowired
     NhaCungCapDAO nhaCungCapDAO;
-    
+
     @Autowired
     SanPhamDAO sanPhamDAO;
+    
+    @Autowired
+    PhieuDatDAO phieuDatDAO;
+    
+    @Autowired
+    CTPhieuDatDAO ctPhieuDatDAO;
+    
 
     @RequestMapping("login")
     public String login(HttpSession session) {
@@ -82,6 +101,7 @@ public class AdminController {
     public String info(HttpSession session, ModelMap model) {
         return "Admin/info";
     }
+//BEGIN-----------Staff
 
     @RequestMapping(value = "changePass")
     public String editStaffPass() {
@@ -100,7 +120,7 @@ public class AdminController {
             flag = false;
         }
         if (newPass.equals("")) {
-            
+
             model.addAttribute("newPassEr", "Vui lòng nhập mật khẩu mới");
             flag = false;
         }
@@ -121,7 +141,6 @@ public class AdminController {
         return "Admin/info";
     }
 
-
     @RequestMapping("staff")
     public String staff(HttpServletRequest request, ModelMap model, HttpSession session) {
 
@@ -131,24 +150,6 @@ public class AdminController {
         model.addAttribute("staff", new NhanVien());
         session.setAttribute("roles", quyenDAO.getAllRole());
         return "Admin/staff";
-    }
-    
-    @RequestMapping("supplier")
-    public String supplier(HttpServletRequest request, ModelMap model, HttpSession session) {
-        showSupplier(request, model, nhaCungCapDAO.getSuppliers());
-
-        model.addAttribute("btnStatus", "btnAdd");
-        model.addAttribute("supplier", new NhaCungCap());
-        return "Admin/supplier";
-    }
-    
-    @RequestMapping("order")
-    public String addOrder(HttpServletRequest request, ModelMap model, HttpSession session) {
-        showSupplier(request, model, nhaCungCapDAO.getSuppliers());
-
-        model.addAttribute("btnStatus", "btnAdd");
-        model.addAttribute("supplier", new NhaCungCap());
-        return "Admin/supplier";
     }
 
     @RequestMapping(value = "staff", params = "btnSearch")
@@ -162,7 +163,7 @@ public class AdminController {
 
     @RequestMapping(value = "staff", params = "btnAdd", method = RequestMethod.POST)
     public String addStaff(HttpServletRequest request, ModelMap model, @ModelAttribute("staff") NhanVien staff,
-                           BindingResult errors) {
+            BindingResult errors) {
         int maQuyen = Integer.parseInt(request.getParameter("quyen"));
         if (validateStaff(request, staff, errors)) {
             TaiKhoan k = new TaiKhoan("345", "1111", quyenDAO.getRole(maQuyen), null, null);
@@ -185,28 +186,10 @@ public class AdminController {
 
         return "Admin/staff";
     }
-    
-    @RequestMapping(value = "supplier", params = "btnAdd", method = RequestMethod.POST)
-    public String addSupplier(HttpServletRequest request, ModelMap model, @ModelAttribute("supplier") NhaCungCap ncc,
-                           BindingResult errors) {
-        System.out.println("com.ptithcm.tttn.controller.AdminController.addSupplier()");
-        String temp1 = nhaCungCapDAO.save(ncc);
-
-            if (temp1.isEmpty()) {
-                model.addAttribute("message", "Thêm thành công");
-                model.addAttribute("staff", new NhanVien());
-            } else {
-                model.addAttribute("message", "Thêm thất bại, vui lòng kiểm tra lại thông tin" + ncc);
-            }
-        model.addAttribute("btnStatus", "btnAdd");
-        showSupplier(request, model, nhaCungCapDAO.getSuppliers());
-
-        return "Admin/supplier";
-    }
 
     @RequestMapping(value = "staff", params = "btnEdit", method = RequestMethod.POST)
     public String editStaff(HttpServletRequest request, ModelMap model, @ModelAttribute("staff") NhanVien staff,
-                            BindingResult errors) {
+            BindingResult errors) {
         if (!validateStaff(request, staff, errors)) {
             System.out.println("Chao edit post");
             showStaffs(request, model, nhanVienDAO.getAllStaff());
@@ -241,7 +224,7 @@ public class AdminController {
 
     @RequestMapping(value = "staff/{id}.htm", params = "linkDelete")
     public String deleteStaff(HttpServletRequest request, ModelMap model, @ModelAttribute("staff") NhanVien staff,
-                              @PathVariable("id") String id) {
+            @PathVariable("id") String id) {
         NhanVien nhanVien = nhanVienDAO.getStaffByID(id);
         TaiKhoan taiKhoan = taiKhoanDAOImpl.getAccount(nhanVien.getTaiKhoan().getTenDN());
 
@@ -307,7 +290,235 @@ public class AdminController {
         pagedListHolder.setPageSize(5);
         model.addAttribute("pagedListHolder", pagedListHolder);
     }
-    
+//END-----------Staff
+
+//BEGIN-------------Product Management
+    @RequestMapping("product")
+    public String product(HttpServletRequest request, ModelMap model, HttpSession session) {
+
+        showProducts(request, model, sanPhamDAO.getListProduct());
+
+        model.addAttribute("btnStatus", "btnAdd");
+        model.addAttribute("categories", loaiSPDAO.getListCategory());
+        model.addAttribute("suppliers", nhaCungCapDAO.getSuppliers());
+        model.addAttribute("product", new SanPham());
+        return "Admin/product";
+    }
+
+    @RequestMapping(value = "product", params = "btnAdd", method = RequestMethod.POST)
+    public String addProduct(HttpServletRequest request, @RequestParam("hinhAnh") MultipartFile productImage,
+            @RequestParam("loaiSP") String loaiSPId,
+            @RequestParam("nhaCungCap") String nccId,
+            ModelMap model, @ModelAttribute("product") SanPham sp,
+            BindingResult errors) {
+        
+        sp.setLoaiSP(loaiSPDAO.getOne(LoaiSP.class, loaiSPId));
+        sp.setNhaCungCap(nhaCungCapDAO.getOne(NhaCungCap.class, nccId));
+        String temp1 = sanPhamDAO.save(sp);
+
+        if (temp1.isEmpty()) {
+            model.addAttribute("message", "Thêm thành công");
+            model.addAttribute("product", new SanPham());
+
+            String fileName = productImage.getOriginalFilename();
+            System.out.println(fileName);
+            String extension = ""; //đuôi file
+
+            int index = fileName.lastIndexOf(".");
+            if (index > 0) {
+                extension = fileName.substring(index);
+            }
+
+            String rootDir = request.getSession().getServletContext().getRealPath("/");
+            Path path = Paths.get(rootDir+"WEB-INF"+ File.separator + "resource" + File.separator + "img" + File.separator + "imgProduct" + File.separator + sp.getMaSP() + extension);
+            if (productImage != null && !productImage.isEmpty()) {
+                try {
+                    productImage.transferTo(new File(path.toString()));
+                    //System.out.println("IMage Save at:"+path.toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    throw new RuntimeException("Product image saving failed", e);
+                }
+            }
+        } else {
+            model.addAttribute("message", "Thêm thất bại, vui lòng kiểm tra lại thông tin" + sp);
+        }
+        model.addAttribute("btnStatus", "btnAdd");
+        model.addAttribute("categories", loaiSPDAO.getListCategory());
+        model.addAttribute("suppliers", nhaCungCapDAO.getSuppliers());
+        showProducts(request, model, sanPhamDAO.getListProduct());
+
+        return "Admin/product";
+    }
+
+    public void showProducts(HttpServletRequest request, ModelMap model, List<SanPham> products) {
+        PagedListHolder pagedListHolder = new PagedListHolder(products);
+        int page = ServletRequestUtils.getIntParameter(request, "p", 0);
+        pagedListHolder.setPage(page);
+        pagedListHolder.setMaxLinkedPages(5);
+        pagedListHolder.setPageSize(5);
+        model.addAttribute("pagedListHolder", pagedListHolder);
+    }
+//END-------------Product Management    
+//BEGIN-----------Product Type
+
+    @RequestMapping("product-type")
+    public String getProductTypePage(HttpServletRequest request, ModelMap model, HttpSession session) {
+
+        showProductTypes(request, model, loaiSPDAO.getListCategory());
+
+        model.addAttribute("btnStatus", "btnAdd");
+        model.addAttribute("productType", new LoaiSP());
+        return "Admin/productType";
+    }
+
+    @RequestMapping(value = "product-type", params = "btnSearch")
+    public String searchProductType(HttpServletRequest request, ModelMap model) {
+        showProductTypes(request, model, loaiSPDAO.searchByName(request.getParameter("name").trim()));
+        model.addAttribute("btnStatus", "btnAdd");
+        model.addAttribute("productType", new LoaiSP());
+
+        return "Admin/productType";
+    }
+
+    @RequestMapping(value = "product-type", params = "btnAdd", method = RequestMethod.POST)
+    public String addProductType(HttpServletRequest request, ModelMap model, @ModelAttribute("productType") LoaiSP type,
+            BindingResult errors) {
+        System.out.println("com.ptithcm.tttn.controller.AdminController.addProductType()");
+        String temp1 = loaiSPDAO.save(type);
+
+        if (temp1.isEmpty()) {
+            model.addAttribute("message", "Thêm thành công");
+            model.addAttribute("productType", new LoaiSP());
+        } else {
+            model.addAttribute("message", "Thêm thất bại, vui lòng kiểm tra lại thông tin" + type);
+        }
+        model.addAttribute("btnStatus", "btnAdd");
+        showProductTypes(request, model, loaiSPDAO.getListCategory());
+
+        return "Admin/productType";
+    }
+
+    @RequestMapping(value = "product-type", params = "btnEdit", method = RequestMethod.POST)
+    public String editProductType(HttpServletRequest request, ModelMap model, @ModelAttribute("productType") LoaiSP type,
+            BindingResult errors) {
+        
+        String temp = loaiSPDAO.update(type);
+
+        if (temp.isEmpty()) {
+            model.addAttribute("message", "Sửa thành công");
+            model.addAttribute("productType", new LoaiSP());
+            model.addAttribute("btnStatus", "btnAdd");
+        } else {
+            model.addAttribute("message", "Sửa thất bại" + type);
+            model.addAttribute("btnStatus", "btnEdit");
+        }
+        showProductTypes(request, model, loaiSPDAO.getListCategory());
+        return "Admin/productType";
+    }
+
+    @RequestMapping(value = "product-type/{id}.htm", params = "linkEdit")
+    public String editProductType(HttpServletRequest request, ModelMap model, @PathVariable("id") String id) {
+        showProductTypes(request, model, loaiSPDAO.getListCategory());
+        System.out.println("Chao edit");
+        model.addAttribute("btnStatus", "btnEdit");
+        LoaiSP s = loaiSPDAO.getOne(LoaiSP.class, id);
+        model.addAttribute("productType", s);
+
+        return "Admin/productType";
+    }
+
+    @RequestMapping(value = "product-type/{id}.htm", params = "linkDelete")
+    public String deleteProductType(HttpServletRequest request, ModelMap model,
+            @PathVariable("id") String id) {
+        LoaiSP type = loaiSPDAO.getOne(LoaiSP.class, id);
+
+        String temp = loaiSPDAO.delete(type);
+
+        System.out.println("xoa toi day");
+
+        if (temp.isEmpty()) {
+            model.addAttribute("message", "Xóa thành công");
+        } else {
+            model.addAttribute("message", "Xóa thất bại");
+        }
+        return "redirect:/Admin/productType.htm";
+    }
+
+    public void showProductTypes(HttpServletRequest request, ModelMap model, List<LoaiSP> types) {
+        PagedListHolder pagedListHolder = new PagedListHolder(types);
+        int page = ServletRequestUtils.getIntParameter(request, "p", 0);
+        pagedListHolder.setPage(page);
+        pagedListHolder.setMaxLinkedPages(5);
+        pagedListHolder.setPageSize(5);
+        model.addAttribute("pagedListHolder", pagedListHolder);
+    }
+//END-------------Product Type
+
+    @RequestMapping("order")
+    public String getOrderPage(HttpServletRequest request, ModelMap model) {
+        model.addAttribute("btnStatus", "btnAdd");
+        model.addAttribute("suppliers", nhaCungCapDAO.getSuppliers());
+        return "Admin/order";
+    }
+
+    @RequestMapping(value = "order", params = "btnAdd", method = RequestMethod.POST)
+    public String addOrder(HttpServletRequest request, ModelMap model) {
+        String[] sanPhams = request.getParameterValues("sanPham");
+        String[] soLuongs = request.getParameterValues("soLuong");
+        String nccId = request.getParameter("nhaCungCap");
+        
+        PhieuDat p = new PhieuDat();
+        p.setMaPD("PD1");
+        p.setNgayTao(new Date());
+        p.setNhaCungCap(nhaCungCapDAO.getOne(NhaCungCap.class, nccId));
+        phieuDatDAO.save(p);
+        
+        for (int i=0 ; i<sanPhams.length ; i++){
+            CTPhieuDatPK pk = new CTPhieuDatPK();
+            pk.setPhieuDat(p);
+            pk.setSanPham(sanPhamDAO.getOne(SanPham.class, sanPhams[i]));
+            
+            CTPhieuDat ct = new CTPhieuDat();
+            ct.setPk(pk);
+            //nhap gia
+            ct.setGia(0);
+            ct.setSl(Integer.valueOf(soLuongs[i]));
+            
+            ctPhieuDatDAO.save(ct);
+        }
+        model.addAttribute("btnStatus", "btnAdd");
+        model.addAttribute("suppliers", nhaCungCapDAO.getSuppliers());
+        return "Admin/order";
+    }
+
+    @RequestMapping("supplier")
+    public String supplier(HttpServletRequest request, ModelMap model, HttpSession session) {
+        showSupplier(request, model, nhaCungCapDAO.getSuppliers());
+
+        model.addAttribute("btnStatus", "btnAdd");
+        model.addAttribute("supplier", new NhaCungCap());
+        return "Admin/supplier";
+    }
+
+    @RequestMapping(value = "supplier", params = "btnAdd", method = RequestMethod.POST)
+    public String addSupplier(HttpServletRequest request, ModelMap model, @ModelAttribute("supplier") NhaCungCap ncc,
+            BindingResult errors) {
+        System.out.println("com.ptithcm.tttn.controller.AdminController.addSupplier()");
+        String temp1 = nhaCungCapDAO.save(ncc);
+
+        if (temp1.isEmpty()) {
+            model.addAttribute("message", "Thêm thành công");
+            model.addAttribute("staff", new NhaCungCap());
+        } else {
+            model.addAttribute("message", "Thêm thất bại, vui lòng kiểm tra lại thông tin" + ncc);
+        }
+        model.addAttribute("btnStatus", "btnAdd");
+        showSupplier(request, model, nhaCungCapDAO.getSuppliers());
+
+        return "Admin/supplier";
+    }
+
     public void showSupplier(HttpServletRequest request, ModelMap model, List<NhaCungCap> suppliers) {
         PagedListHolder pagedListHolder = new PagedListHolder(suppliers);
         int page = ServletRequestUtils.getIntParameter(request, "p", 0);
@@ -322,7 +533,7 @@ public class AdminController {
         showCustomer(request, model, khachHangDAO.getAllCustomer(factory));
         return "Admin/customer";
     }
-    
+
     @RequestMapping("product-supplier")
     public void getProductsOfSupplier(HttpServletRequest request, ModelMap model, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
         ObjectMapper mapper = new ObjectMapper();
@@ -332,7 +543,6 @@ public class AdminController {
         List<SanPham> products = sanPhamDAO.getListProductByIDBrand(maNCC);
         
         mapper.writeValue(response.getOutputStream(), products);
-            
     }
 
     public void showCustomer(HttpServletRequest request, ModelMap model, List<KhachHang> customers) {
