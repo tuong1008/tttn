@@ -15,5 +15,5 @@ public class KhuyenMaiDAOImpl extends AbstractDao<KhuyenMai> implements  KhuyenM
     public List<KhuyenMai> getAll() {
         return getFromQuery("FROM KhuyenMai", KhuyenMai.class);
     }
-    
+
 }

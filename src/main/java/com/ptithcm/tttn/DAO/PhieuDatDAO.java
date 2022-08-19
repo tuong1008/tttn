@@ -9,4 +9,6 @@ import java.util.List;
 
 public interface PhieuDatDAO extends Dao<PhieuDat>{
     List<PhieuDat> getAll();
+    List<PhieuDat> searchAllPhieuDat(String search);
+    
 }

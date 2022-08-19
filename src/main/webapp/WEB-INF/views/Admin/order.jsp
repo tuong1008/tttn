@@ -10,13 +10,13 @@
     </head>
     <body>
         <form action="${pageContext.request.contextPath}/Admin/order.htm"
-                   method="post" class="form-horizontal">
+              method="post" class="form-horizontal">
             <select onchange="loadProduct()" name="nhaCungCap" id="nhaCungCap">
                 <c:forEach var = "i" items="${suppliers}">
                     <option value="${i.maNCC}">${i.tenNCC}</option>
                 </c:forEach>
             </select>
-            
+
 
             <div id="container">
             </div>
@@ -27,7 +27,7 @@
             var select;
             loadProduct();
             function loadProduct() {
-                document.getElementById("container").innerHTML="";
+                document.getElementById("container").innerHTML = "";
                 select = document.createElement('select');
                 let e = document.getElementById("nhaCungCap");
                 let value = e.value;
@@ -51,9 +51,13 @@
                             }
                             let div = document.createElement("div");
                             let input = document.createElement("input");
+                            let inputGia = document.createElement("input");
                             input.type = "number";
                             input.name = "soLuong";
+                            inputGia.type = "number";
+                            inputGia.name = "gia";
                             div.appendChild(select);
+                            div.appendChild(inputGia);
                             div.appendChild(input);
                             container.appendChild(div);
                         })
@@ -67,8 +71,12 @@
                 let input = document.createElement("input");
                 input.type = "number";
                 input.name = "soLuong";
+                let inputGia = document.createElement("input");
+                inputGia.type = "number";
+                inputGia.name = "gia";
                 let newSelect = select.cloneNode(true);
                 div.appendChild(newSelect);
+                div.appendChild(inputGia);
                 div.appendChild(input);
                 let container = document.getElementById("container");
                 container.appendChild(div);

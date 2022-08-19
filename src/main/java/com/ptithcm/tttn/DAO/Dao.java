@@ -30,4 +30,6 @@ public interface Dao<T> {
     public T getOne(Class<T> type, Object id);
 
     public void setParameters(Query query, Object... params);
+    
+    public String nextPK(String tenBang, String kyTuDau, String tenCotPK);
 }

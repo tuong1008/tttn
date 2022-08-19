@@ -10,3 +10,4 @@ import java.util.List;
 public interface KhuyenMaiDAO extends Dao<KhuyenMai>{
     List<KhuyenMai> getAll();
 }
+

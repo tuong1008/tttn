@@ -4,7 +4,6 @@ import com.ptithcm.tttn.DAO.AbstractDao;
 import com.ptithcm.tttn.DAO.DonHangDAO;
 import com.ptithcm.tttn.entity.DonHang;
 import com.ptithcm.tttn.entity.KhachHang;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -47,5 +46,7 @@ public class DonHangDAOImpl extends AbstractDao<DonHang> implements DonHangDAO {
         }
         return 1;
     }
+
+   
 
 }

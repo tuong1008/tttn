@@ -15,5 +15,10 @@ public class CTPhieuDatDAOImpl extends AbstractDao<CTPhieuDat> implements CTPhie
     public List<CTPhieuDat> getAll() {
         return getFromQuery("FROM CTPhieuDat", CTPhieuDat.class);
     }
+
+    @Override
+    public List<CTPhieuDat> getById(String id) {
+        return getFromQuery("FROM CTPhieuDat ct WHERE ct.pk.phieuDat.maPD=?", CTPhieuDat.class, id);
+    }
     
 }

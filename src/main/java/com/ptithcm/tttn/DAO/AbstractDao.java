@@ -116,4 +116,13 @@ public class AbstractDao<T> implements Dao<T> {
             query.setParameter(i, params[i]);
         }
     }
+
+    @Override
+    public String nextPK(String tenBang, String kyTuDau, String tenCotPK) {
+        Integer nextID = getFromQuery("SELECT MAX(substring("+tenCotPK+", 3, LENGTH("+tenCotPK+")))+1 FROM "+ tenBang, Integer.class).get(0);
+        if (nextID == null){
+            return kyTuDau + "0";
+        }
+        return kyTuDau + nextID;
+    }
 }

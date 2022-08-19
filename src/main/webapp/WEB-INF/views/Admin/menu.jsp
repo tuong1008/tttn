@@ -63,7 +63,7 @@
                 </ul>
             </li>
             <li class="task__item">
-                <a href=""> <i class="fas fa-file-invoice-dollar"></i> Quản lí đặt hàng</a>
+                <a href="Admin/orderMng.htm"> <i class="fas fa-file-invoice-dollar"></i> Quản lí đặt hàng</a>
                 <ul class="list__sub-task">
                     <li class="sub-task__item">
                         <a href="Admin/order.htm">Phiếu đặt</a>
@@ -74,7 +74,7 @@
 
         <c:if test="${sessionScope.staff.taiKhoan.quyen.maQuyen!=4 && sessionScope.staff.taiKhoan.quyen.maQuyen!=3}">
             <li class="task__item">
-                <a href="Admin/billUnConfirm.htm"> <i class="fas fa-file-invoice-dollar"></i> Quản lí khuyến mãi</a>
+                <a href="Admin/promotion.htm"> <i class="fas fa-file-invoice-dollar"></i> Quản lí khuyến mãi</a>
             </li>
             <li class="task__item">
                 <a href="Admin/statistic.htm"> <i class="fas fa-chart-area"></i> Thống kê </a>

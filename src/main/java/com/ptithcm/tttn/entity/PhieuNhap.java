@@ -14,7 +14,7 @@ public class PhieuNhap implements Serializable {
 
     @Id
     @Column(name = "MAPN")
-    private String maPD;
+    private String maPN;
 
     @Column(name = "NGAYTAO")
     @Temporal(TemporalType.DATE)
@@ -39,10 +39,10 @@ public class PhieuNhap implements Serializable {
 
     }
 
-    public PhieuNhap(String maPD, Date ngayTao, long tongTien, NhanVien nhanVien, Collection<CTPhieuNhap> ctPhieuNhaps,
+    public PhieuNhap(String maPN, Date ngayTao, long tongTien, NhanVien nhanVien, Collection<CTPhieuNhap> ctPhieuNhaps,
                      PhieuDat phieuDat) {
         super();
-        this.maPD = maPD;
+        this.maPN = maPN;
         this.ngayTao = ngayTao;
         this.tongTien = tongTien;
         this.nhanVien = nhanVien;
@@ -50,12 +50,12 @@ public class PhieuNhap implements Serializable {
         this.phieuDat = phieuDat;
     }
 
-    public String getMaPD() {
-        return maPD;
+    public String getMaPN() {
+        return maPN;
     }
 
-    public void setMaPD(String maPD) {
-        this.maPD = maPD;
+    public void setMaPN(String maPN) {
+        this.maPN = maPN;
     }
 
     public Date getNgayTao() {

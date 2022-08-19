@@ -21,10 +21,12 @@
           p:prefix="/WEB-INF/views/" p:suffix=".jsp"
           class="org.springframework.web.servlet.view.InternalResourceViewResolver"/>
 
-    <bean id="path" class="com.ptithcm.tttn.model.BasePath">
+<!--    <bean id="path" class="com.ptithcm.tttn.model.BasePath">
         <property name="pathName"
                   value="D:\PTIT_HCM\Semester_7\Web_Programming\Doan\BuyPhone\src\main\webapp\resource\img\imgPhone"/>
-    </bean>
+    </bean>-->
+
+    <mvc:resources mapping="/resource/**" location="/WEB-INF/resource/"/>
 
     <!-- Cấu hình package chứa các controller -->
     <context:component-scan base-package="com.ptithcm.tttn.controller"/>

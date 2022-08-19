@@ -6,6 +6,7 @@ package com.ptithcm.tttn.DAOImpl;
 
 import com.ptithcm.tttn.DAO.AbstractDao;
 import com.ptithcm.tttn.DAO.PhieuDatDAO;
+import com.ptithcm.tttn.entity.NhanVien;
 import com.ptithcm.tttn.entity.PhieuDat;
 import java.util.List;
 
@@ -14,6 +15,11 @@ public class PhieuDatDAOImpl extends AbstractDao<PhieuDat> implements PhieuDatDA
     @Override
     public List<PhieuDat> getAll() {
         return getFromQuery("FROM PhieuDat", PhieuDat.class);
+    }
+
+    @Override
+    public List<PhieuDat> searchAllPhieuDat(String search) {
+        return getFromQuery("FROM PhieuDat n Where n.ngayTao LIKE ?", PhieuDat.class, "%" + search + "%");
     }
     
 }

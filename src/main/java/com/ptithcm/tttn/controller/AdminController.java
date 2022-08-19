@@ -4,11 +4,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ptithcm.tttn.DAO.*;
 import com.ptithcm.tttn.entity.CTPhieuDat;
 import com.ptithcm.tttn.entity.CTPhieuDatPK;
+import com.ptithcm.tttn.entity.CTPhieuNhap;
+import com.ptithcm.tttn.entity.CTPhieuNhapPK;
+import com.ptithcm.tttn.entity.ChiTietKM;
+import com.ptithcm.tttn.entity.ChiTietKMPK;
 import com.ptithcm.tttn.entity.KhachHang;
+import com.ptithcm.tttn.entity.KhuyenMai;
 import com.ptithcm.tttn.entity.LoaiSP;
 import com.ptithcm.tttn.entity.NhaCungCap;
 import com.ptithcm.tttn.entity.NhanVien;
 import com.ptithcm.tttn.entity.PhieuDat;
+import com.ptithcm.tttn.entity.PhieuNhap;
 import com.ptithcm.tttn.entity.SanPham;
 import com.ptithcm.tttn.entity.TaiKhoan;
 import java.io.File;
@@ -16,6 +22,8 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +82,15 @@ public class AdminController {
     
     @Autowired
     CTPhieuDatDAO ctPhieuDatDAO;
+    
+    @Autowired
+    PhieuNhapDAO phieuNhapDAO;
+    
+    @Autowired
+    CTPhieuNhapDAO ctPhieuNhapDAO;
+    
+    @Autowired
+    KhuyenMaiDAO khuyenMaiDAO;
     
 
     @RequestMapping("login")
@@ -311,7 +328,6 @@ public class AdminController {
             @RequestParam("nhaCungCap") String nccId,
             ModelMap model, @ModelAttribute("product") SanPham sp,
             BindingResult errors) {
-        
         sp.setLoaiSP(loaiSPDAO.getOne(LoaiSP.class, loaiSPId));
         sp.setNhaCungCap(nhaCungCapDAO.getOne(NhaCungCap.class, nccId));
         String temp1 = sanPhamDAO.save(sp);
@@ -384,7 +400,8 @@ public class AdminController {
     @RequestMapping(value = "product-type", params = "btnAdd", method = RequestMethod.POST)
     public String addProductType(HttpServletRequest request, ModelMap model, @ModelAttribute("productType") LoaiSP type,
             BindingResult errors) {
-        System.out.println("com.ptithcm.tttn.controller.AdminController.addProductType()");
+        
+        type.setMaLoai(loaiSPDAO.nextPK("LoaiSP", "LP", "maLoai"));
         String temp1 = loaiSPDAO.save(type);
 
         if (temp1.isEmpty()) {
@@ -454,7 +471,7 @@ public class AdminController {
         model.addAttribute("pagedListHolder", pagedListHolder);
     }
 //END-------------Product Type
-
+//BEGIN-------------Order
     @RequestMapping("order")
     public String getOrderPage(HttpServletRequest request, ModelMap model) {
         model.addAttribute("btnStatus", "btnAdd");
@@ -466,10 +483,11 @@ public class AdminController {
     public String addOrder(HttpServletRequest request, ModelMap model) {
         String[] sanPhams = request.getParameterValues("sanPham");
         String[] soLuongs = request.getParameterValues("soLuong");
+        String[] gias = request.getParameterValues("gia");
         String nccId = request.getParameter("nhaCungCap");
         
         PhieuDat p = new PhieuDat();
-        p.setMaPD("PD1");
+        p.setMaPD(phieuDatDAO.nextPK("PhieuDat", "PD", "maPD"));
         p.setNgayTao(new Date());
         p.setNhaCungCap(nhaCungCapDAO.getOne(NhaCungCap.class, nccId));
         phieuDatDAO.save(p);
@@ -481,8 +499,7 @@ public class AdminController {
             
             CTPhieuDat ct = new CTPhieuDat();
             ct.setPk(pk);
-            //nhap gia
-            ct.setGia(0);
+            ct.setGia(Long.valueOf(gias[i]));
             ct.setSl(Integer.valueOf(soLuongs[i]));
             
             ctPhieuDatDAO.save(ct);
@@ -491,7 +508,123 @@ public class AdminController {
         model.addAttribute("suppliers", nhaCungCapDAO.getSuppliers());
         return "Admin/order";
     }
+    
+    @RequestMapping(value = "order", params = "btnSearch")
+    public String searchOrder(HttpServletRequest request, ModelMap model) {
+        showOrderMng(request, model, phieuDatDAO.searchAllPhieuDat(request.getParameter("name").trim()));
+        model.addAttribute("btnStatus", "btnAdd");
+        model.addAttribute("productType", new LoaiSP());
 
+        return "Admin/productType";
+    }
+    
+    @RequestMapping("orderMng")
+    public String getOrderMngPage(HttpServletRequest request, ModelMap model) {
+        showOrderMng(request, model, phieuDatDAO.getAll());
+        return "Admin/orderMng";
+    }
+    
+    public void showOrderMng(HttpServletRequest request, ModelMap model, List<PhieuDat> phieuDats) {
+        PagedListHolder pagedListHolder = new PagedListHolder(phieuDats);
+        int page = ServletRequestUtils.getIntParameter(request, "p", 0);
+        pagedListHolder.setPage(page);
+        pagedListHolder.setMaxLinkedPages(5);
+        pagedListHolder.setPageSize(5);
+        model.addAttribute("pagedListHolder", pagedListHolder);
+    }
+//END-------------Order
+//BEGIN-------------Promotion
+    @RequestMapping("promotion")
+    public String getPromotionPage(HttpServletRequest request, ModelMap model) {
+        model.addAttribute("btnStatus", "btnAdd");
+        model.addAttribute("dsSanPham", sanPhamDAO.getListProduct());
+        return "Admin/promotion";
+    }
+
+    @RequestMapping(value = "promotion", params = "btnAdd", method = RequestMethod.POST)
+    public String addPromotion(HttpServletRequest request, ModelMap model) throws ParseException {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String ngayBD = request.getParameter("ngayBD");
+        String ngayKT = request.getParameter("ngayKT");
+        String moTa = request.getParameter("moTa");
+        String[] maSPs = request.getParameterValues("maSP");
+        String[] giamGias = request.getParameterValues("giamGia");
+        
+        KhuyenMai p = new KhuyenMai();
+        p.setNgayBD(formatter.parse(ngayBD));
+        p.setNgayKT(formatter.parse(ngayKT));
+        p.setMoTa(moTa);
+        
+        khuyenMaiDAO.save(p);
+        
+        for (int i=0 ; i<maSPs.length ; i++){
+            ChiTietKMPK pk = new ChiTietKMPK();
+            pk.setKhuyenMai(p);
+            pk.setSanPham(sanPhamDAO.getOne(SanPham.class, maSPs[i]));
+            
+            ChiTietKM ct = new ChiTietKM();
+            
+            ct.setChiTietKMPK(pk);
+            ct.setGiamGia(Integer.valueOf(giamGias[i]));
+            
+            chiTietKMDAO.save(ct);
+        }
+        model.addAttribute("btnStatus", "btnAdd");
+        model.addAttribute("dsSanPham", sanPhamDAO.getListProduct());
+        return "Admin/promotion";
+    }
+//END-------------Promotion    
+//BEGIN-------------Import
+    @RequestMapping("import/{id}.htm")
+    public String getImportPage(HttpServletRequest request, ModelMap model, @PathVariable("id") String id) {
+        model.addAttribute("btnStatus", "btnAdd");
+        model.addAttribute("ctPhieuDat", ctPhieuDatDAO.getById(id));
+        model.addAttribute("maPD", id);
+        return "Admin/import";
+    }
+
+    @RequestMapping(value = "import/{id}.htm", params = "btnAdd", method = RequestMethod.POST)
+    public String addImport(HttpServletRequest request, ModelMap model, @PathVariable("id") String id) {
+        String[] maSPs = request.getParameterValues("maSP");
+        String[] soLuongs = request.getParameterValues("sl");
+        String[] gias = request.getParameterValues("gia");
+        long tongTien=0;
+        for (int i=0 ; i<soLuongs.length ; i++){
+            tongTien = tongTien + Long.valueOf(soLuongs[i])*Long.valueOf(gias[i]);
+        }
+        
+        
+        PhieuNhap p = new PhieuNhap();
+        p.setMaPN(phieuDatDAO.nextPK("PhieuNhap", "PN", "maPN"));
+        p.setNgayTao(new Date());
+        p.setTongTien(tongTien);
+        p.setPhieuDat(phieuDatDAO.getOne(PhieuDat.class, id));
+        phieuNhapDAO.save(p);
+        
+        for (int i=0 ; i<soLuongs.length ; i++){
+            SanPham sp = sanPhamDAO.getOne(SanPham.class, maSPs[i]);
+            CTPhieuNhapPK pk = new CTPhieuNhapPK();
+            pk.setPhieuNhap(p);
+            pk.setSanPham(sp);
+            
+            CTPhieuNhap ct = new CTPhieuNhap();
+            ct.setPk(pk);
+            ct.setGia(Long.valueOf(gias[i]));
+            ct.setSl(Integer.valueOf(soLuongs[i]));
+            
+            ctPhieuNhapDAO.save(ct);
+            
+            if (soLuongs[i].equals("0")) sp.setGia(Long.valueOf(gias[i]) * 12 / 10);
+            sp.setSlt(Integer.valueOf(soLuongs[i]) + sp.getSlt());
+            sanPhamDAO.update(sp);
+        }
+        model.addAttribute("btnStatus", "btnAdd");
+        model.addAttribute("suppliers", nhaCungCapDAO.getSuppliers());
+        return "Admin/import";
+    }
+//END-------------Import
+    
+//BEGIN-------------Supplier
     @RequestMapping("supplier")
     public String supplier(HttpServletRequest request, ModelMap model, HttpSession session) {
         showSupplier(request, model, nhaCungCapDAO.getSuppliers());
@@ -504,7 +637,7 @@ public class AdminController {
     @RequestMapping(value = "supplier", params = "btnAdd", method = RequestMethod.POST)
     public String addSupplier(HttpServletRequest request, ModelMap model, @ModelAttribute("supplier") NhaCungCap ncc,
             BindingResult errors) {
-        System.out.println("com.ptithcm.tttn.controller.AdminController.addSupplier()");
+//        ncc.setMaNCC(nhaCungCapDAO.nextPK("NhaCungCap", "CC", "maNCC"));
         String temp1 = nhaCungCapDAO.save(ncc);
 
         if (temp1.isEmpty()) {
@@ -527,7 +660,8 @@ public class AdminController {
         pagedListHolder.setPageSize(5);
         model.addAttribute("pagedListHolder", pagedListHolder);
     }
-
+//END-------------Supplier
+    
     @RequestMapping("customer")
     public String customer(HttpServletRequest request, ModelMap model) {
         showCustomer(request, model, khachHangDAO.getAllCustomer(factory));

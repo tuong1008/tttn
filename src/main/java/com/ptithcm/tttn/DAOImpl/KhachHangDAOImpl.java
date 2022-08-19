@@ -3,12 +3,10 @@ package com.ptithcm.tttn.DAOImpl;
 import com.ptithcm.tttn.DAO.AbstractDao;
 import com.ptithcm.tttn.DAO.KhachHangDAO;
 import com.ptithcm.tttn.entity.KhachHang;
-import com.ptithcm.tttn.entity.NhanVien;
 import com.ptithcm.tttn.entity.TaiKhoan;
 import org.hibernate.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class KhachHangDAOImpl extends AbstractDao<KhachHang> implements KhachHangDAO {
