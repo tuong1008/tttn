@@ -1,4 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+         pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="tg" tagdir="/WEB-INF/tags" %>
@@ -8,63 +9,96 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <link href="<c:url value='/resource/css/Admin/menuStyle.css' />"
+              rel="stylesheet">
+        <link href="<c:url value='/resource/css/Admin/adminStyle.css' />"
+              rel="stylesheet">
+        <link href="<c:url value='/resource/css/Style.css' />" rel="stylesheet">
+        <link
+            href="<c:url value='/resource/fontawesome-free-5.15.4-web/css/all.css' />"
+            rel="stylesheet">
+        <title>Insert title here</title>
+        <base href="${pageContext.servletContext.contextPath}/">
     </head>
     <body>
-    <form:form action="${pageContext.request.contextPath}/Admin/supplier.htm"
-               method="post" modelAttribute="supplier" class="form-horizontal">
-        <form:input type="text" placeholder="Nhập mã" path="maNCC"/>
-        <form:errors class="error" path="maNCC"/>
-        
-        <form:input path="tenNCC" class="form-control" placeholder="Enter tenNCC"
-                    id="tenNCC"/>
-        <form:errors path="tenNCC" cssClass="text-danger"/>
-        <form:input path="sdt" class="form-control" placeholder="Enter sdt"
-                    id="sdt"/>
-        <form:errors path="sdt" cssClass="text-danger"/>
-        <form:input path="diaChi" class="form-control" placeholder="Enter diaChi"
-                    id="diaChi"/>
-        <form:errors path="diaChi" cssClass="text-danger"/>
-        <form:input path="email" class="form-control" placeholder="Enter email"
-                    id="email"/>
-        <form:errors path="email" cssClass="text-danger"/>
-        <button name="${btnStatus}">Lưu</button>
-    </form:form>
-               <h2>DANH SÁCH NHÀ CUNG C?P</h2>
-    <jsp:useBean id="pagedListHolder" scope="request"
-                 type="org.springframework.beans.support.PagedListHolder"/>
-    <c:url value="Admin/supplier.htm" var="pagedLink">
-        <c:param name="p" value="~"/>
-    </c:url>
-    <div>
-        <tg:paging pagedListHolder="${pagedListHolder}"
-                   pagedLink="${pagedLink}"/>
+        <%@include file="/WEB-INF/views/Admin/menu.jsp" %>
+        <div class="container">
+            <h2>THÔNG TIN NHÀ CUNG CẤP</h2>
+            <form:form action="${pageContext.request.contextPath}/Admin/supplier.htm"
+                       method="post" modelAttribute="supplier" class="form-horizontal">
+                <div class="form-group">
+                    <div class="form-element">
+                        <label class="label-title" for="">Mã: </label>
+                        <form:input type="text" placeholder="Nhập mã" path="maNCC"/>
+                        <form:errors class="error" path="maNCC"/>    
+                    </div>
 
-    </div>
-    <table>
-        <tr>
-            <th></th>
-            <th>Mã nhà cung c?p</th>
-            <th>Tên nhà cung c?p</th>
-            <th>S? di?n tho?i</th>
-            <th>Địa chỉ</th>
-            <th>Email</th>
-            <th>Action</th>
-        </tr>
-        <c:forEach var="s" items="${pagedListHolder.pageList}">
-            <tr>
-                <td>${s.maNCC}</td>
-                <td>${s.tenNCC}</td>
-                <td>${s.sdt}</td>
-                <td>${s.diaChi}</td>
-                <td>${s.email}</td>
-                <td>
-                 <a href="Admin/supplier/${s.maNCC}.htm?linkDelete">Xóa</a>
-                </td>
-                <td><a href="Admin/supplier/${s.maNCC}.htm?linkEdit">Sửa</a></td>
-                <td><a href="Admin/supplier/${s.maNCC}.htm?linkReset">Reset</a></td>
-            </tr>
-        </c:forEach>
-    </table>
-</body>
+                    <div class="form-element">
+                        <label class="label-title" for="">Tên: </label>
+                        <form:input path="tenNCC" class="form-control" placeholder="Nhập tên nhà cung cấp"
+                                    id="tenNCC"/>
+                        <form:errors path="tenNCC" cssClass="text-danger"/>    
+                    </div>
+
+                    <div class="form-element">
+                        <label class="label-title" for="">Số điện thoại: </label>
+                        <form:input path="sdt" class="form-control" placeholder="Nhập số điện thoại"
+                                    id="sdt"/>
+                        <form:errors path="sdt" cssClass="text-danger"/>    
+                    </div>
+
+                    <div class="form-element">
+                        <label class="label-title" for="">Địa chỉ: </label>
+                        <form:input path="diaChi" class="form-control" placeholder="Nhập địa chỉ"
+                                    id="diaChi"/>
+                        <form:errors path="diaChi" cssClass="text-danger"/>    
+                    </div>
+
+                    <div class="form-element">
+                        <label class="label-title" for="">Email: </label>
+                        <form:input path="email" class="form-control" placeholder="Nhập email"
+                                    id="email"/>
+                        <form:errors path="email" cssClass="text-danger"/>    
+                    </div>
+                </div>
+                <button name="${btnStatus}">Lưu</button>
+            </form:form>
+            <h2>DANH SÁCH NHÀ CUNG CẤP</h2>
+            <jsp:useBean id="pagedListHolder" scope="request"
+                         type="org.springframework.beans.support.PagedListHolder"/>
+            <c:url value="Admin/supplier.htm" var="pagedLink">
+                <c:param name="p" value="~"/>
+            </c:url>
+            <div>
+                <tg:paging pagedListHolder="${pagedListHolder}"
+                           pagedLink="${pagedLink}"/>
+
+            </div>
+            <table>
+                <tr>
+                    <th>Mã nhà cung cấp</th>
+                    <th>Tên nhà cung cấp</th>
+                    <th>Số điện thoại</th>
+                    <th>Địa chỉ</th>
+                    <th>Email</th>
+                    <th>Sửa</th>
+                    <th>Xóa</th>
+                </tr>
+                <c:forEach var="s" items="${pagedListHolder.pageList}">
+                    <tr>
+                        <td>${s.maNCC}</td>
+                        <td>${s.tenNCC}</td>
+                        <td>${s.sdt}</td>
+                        <td>${s.diaChi}</td>
+                        <td>${s.email}</td>
+                        <td><a href="Admin/supplier/${s.maNCC}.htm?linkEdit">Sửa</a></td>
+                        <td>
+                            <a href="Admin/supplier/${s.maNCC}.htm?linkDelete">Xóa</a>
+                        </td>
+                    </tr>
+                </c:forEach>
+            </table>
+        </div>
+
+    </body>
 </html>

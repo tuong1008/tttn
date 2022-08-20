@@ -29,8 +29,7 @@ public class DonHangDAOImpl extends AbstractDao<DonHang> implements DonHangDAO {
 
     @Override
     public int insert(KhachHang k) {
-        // TODO: set ma don hang cứng?
-        DonHang dh = new DonHang("DH005", 0, k.getHoTen(), k.getDiaChi(), k.getSdt(), k.getEmail(), new Date(), null, 0,
+        DonHang dh = new DonHang(nextPK("DonHang", "DH", "maDH"), 0, k.getHoTen(), k.getDiaChi(), k.getSdt(), k.getEmail(), new Date(), null, 0,
                 null, null, k, null, null);
         Session session = factory.openSession();
         Transaction t = session.beginTransaction();

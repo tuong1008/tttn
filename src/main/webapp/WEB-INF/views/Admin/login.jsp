@@ -13,7 +13,7 @@
             rel="stylesheet">
     <style type="text/css">
         .container-app {
-            background-color: #ca0404;
+            background-color: lightgray;
             height: 100vh;
 
             align-items: center;

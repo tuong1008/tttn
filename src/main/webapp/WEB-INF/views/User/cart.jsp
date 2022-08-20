@@ -142,7 +142,9 @@
             }
         </style>
     </div>
-
+    <c:if test = "${ not empty errorMsg}">
+         <div class="error">${errorMsg}</div>
+    </c:if>
     <div class="cart-app__title">
         <div class="title__product">Sản phẩm</div>
         <div class="title__item">Đơn giá</div>

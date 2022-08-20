@@ -22,10 +22,7 @@
             margin-top: 100px;
             display: flex;
             flex-direction: column;
-            background-image: url("resource/img/backgroundMain.jpg");
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-attachment: fixed;
+            
         }
 
         /*slide*/
@@ -59,7 +56,7 @@
 
         .slide__item {
             display: none;
-            height: 200px;
+            height: 300px;
         }
 
         .slide__item img {
@@ -139,7 +136,7 @@
 
         .card__item:hover {
             box-shadow: 0px 0px 4px 4px rgb(201, 194, 194);
-            background-color: aqua;
+            background-color: lightgrey;
         }
 
         .card__item:hover .card-item__img {
@@ -162,7 +159,7 @@
         .card-item__name {
             text-align: center;
             display: block;
-            color: black;
+            color: white;
             font-weight: bolder;
         }
 
@@ -199,7 +196,7 @@
         .cost__discount,
         .cost__unit-action {
             padding: 4px;
-            background-color: red;
+            background-color: white;
             font-weight: bolder;
             border-radius: 5px;
         }
@@ -240,16 +237,13 @@
     <div class="slide">
         <div class="slide__list">
             <div class="slide__item slide__item--active" idx="0">
-                <img src="resource/img/slide1.jpg">
+                <img src="resource/img/banner1.jpg">
             </div>
             <div class="slide__item" idx="1">
-                <img src="resource/img/slide2.jpg">
+                <img src="resource/img/banner2.jpg">
             </div>
             <div class="slide__item" idx="2">
-                <img src="resource/img/slide3.jpg">
-            </div>
-            <div class="slide__item" idx="3">
-                <img src="resource/img/slide4.jpg">
+                <img src="resource/img/banner4.png">
             </div>
         </div>
         <span class="btn__slide" id="btn__slide--prev"><i

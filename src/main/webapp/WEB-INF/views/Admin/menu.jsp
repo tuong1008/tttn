@@ -4,21 +4,24 @@
 
 <header>
     <div class="header__logo">
-        <img src="resource/img/FPTShop_logo.png" alt="">
+        <img style="max-width: 50px" src="resource/img/nike_logo.png" alt="">
     </div>
     <div class="header__right">
         <a class="header__logout" href="Admin/login.htm"><i class="fas fa-sign-out-alt"></i></a>
     </div>
 </header>
 <nav
-        style="background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5)), url(resource/img/navBackground.jpg);
-			background-position: center;
-			background-repeat: no-repeat;
-			background-size: cover;">
+        style="background-color: grey;
+            max-height: 2000px;
+            height: 100%;
+            margin: 0px auto;
+            overflow: scroll;">
     <ul class="list__task">
         <li class="task__item">
-            <a href="Admin/info.htm"> <img src="resource/img/admin.jpg" alt="">
-                <h3>Thông tin cá nhân</h3></a>
+            <a href="Admin/info.htm" style="margin: auto;
+               font-weight: bold;
+               text-align: center;
+               ">Thông tin cá nhân</a>
         </li>
         <c:if test="${sessionScope.staff.taiKhoan.quyen.maQuyen==4}">
             <li class="task__item">
@@ -35,24 +38,16 @@
         </c:if>
         <c:if test="${sessionScope.staff.taiKhoan.quyen.maQuyen!=4}">
             <li class="task__item">
-                <a href="Admin/product-type.htm"> <i class="fab fa-product-hunt"></i> Quản lí lo?i s?n ph?m </a>
+                <a href="Admin/product-type.htm"> <i class="fab fa-product-hunt"></i> Quản lí loại sản phẩm</a>
             </li>
             <li class="task__item">
-                <a href="Admin/productList.htm"> <i class="fab fa-product-hunt"></i> Quản lí sản phẩm </a>
-                <ul class="list__sub-task">
-                    <li class="sub-task__item">
-                        <a href="Admin/productList.htm">Danh sách sản phẩm</a>
-                    </li>
-                    <li class="sub-task__item">
-                        <a href="Admin/product.htm">Thêm sản phẩm</a>
-                    </li>
-                </ul>
+                <a href="Admin/product.htm"> <i class="fab fa-product-hunt"></i> Quản lí sản phẩm </a>
             </li>
             <li class="task__item">
                 <a href="Admin/supplier.htm"> <i class="fab fa-product-hunt"></i> Quản lí nhà cung cấp </a>
             </li>
             <li class="task__item">
-                <a href="Admin/billUnConfirm.htm"> <i class="fas fa-file-invoice-dollar"></i> Quản lí hóa đơn</a>
+                <a> <i class="fas fa-file-invoice-dollar"></i> Quản lí hóa đơn</a>
                 <ul class="list__sub-task">
                     <li class="sub-task__item">
                         <a href="Admin/billUnConfirm.htm">Đơn hàng chờ xử lý</a>
@@ -63,8 +58,11 @@
                 </ul>
             </li>
             <li class="task__item">
-                <a href="Admin/orderMng.htm"> <i class="fas fa-file-invoice-dollar"></i> Quản lí đặt hàng</a>
+                <a> <i class="fas fa-file-invoice-dollar"></i> Quản lí đặt hàng</a>
                 <ul class="list__sub-task">
+                    <li class="sub-task__item">
+                        <a href="Admin/orderMng.htm">Danh sách phiếu đặt</a>
+                    </li>
                     <li class="sub-task__item">
                         <a href="Admin/order.htm">Phiếu đặt</a>
                     </li>

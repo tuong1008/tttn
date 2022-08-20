@@ -76,22 +76,21 @@ public class AdminController {
 
     @Autowired
     SanPhamDAO sanPhamDAO;
-    
+
     @Autowired
     PhieuDatDAO phieuDatDAO;
-    
+
     @Autowired
     CTPhieuDatDAO ctPhieuDatDAO;
-    
+
     @Autowired
     PhieuNhapDAO phieuNhapDAO;
-    
+
     @Autowired
     CTPhieuNhapDAO ctPhieuNhapDAO;
-    
+
     @Autowired
     KhuyenMaiDAO khuyenMaiDAO;
-    
 
     @RequestMapping("login")
     public String login(HttpSession session) {
@@ -328,25 +327,29 @@ public class AdminController {
             @RequestParam("nhaCungCap") String nccId,
             ModelMap model, @ModelAttribute("product") SanPham sp,
             BindingResult errors) {
+        sp.setSpMoi(1);
         sp.setLoaiSP(loaiSPDAO.getOne(LoaiSP.class, loaiSPId));
         sp.setNhaCungCap(nhaCungCapDAO.getOne(NhaCungCap.class, nccId));
+
+        String fileName = productImage.getOriginalFilename();
+        System.out.println(fileName);
+        String extension = ""; //đuôi file
+
+        int index = fileName.lastIndexOf(".");
+        if (index > 0) {
+            extension = fileName.substring(index);
+        }
+        sp.setGia(0);
+        sp.setSlt(0);
+        sp.setHinhAnh(sp.getMaSP() + extension);
         String temp1 = sanPhamDAO.save(sp);
 
         if (temp1.isEmpty()) {
             model.addAttribute("message", "Thêm thành công");
             model.addAttribute("product", new SanPham());
 
-            String fileName = productImage.getOriginalFilename();
-            System.out.println(fileName);
-            String extension = ""; //đuôi file
-
-            int index = fileName.lastIndexOf(".");
-            if (index > 0) {
-                extension = fileName.substring(index);
-            }
-
             String rootDir = request.getSession().getServletContext().getRealPath("/");
-            Path path = Paths.get(rootDir+"WEB-INF"+ File.separator + "resource" + File.separator + "img" + File.separator + "imgProduct" + File.separator + sp.getMaSP() + extension);
+            Path path = Paths.get(rootDir + "WEB-INF" + File.separator + "resource" + File.separator + "img" + File.separator + "imgProduct" + File.separator + sp.getMaSP() + extension);
             if (productImage != null && !productImage.isEmpty()) {
                 try {
                     productImage.transferTo(new File(path.toString()));
@@ -400,7 +403,7 @@ public class AdminController {
     @RequestMapping(value = "product-type", params = "btnAdd", method = RequestMethod.POST)
     public String addProductType(HttpServletRequest request, ModelMap model, @ModelAttribute("productType") LoaiSP type,
             BindingResult errors) {
-        
+
         type.setMaLoai(loaiSPDAO.nextPK("LoaiSP", "LP", "maLoai"));
         String temp1 = loaiSPDAO.save(type);
 
@@ -419,7 +422,7 @@ public class AdminController {
     @RequestMapping(value = "product-type", params = "btnEdit", method = RequestMethod.POST)
     public String editProductType(HttpServletRequest request, ModelMap model, @ModelAttribute("productType") LoaiSP type,
             BindingResult errors) {
-        
+
         String temp = loaiSPDAO.update(type);
 
         if (temp.isEmpty()) {
@@ -472,6 +475,7 @@ public class AdminController {
     }
 //END-------------Product Type
 //BEGIN-------------Order
+
     @RequestMapping("order")
     public String getOrderPage(HttpServletRequest request, ModelMap model) {
         model.addAttribute("btnStatus", "btnAdd");
@@ -485,30 +489,30 @@ public class AdminController {
         String[] soLuongs = request.getParameterValues("soLuong");
         String[] gias = request.getParameterValues("gia");
         String nccId = request.getParameter("nhaCungCap");
-        
+
         PhieuDat p = new PhieuDat();
         p.setMaPD(phieuDatDAO.nextPK("PhieuDat", "PD", "maPD"));
         p.setNgayTao(new Date());
         p.setNhaCungCap(nhaCungCapDAO.getOne(NhaCungCap.class, nccId));
         phieuDatDAO.save(p);
-        
-        for (int i=0 ; i<sanPhams.length ; i++){
+
+        for (int i = 0; i < sanPhams.length; i++) {
             CTPhieuDatPK pk = new CTPhieuDatPK();
             pk.setPhieuDat(p);
             pk.setSanPham(sanPhamDAO.getOne(SanPham.class, sanPhams[i]));
-            
+
             CTPhieuDat ct = new CTPhieuDat();
             ct.setPk(pk);
             ct.setGia(Long.valueOf(gias[i]));
             ct.setSl(Integer.valueOf(soLuongs[i]));
-            
+
             ctPhieuDatDAO.save(ct);
         }
         model.addAttribute("btnStatus", "btnAdd");
         model.addAttribute("suppliers", nhaCungCapDAO.getSuppliers());
         return "Admin/order";
     }
-    
+
     @RequestMapping(value = "order", params = "btnSearch")
     public String searchOrder(HttpServletRequest request, ModelMap model) {
         showOrderMng(request, model, phieuDatDAO.searchAllPhieuDat(request.getParameter("name").trim()));
@@ -517,13 +521,13 @@ public class AdminController {
 
         return "Admin/productType";
     }
-    
+
     @RequestMapping("orderMng")
     public String getOrderMngPage(HttpServletRequest request, ModelMap model) {
         showOrderMng(request, model, phieuDatDAO.getAll());
         return "Admin/orderMng";
     }
-    
+
     public void showOrderMng(HttpServletRequest request, ModelMap model, List<PhieuDat> phieuDats) {
         PagedListHolder pagedListHolder = new PagedListHolder(phieuDats);
         int page = ServletRequestUtils.getIntParameter(request, "p", 0);
@@ -534,6 +538,7 @@ public class AdminController {
     }
 //END-------------Order
 //BEGIN-------------Promotion
+
     @RequestMapping("promotion")
     public String getPromotionPage(HttpServletRequest request, ModelMap model) {
         model.addAttribute("btnStatus", "btnAdd");
@@ -549,24 +554,24 @@ public class AdminController {
         String moTa = request.getParameter("moTa");
         String[] maSPs = request.getParameterValues("maSP");
         String[] giamGias = request.getParameterValues("giamGia");
-        
+
         KhuyenMai p = new KhuyenMai();
         p.setNgayBD(formatter.parse(ngayBD));
         p.setNgayKT(formatter.parse(ngayKT));
         p.setMoTa(moTa);
-        
+
         khuyenMaiDAO.save(p);
-        
-        for (int i=0 ; i<maSPs.length ; i++){
+
+        for (int i = 0; i < maSPs.length; i++) {
             ChiTietKMPK pk = new ChiTietKMPK();
             pk.setKhuyenMai(p);
             pk.setSanPham(sanPhamDAO.getOne(SanPham.class, maSPs[i]));
-            
+
             ChiTietKM ct = new ChiTietKM();
-            
+
             ct.setChiTietKMPK(pk);
             ct.setGiamGia(Integer.valueOf(giamGias[i]));
-            
+
             chiTietKMDAO.save(ct);
         }
         model.addAttribute("btnStatus", "btnAdd");
@@ -575,6 +580,7 @@ public class AdminController {
     }
 //END-------------Promotion    
 //BEGIN-------------Import
+
     @RequestMapping("import/{id}.htm")
     public String getImportPage(HttpServletRequest request, ModelMap model, @PathVariable("id") String id) {
         model.addAttribute("btnStatus", "btnAdd");
@@ -588,33 +594,34 @@ public class AdminController {
         String[] maSPs = request.getParameterValues("maSP");
         String[] soLuongs = request.getParameterValues("sl");
         String[] gias = request.getParameterValues("gia");
-        long tongTien=0;
-        for (int i=0 ; i<soLuongs.length ; i++){
-            tongTien = tongTien + Long.valueOf(soLuongs[i])*Long.valueOf(gias[i]);
+        long tongTien = 0;
+        for (int i = 0; i < soLuongs.length; i++) {
+            tongTien = tongTien + Long.valueOf(soLuongs[i]) * Long.valueOf(gias[i]);
         }
-        
-        
+
         PhieuNhap p = new PhieuNhap();
         p.setMaPN(phieuDatDAO.nextPK("PhieuNhap", "PN", "maPN"));
         p.setNgayTao(new Date());
         p.setTongTien(tongTien);
         p.setPhieuDat(phieuDatDAO.getOne(PhieuDat.class, id));
         phieuNhapDAO.save(p);
-        
-        for (int i=0 ; i<soLuongs.length ; i++){
+
+        for (int i = 0; i < soLuongs.length; i++) {
             SanPham sp = sanPhamDAO.getOne(SanPham.class, maSPs[i]);
             CTPhieuNhapPK pk = new CTPhieuNhapPK();
             pk.setPhieuNhap(p);
             pk.setSanPham(sp);
-            
+
             CTPhieuNhap ct = new CTPhieuNhap();
             ct.setPk(pk);
             ct.setGia(Long.valueOf(gias[i]));
             ct.setSl(Integer.valueOf(soLuongs[i]));
-            
+
             ctPhieuNhapDAO.save(ct);
-            
-            if (soLuongs[i].equals("0")) sp.setGia(Long.valueOf(gias[i]) * 12 / 10);
+
+            if (!soLuongs[i].equals("0")) {
+                sp.setGia(Long.valueOf(gias[i]) * 12 / 10);
+            }
             sp.setSlt(Integer.valueOf(soLuongs[i]) + sp.getSlt());
             sanPhamDAO.update(sp);
         }
@@ -623,7 +630,7 @@ public class AdminController {
         return "Admin/import";
     }
 //END-------------Import
-    
+
 //BEGIN-------------Supplier
     @RequestMapping("supplier")
     public String supplier(HttpServletRequest request, ModelMap model, HttpSession session) {
@@ -661,7 +668,7 @@ public class AdminController {
         model.addAttribute("pagedListHolder", pagedListHolder);
     }
 //END-------------Supplier
-    
+
     @RequestMapping("customer")
     public String customer(HttpServletRequest request, ModelMap model) {
         showCustomer(request, model, khachHangDAO.getAllCustomer(factory));
@@ -675,7 +682,7 @@ public class AdminController {
         response.setContentType("application/json");
         String maNCC = request.getParameter("maNCC");
         List<SanPham> products = sanPhamDAO.getListProductByIDBrand(maNCC);
-        
+
         mapper.writeValue(response.getOutputStream(), products);
     }
 

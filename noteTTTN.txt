@@ -15,8 +15,8 @@
 
 
 1 Admin: toàn quyền.
-2 Manager: gồm các quyền của Approver, quyền xem các thống kê, quản lý chương trình khuyến mãi, quản lý phân công.
-3 Approver: Quản lý duyệt đơn hàng, quản lý sản phẩm, quản lý loại sản phẩm, quản lý đặt hàng, quản lý nhập hàng, quản lý nhà cung cấp.
+2 Manager: gồm các quyền của Approver, quyền xem các thống kê, quản lý chương trình khuyến mãi.
+3 Approver: Quản lý duyệt đơn hàng và quản lý phân công, quản lý sản phẩm, quản lý loại sản phẩm, quản lý đặt hàng, quản lý nhập hàng, quản lý nhà cung cấp.
 4 Shipper: Quản lý đơn hàng được phân công và giao hàng.
 
 -Thêm NV có combobox chọn quyền, thì Tạo TK mã nv tự tăng bằng cách set default = function(), tên đăng nhập đã xử lý HQL, set mật khẩu mặc định vì người người tạo là admin, nhập các field trong bảng Nhân viên, rồi lưu tất cả vào 2 bảng TK và NV
@@ -35,3 +35,6 @@
 -thống kê thì thống kê tất cả đơn hàng trạng thái 1 từ ngày tháng năm nào đến ngày tháng năm nào, theo ngày tạo, sp sẽ có tất cả các tháng
 
 TEST CASE có nhà cung cấp mà chưa có sản phẩm
+KH, NV nhập chung
+tạo phiếu nhập bị lỗi
+QL phieu nhap

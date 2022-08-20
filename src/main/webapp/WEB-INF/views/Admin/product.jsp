@@ -1,4 +1,5 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+         pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="tg" tagdir="/WEB-INF/tags" %>
@@ -6,81 +7,113 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link href="<c:url value='/resource/css/Admin/menuStyle.css' />"
+              rel="stylesheet">
+        <link href="<c:url value='/resource/css/Admin/adminStyle.css' />"
+              rel="stylesheet">
+        <link href="<c:url value='/resource/css/Style.css' />" rel="stylesheet">
+        <link
+            href="<c:url value='/resource/fontawesome-free-5.15.4-web/css/all.css' />"
+            rel="stylesheet">
         <title>JSP Page</title>
+        <base href="${pageContext.servletContext.contextPath}/">
     </head>
     <body>
-    <form:form action="${pageContext.request.contextPath}/Admin/product.htm"
-               enctype="multipart/form-data" method="post" modelAttribute="product" class="form-horizontal">
-        <form:input type="text" placeholder="Nhập mã" path="maSP"/>
-        <form:errors class="error" path="maSP"/>
+        <%@include file="/WEB-INF/views/Admin/menu.jsp" %>
+        <div class="container">
+            <h2>THÔNG TIN SẢN PHẨM</h2>
+            <form:form action="${pageContext.request.contextPath}/Admin/product.htm"
+                       enctype="multipart/form-data" method="post" modelAttribute="product" class="form-horizontal">
+                <div class="form-group">
+                    <div class="form-element">
+                        <label class="label-title" for="">Mã sản phẩm: </label>
+                        <form:input type="text" placeholder="Nhập mã" path="maSP"/>
+                        <form:errors class="error" path="maSP"/>    
+                    </div>
 
-        <form:input path="tenSP" class="form-control" placeholder="Enter tenSP"
-                    id="tenSP"/>
-        <form:errors path="tenSP" cssClass="text-danger"/>
-        <form:input path="moTa" class="form-control" placeholder="Enter moTa"
-                    id="moTa"/>
-        <form:errors path="moTa" cssClass="text-danger"/>
-        <input type="file" name="hinhAnh" class="form-control" placeholder="Enter hinhAnh"
-                    id="hinhAnh"/>
-        <form:input path="gia" class="form-control" placeholder="Enter gia"
-                    id="gia"/>
-        <form:errors path="gia" cssClass="text-danger"/>
-        <form:input path="slt" class="form-control" placeholder="Enter slt"
-                    id="slt"/>
-        <form:errors path="slt" cssClass="text-danger"/>
+                    <div class="form-element">
+                        <label class="label-title" for="">Tên sản phẩm: </label>
+                        <form:input path="tenSP" class="form-control" placeholder="Nhập tên sản phẩm"
+                                    id="tenSP"/>
+                        <form:errors path="tenSP" cssClass="text-danger"/>    
+                    </div>
 
-        <form:select path="loaiSP">
-            <form:options itemValue="maLoai" itemLabel="tenLoai" path="loaiSP" items="${categories}"/>
-        </form:select>
-        
-        <form:select path="nhaCungCap">
-            <form:options itemValue="maNCC" itemLabel="tenNCC" items="${suppliers}"/>
-        </form:select>
-        
-        <button name="${btnStatus}">Lưu</button>
-    </form:form>
-    <h2>DANH SÁCH SẢN PHẨM</h2>
-    <jsp:useBean id="pagedListHolder" scope="request"
-                 type="org.springframework.beans.support.PagedListHolder"/>
-    <c:url value="Admin/product.htm" var="pagedLink">
-        <c:param name="p" value="~"/>
-    </c:url>
-    <div>
-        <tg:paging pagedListHolder="${pagedListHolder}"
-                   pagedLink="${pagedLink}"/>
+                    <div class="form-element">
+                        <label class="label-title" for="">Mô tả: </label>
+                        <form:input path="moTa" class="form-control" placeholder="Nhập mô tả"
+                                    id="moTa"/>
+                        <form:errors path="moTa" cssClass="text-danger"/>    
+                    </div>
 
-    </div>
-    <table>
-        <tr>
-            <th>Mã sản phẩm</th>
-            <th>Tên sản phẩm</th>
-            <th>Mô tả</th>
-            <th>Hình ảnh</th>
-            <th>Giá</th>
-            <th>Số lượng</th>
-            <th>Sản phẩm mới</th>
-            <th>Loại sản phẩm</th>
-            <th>Nhà cung cấp</th>
-            <th>Action</th>
-        </tr>
-        <c:forEach var="s" items="${pagedListHolder.pageList}">
-            <tr>
-                <td>${s.maSP}</td>
-                <td>${s.tenSP}</td>
-                <td>${s.moTa}</td>
-                <td>${s.hinhAnh}</td>
-                <td>${s.gia}</td>
-                <td>${s.slt}</td>
-                <td>${s.spMoi}</td>
-                <td>${s.loaiSP.tenLoai}</td>
-                <td>${s.nhaCungCap.maNCC}</td>
-                <td>
-                    <a href="Admin/product/${s.maSP}.htm?linkDelete">Xóa</a>
-                </td>
-                <td><a href="Admin/product/${s.maSP}.htm?linkEdit">Sửa</a></td>
-                <td><a href="Admin/product/${s.maSP}.htm?linkReset">Reset</a></td>
-            </tr>
-        </c:forEach>
-    </table>
-</body>
+                    <div class="form-element">
+                        <label class="label-title" for="">Hình ảnh: </label>
+                        <input type="file" name="hinhAnh" class="form-control"
+                               id="hinhAnh"/>    
+                    </div>
+                    <%--<form:input path="gia" class="form-control" placeholder="Enter gia"--%>
+                    <!--id="gia"/>-->
+                    <%--<form:input path="slt" class="form-control" placeholder="Enter slt"--%>
+                    <!--id="slt"/>-->
+
+                    <div class="form-element">
+                        <label class="label-title" for="">Loại sản phẩm: </label>
+                        <form:select path="loaiSP">
+                            <form:options itemValue="maLoai" itemLabel="tenLoai" path="loaiSP" items="${categories}"/>
+                        </form:select>    
+                    </div>
+
+                    <div class="form-element">
+                        <label class="label-title" for="">Nhà cung cấp: </label>
+                        <form:select path="nhaCungCap">
+                            <form:options itemValue="maNCC" itemLabel="tenNCC" items="${suppliers}"/>
+                        </form:select>    
+                    </div>
+                </div>
+                <button name="${btnStatus}">Lưu</button>
+            </form:form>
+            <h2>DANH SÁCH SẢN PHẨM</h2>
+            <jsp:useBean id="pagedListHolder" scope="request"
+                         type="org.springframework.beans.support.PagedListHolder"/>
+            <c:url value="Admin/product.htm" var="pagedLink">
+                <c:param name="p" value="~"/>
+            </c:url>
+            <div>
+                <tg:paging pagedListHolder="${pagedListHolder}"
+                           pagedLink="${pagedLink}"/>
+
+            </div>
+            <table>
+                <tr>
+                    <th>Mã sản phẩm</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Mô tả</th>
+                    <th>Hình ảnh</th>
+                    <th>Giá</th>
+                    <th>Số lượng</th>
+                    <th>Sản phẩm mới</th>
+                    <th>Loại sản phẩm</th>
+                    <th>Nhà cung cấp</th>
+                    <th>Sửa</th>
+                    <th>Xóa</th>
+                </tr>
+                <c:forEach var="s" items="${pagedListHolder.pageList}">
+                    <tr>
+                        <td>${s.maSP}</td>
+                        <td>${s.tenSP}</td>
+                        <td>${s.moTa}</td>
+                        <td><img style="max-width: 100px" src="resource/img/imgProduct/${s.hinhAnh}"></td>
+                        <td>${s.gia}</td>
+                        <td>${s.slt}</td>
+                        <td>${s.spMoi}</td>
+                        <td>${s.loaiSP.tenLoai}</td>
+                        <td>${s.nhaCungCap.maNCC}</td>
+                        <td><a href="Admin/product/${s.maSP}.htm?linkEdit">Sửa</a></td>
+                        <td>
+                            <a href="Admin/product/${s.maSP}.htm?linkDelete">Xóa</a>
+                        </td>
+                    </tr>
+                </c:forEach>
+            </table>
+        </div>
+    </body>
 </html>

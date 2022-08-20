@@ -7,7 +7,7 @@
     <div class="header-top__wrap">
         <div class="header-top__item header-top__left">
             <a href="User/home.htm" class="header-top-left__link"> <img
-                    src="resource/img/logo.png" alt="" class="header__logo">
+                    src="resource/img/nike_logo.png" alt="" class="header__logo">
             </a>
         </div>
         <div class="header-top__item header-top__center">
@@ -52,7 +52,7 @@
                             <c:forEach var="s" items="${sessionScope.detailBills}">
                                 <li class="cart-hover-list__item">
                                     <img src="resource/img/imgProduct/${s.pk.sanPham.hinhAnh}" width="100" height="100" alt="">
-                                    <p>${s.pk.sanPham.tenSP} khởi động 5.0 đi ra ngoài Trái Đất</p>
+                                    <p>${s.pk.sanPham.tenSP}</p>
                                     <span> <fmt:formatNumber type="currency" value="${s.pk.sanPham.gia}"/> </span>
                                 </li>
                                 <%m = m + 1;%>

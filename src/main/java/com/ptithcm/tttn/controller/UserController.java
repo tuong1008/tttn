@@ -52,6 +52,9 @@ public class UserController {
 
     @Autowired
     LoaiSPDAO loaiSPDAOImpl;
+    
+    @Autowired
+    QuyenDAO quyenDAO;
 
     @RequestMapping("home")
     public String index(HttpServletRequest request, HttpSession session, ModelMap model) {
@@ -159,7 +162,7 @@ public class UserController {
                 model.addAttribute("message", "Tài khoản đã tồn tại");
                 return "User/register";
             }
-            TaiKhoan taiKhoan = new TaiKhoan(username, pass, new QuyenDAOImpl().getRole(5), null, null);
+            TaiKhoan taiKhoan = new TaiKhoan(username, pass, quyenDAO.getRole(5), null, null);
             Integer temp = khachHangDAOImpl.insertCustomer(customer, taiKhoan);
 
             if (temp != 0) {
@@ -405,8 +408,18 @@ public class UserController {
     @RequestMapping(value = "payment")
     public String payment(HttpServletRequest request, HttpSession session, ModelMap model) {
         DonHang b = donHangDAOImpl.getBillUnBuy(((KhachHang) session.getAttribute("customer")).getMaKH());
+        List<CTDonHang> cts = ctDonHangDAOImpl.getDetailBills(b.getMaDH());
         long sum = 0;
-        for (CTDonHang ct : b.getCtDonHangs()) {
+        for (CTDonHang ct : cts) {
+            //Kiem tra slt
+            SanPham s = ct.getPk().getSanPham();
+            if (s.getSlt() < ct.getSl()){
+                String errorMsg = s.getTenSP()+ " chỉ còn " + s.getSlt() + " sản phẩm!";
+                model.addAttribute("errorMsg", errorMsg);
+                showDetailBills(request, model, session);
+                return "User/cart";
+            }
+            
             sum = sum + ct.getPk().getSanPham().getGia() * ct.getSl()
                     * (100 - chiTietKMDAOImpl.getDiscount(ct.getPk().getSanPham().getMaSP())) / 100;
             System.out.println(sum);
