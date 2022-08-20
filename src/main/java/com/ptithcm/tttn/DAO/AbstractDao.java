@@ -51,7 +51,7 @@ public class AbstractDao<T> implements Dao<T> {
                     break;
             }
             trans.commit();
-        } catch (HibernateException e) {
+        } catch (Throwable e) {
             if (trans != null) {
                 trans.rollback();
             }
@@ -87,7 +87,7 @@ public class AbstractDao<T> implements Dao<T> {
             trans.commit();
 
             return list;
-        } catch (HibernateException e) {
+        } catch (Throwable e) {
 //            LOGGER.error(e.getMessage(), e);
             e.printStackTrace();
         } finally {
@@ -103,7 +103,7 @@ public class AbstractDao<T> implements Dao<T> {
         try {
             Session session = sessionFactory.openSession();
             return (T) session.get(type, (Serializable) id);
-        } catch (HibernateException e) {
+        } catch (Throwable e) {
             e.printStackTrace();
 //            LOGGER.error(e.getMessage(), e);
         }
