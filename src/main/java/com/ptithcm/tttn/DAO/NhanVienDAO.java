@@ -2,6 +2,7 @@ package com.ptithcm.tttn.DAO;
 
 
 import com.ptithcm.tttn.entity.NhanVien;
+import java.util.ArrayList;
 
 import java.util.List;
 
@@ -15,5 +16,7 @@ public interface NhanVienDAO extends Dao<NhanVien> {
     List<NhanVien> getAllStaff();
 
     List<NhanVien> searchAllStaff(String hoTen);
+    
+    List<NhanVien> getShippers();
 
 }

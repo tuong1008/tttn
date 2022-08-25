@@ -2,12 +2,14 @@ package com.ptithcm.tttn.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ptithcm.tttn.DAO.*;
+import com.ptithcm.tttn.entity.CTDonHang;
 import com.ptithcm.tttn.entity.CTPhieuDat;
 import com.ptithcm.tttn.entity.CTPhieuDatPK;
 import com.ptithcm.tttn.entity.CTPhieuNhap;
 import com.ptithcm.tttn.entity.CTPhieuNhapPK;
 import com.ptithcm.tttn.entity.ChiTietKM;
 import com.ptithcm.tttn.entity.ChiTietKMPK;
+import com.ptithcm.tttn.entity.DonHang;
 import com.ptithcm.tttn.entity.KhachHang;
 import com.ptithcm.tttn.entity.KhuyenMai;
 import com.ptithcm.tttn.entity.LoaiSP;
@@ -24,6 +26,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,7 +94,12 @@ public class AdminController {
 
     @Autowired
     KhuyenMaiDAO khuyenMaiDAO;
+    
+    @Autowired
+    DonHangDAO donHangDAO;
 
+    @Autowired
+    CTDonHangDAO ctDonHangDAO;
     @RequestMapping("login")
     public String login(HttpSession session) {
         session.removeAttribute("staff");
@@ -694,5 +702,109 @@ public class AdminController {
         pagedListHolder.setPageSize(10);
         model.addAttribute("pagedListHolder", pagedListHolder);
     }
+//BEGIN----------------- bill manager ---------------------//
 
+	@RequestMapping("billUnConfirm")
+	public String billUnConfirm(HttpServletRequest request, ModelMap model) {
+		List<DonHang> bills = donHangDAO.getBillUnconfirm();
+		Collections.sort(bills);
+		showBill(request, model, bills);
+		model.addAttribute("nameBill", "billUnConfirm");
+		return "Admin/bill";
+	}
+	
+	@RequestMapping("billCancel")
+	public String billCancel(HttpServletRequest request, ModelMap model, HttpSession session) {
+		List<DonHang> bills = donHangDAO.getBillCancel();
+		Collections.sort(bills);
+		showBill(request, model, bills);
+		model.addAttribute("nameBill", "billCancel");
+		return "Admin/bill";
+	}
+	
+	@RequestMapping("billComplete")
+	public String billComplete(HttpServletRequest request, ModelMap model, HttpSession session) {
+		List<DonHang> bills = donHangDAO.getBillComplete(session);
+		Collections.sort(bills);
+		showBill(request, model, bills);
+		model.addAttribute("nameBill", "billComplete");
+		return "Admin/bill";
+	}
+	
+	@RequestMapping("billDelivery")
+	public String billDelivery(HttpServletRequest request, ModelMap model, HttpSession session) {
+		List<DonHang> bills = donHangDAO.getBillDelivering(session);
+		Collections.sort(bills);
+		showBill(request, model, bills);
+		model.addAttribute("nameBill", "billDelivery");
+		return "Admin/bill";
+	}
+
+	@RequestMapping(value = "billUnConfirm", params = "btnSearch")
+	public String searchBillUnConfirm(HttpServletRequest request, ModelMap model) {
+		showBill(request, model, donHangDAO.searchBills(request.getParameter("from"), request.getParameter("to")));
+		model.addAttribute("nameBill", "billUnConfirm");
+		return "Admin/bill";
+	}
+	@RequestMapping(value = "billComplete", params = "btnSearch")
+	public String searchBillComplete(HttpServletRequest request, ModelMap model) {
+		showBill(request, model, donHangDAO.searchBills(request.getParameter("from"), request.getParameter("to")));
+		model.addAttribute("nameBill", "billComplete");
+		return "Admin/bill";
+	}
+
+
+	@RequestMapping(value = "billCancel", params = "btnSearch")
+	public String searchbillCancel(HttpServletRequest request, ModelMap model) {
+		showBill(request, model, donHangDAO.searchBills(request.getParameter("from"), request.getParameter("to")));
+		return "Admin/billCancel";
+	}
+
+	public void showBill(HttpServletRequest request, ModelMap model, List<DonHang> bills) {
+		PagedListHolder pagedListHolder = new PagedListHolder(bills);
+		int page = ServletRequestUtils.getIntParameter(request, "p", 0);
+		pagedListHolder.setPage(page);
+		pagedListHolder.setMaxLinkedPages(5);
+		pagedListHolder.setPageSize(10);
+		model.addAttribute("pagedListHolder", pagedListHolder);
+	}
+
+	@RequestMapping(value = "billDetail/{id}.htm")
+	public String billDetail(HttpServletRequest request, ModelMap model, @PathVariable("id") String id) {
+		List<CTDonHang> ctDonHangs = ctDonHangDAO.getDetailBills(id);
+		model.addAttribute("list", ctDonHangs);
+		model.addAttribute("listNV", nhanVienDAO.getShippers());
+		model.addAttribute("bill", donHangDAO.getOne(DonHang.class, id));
+		return "Admin/billDetail";
+	}
+
+	@RequestMapping(value = "billDetail/{id}.htm", params = "btnBrower")
+	public String billDetailBrower(HttpServletRequest request, ModelMap model, HttpSession session,
+			@PathVariable("id") String id) {
+		DonHang bill = donHangDAO.getOne(DonHang.class, id);
+		bill.setNhanVienG(nhanVienDAO.getOne(NhanVien.class, request.getParameter("maNVG")));
+		bill.setNhanVienD((NhanVien) session.getAttribute("staff"));
+		donHangDAO.update(bill);
+		return "redirect:/Admin/billUnConfirm.htm";
+	}
+
+	@RequestMapping(value = "billDetail/{id}.htm", params = "btnCancel")
+	public String billDetailCancel(HttpServletRequest request, ModelMap model, HttpSession session,
+			@PathVariable("id") String id) {
+		DonHang bill = donHangDAO.getOne(DonHang.class, id);
+		bill.setNhanVienD((NhanVien) session.getAttribute("staff"));
+		bill.setTrangThai(-1);
+		donHangDAO.update(bill);
+		return "redirect:/Admin/billUnConfirm.htm";
+	}
+
+	@RequestMapping(value = "billDetail/{id}.htm", params = "btnConfirm")
+	public String billDetailConfirm(HttpServletRequest request, ModelMap model, HttpSession session,
+			@PathVariable("id") String id) {
+		DonHang bill = donHangDAO.getOne(DonHang.class, id);
+		bill.setNgayNhan(new Date());
+		donHangDAO.update(bill);
+		return "redirect:/Admin/billDelivery.htm";
+	}
+//END----------------bill manager
 }

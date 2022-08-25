@@ -3,6 +3,7 @@ package com.ptithcm.tttn.DAOImpl;
 import com.ptithcm.tttn.DAO.AbstractDao;
 import com.ptithcm.tttn.DAO.NhanVienDAO;
 import com.ptithcm.tttn.entity.NhanVien;
+import java.util.ArrayList;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -48,6 +49,11 @@ public class NhanVienDAOImpl extends AbstractDao<NhanVien> implements NhanVienDA
         session.getTransaction().commit();
 
         return list.isEmpty() ? 0 : Integer.parseInt(list.get(0));
+    }
+
+    @Override
+    public List<NhanVien> getShippers() {
+        return getFromQuery("FROM NhanVien Where taiKhoan.quyen.tenQuyen = 'Shipper' ", NhanVien.class);
     }
 
 }

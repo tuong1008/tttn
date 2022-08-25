@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "DONHANG")
-public class DonHang implements Serializable {
+public class DonHang implements Serializable, Comparable<DonHang> {
 
     @Id
     @Column(name = "MADH")
@@ -196,6 +196,11 @@ public class DonHang implements Serializable {
 
     public void setHoaDons(Collection<HoaDon> hoaDons) {
         this.hoaDons = hoaDons;
+    }
+
+    @Override
+    public int compareTo(DonHang o) {
+        return o.ngayTao.compareTo(ngayTao);
     }
 
 }
