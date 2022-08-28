@@ -12,9 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 public class NhanVienDAOImpl extends AbstractDao<NhanVien> implements NhanVienDAO {
-    @Autowired
-    SessionFactory factory;
-
     @Override
     public NhanVien getStaff(String username) {
         List<NhanVien> list = getFromQuery("FROM NhanVien n where n.taiKhoan.tenDN = ?", NhanVien.class, username);
@@ -38,17 +35,20 @@ public class NhanVienDAOImpl extends AbstractDao<NhanVien> implements NhanVienDA
 
     @Override
     public Integer getMaxNumberByName(String username) {
-        Session session = factory.getCurrentSession();
-        session.beginTransaction();
-
-        String hql = "SELECT max(substring(tenDN,length(tenDN),length(tenDN))) FROM NhanVien WHERE substring(tenDN,1,length(tenDN)-1) =:name";
-        Query query = session.createQuery(hql);
-        query.setParameter("name", username);
-
-        List<String> list = query.list();
-        session.getTransaction().commit();
-
+        List<String> list = getFromQuery("SELECT max(substring(tenDN,length(tenDN),length(tenDN))) FROM NhanVien WHERE substring(tenDN,1,length(tenDN)-1) =?", String.class, username);
         return list.isEmpty() ? 0 : Integer.parseInt(list.get(0));
+        
+//        Session session = sessionFactory.openSession();
+//        session.beginTransaction();
+//
+//        String hql = "SELECT max(substring(tenDN,length(tenDN),length(tenDN))) FROM NhanVien WHERE substring(tenDN,1,length(tenDN)-1) =:name";
+//        Query query = session.createQuery(hql);
+//        query.setParameter("name", username);
+//
+//        List<String> list = query.list();
+//        session.getTransaction().commit();
+//        session.close();
+//        return list.isEmpty() ? 0 : Integer.parseInt(list.get(0));
     }
 
     @Override

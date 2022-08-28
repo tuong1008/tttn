@@ -13,7 +13,7 @@ public class LoaiSP implements Serializable {
     @Column(name = "MALOAI")
     private String maLoai;
 
-    @Column(name = "TENLOAI")
+    @Column(name = "TENLOAI", columnDefinition = "nvarchar(255)")
     private String tenLoai;
 
     @OneToMany(mappedBy = "loaiSP", fetch = FetchType.LAZY)

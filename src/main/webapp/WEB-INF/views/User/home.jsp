@@ -231,8 +231,8 @@
 <header class="header-app">
     <%@include file="/WEB-INF/views/User/Menu/header.jsp" %>
 </header>
-
-
+<fmt:setLocale value="vi_VN" scope="session"/>
+<fmt:setBundle basename = "com.tutorialspoint.Example" var = "lang"/>
 <div class="container-app">
     <div class="slide">
         <div class="slide__list">
@@ -347,7 +347,8 @@
                         </a>
                         <a href="User/helmet/${p.maSP}.htm" class="card-item__name">${p.tenSP}</a>
                         <div class="card-item__cost">
-                            <p class="cost__unit-actiont"><fmt:formatNumber type="currency" value="${p.gia}"/></p>
+                            <p class="cost__unit-actiont">
+                                <fmt:formatNumber type="currency" value="${p.gia}" /></p>
                         </div>
                         <div class="card-item__btn">
                             <a href="User/helmet/${p.maSP}.htm" class="btn__buy btn">MUA NGAY</a> <a
@@ -367,7 +368,9 @@
                         </a>
                         <a href="User/helmet/${p.maSP}.htm" class="card-item__name">${p.tenSP}</a>
                         <div class="card-item__cost">
-                            <p class="cost__unit-actiont"><fmt:formatNumber type="currency" value="${p.gia}"/></p>
+                            
+                            <p class="cost__unit-actiont">
+                                <fmt:formatNumber type="currency" value="${p.gia}"/></p>
                         </div>
                         <div class="card-item__btn">
                             <a href="User/helmet/${p.maSP}.htm" class="btn__buy btn">MUA NGAY</a> <a
@@ -392,10 +395,12 @@
                     <div class="card-item__cost">
                         <c:if test="${p.value>0}">
                             <span class="cost__discount">- ${p.value} %</span>
-                            <span class="cost__unit"> <fmt:formatNumber type="currency" value="${p.key.gia}"/> </span>
+                            <span class="cost__unit"> 
+                                <fmt:formatNumber type="currency" value="${p.key.gia}"/> </span>
                         </c:if>
                         <c:if test="${p.value==0}">
-                            <span class="cost__unit-action"> <fmt:formatNumber type="currency" value="${p.key.gia}"/> </span>
+                            <span class="cost__unit-action"> 
+                                <fmt:formatNumber type="currency" value="${p.key.gia}"/> </span>
                         </c:if>
                     </div>
                     <div class="card-item__btn">

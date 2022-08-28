@@ -23,10 +23,10 @@ public class SanPham implements Serializable {
     @Column(name = "MASP")
     private String maSP;
 
-    @Column(name = "TENSP")
+    @Column(name = "TENSP", columnDefinition = "nvarchar(255)")
     private String tenSP;
 
-    @Column(name = "MOTA")
+    @Column(name = "MOTA", columnDefinition = "nvarchar(255)")
     private String moTa;
 
     @Column(name = "HINHANH")

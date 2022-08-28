@@ -27,7 +27,7 @@ public class KhuyenMai implements Serializable {
     @DateTimeFormat(pattern = "MM/dd/yyyy")
     private Date ngayKT;
 
-    @Column(name = "MOTA")
+    @Column(name = "MOTA", columnDefinition = "nvarchar(255)")
     private String moTa;
 
     @ManyToOne

@@ -19,10 +19,10 @@ public class DonHang implements Serializable, Comparable<DonHang> {
     @Column(name = "TRANGTHAI")
     private int trangThai;
 
-    @Column(name = "HOTENNN")
+    @Column(name = "HOTENNN", columnDefinition = "nvarchar(255)")
     private String hoTenNN;
 
-    @Column(name = "DIACHINN")
+    @Column(name = "DIACHINN", columnDefinition = "nvarchar(255)")
     private String diaChiNN;
 
     @Column(name = "SDTNN")

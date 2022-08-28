@@ -98,7 +98,6 @@
 .header-top-left__link:hover {
     border: solid 1px black;
     background-color: white;
-    box-shadow: 0 0 4px;
     transition: 1s;
 }
 

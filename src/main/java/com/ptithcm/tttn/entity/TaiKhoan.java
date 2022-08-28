@@ -29,6 +29,14 @@ public class TaiKhoan implements Serializable {
 
     }
 
+    public TaiKhoan(String tenDN, String matKhau, Quyen quyen) {
+        this.tenDN = tenDN;
+        this.matKhau = matKhau;
+        this.quyen = quyen;
+    }
+    
+    
+
     public TaiKhoan(String tenDN, String matKhau, Quyen quyen, Collection<KhachHang> khachHangs,
                     Collection<NhanVien> nhanViens) {
         super();

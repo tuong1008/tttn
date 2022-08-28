@@ -26,12 +26,6 @@
                        enctype="multipart/form-data" method="post" modelAttribute="product" class="form-horizontal">
                 <div class="form-group">
                     <div class="form-element">
-                        <label class="label-title" for="">Mã sản phẩm: </label>
-                        <form:input type="text" placeholder="Nhập mã" path="maSP"/>
-                        <form:errors class="error" path="maSP"/>    
-                    </div>
-
-                    <div class="form-element">
                         <label class="label-title" for="">Tên sản phẩm: </label>
                         <form:input path="tenSP" class="form-control" placeholder="Nhập tên sản phẩm"
                                     id="tenSP"/>
@@ -74,7 +68,7 @@
             <h2>DANH SÁCH SẢN PHẨM</h2>
             <jsp:useBean id="pagedListHolder" scope="request"
                          type="org.springframework.beans.support.PagedListHolder"/>
-            <c:url value="Admin/product.htm" var="pagedLink">
+            <c:url value="Admin/productList.htm" var="pagedLink">
                 <c:param name="p" value="~"/>
             </c:url>
             <div>

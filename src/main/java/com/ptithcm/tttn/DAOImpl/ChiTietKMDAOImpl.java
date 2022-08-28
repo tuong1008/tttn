@@ -31,4 +31,9 @@ public class ChiTietKMDAOImpl extends AbstractDao<ChiTietKM> implements ChiTietK
         return list.isEmpty() ? 0 : list.get(0);
     }
 
+    @Override
+    public List<ChiTietKM> getDetailPromotions(Integer id) {
+        return getFromQuery("FROM ChiTietKM WHERE pk.khuyenMai.maKM =?", ChiTietKM.class, id);
+    }
+
 }

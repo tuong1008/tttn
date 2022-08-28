@@ -34,7 +34,32 @@
 -hóa đơn và mã số thuế tự động lập sau khi nhân viên giao hàng xg
 -thống kê thì thống kê tất cả đơn hàng trạng thái 1 từ ngày tháng năm nào đến ngày tháng năm nào, theo ngày tạo, sp sẽ có tất cả các tháng
 
-TEST CASE có nhà cung cấp mà chưa có sản phẩm
-KH, NV nhập chung
-tạo phiếu nhập bị lỗi
+lỗi khi sửa loại sản phẩm
+không hiện sản phẩm 0đ và hết hàng
+thêm vào giỏ hàng mà vượt quá số lượng tồn thì báo luôn
+tạo phiếu nhập, tên dài quá bị nổ, nhập hàng xg bỏ option Tạo phiếu nhập
+phân trang chỗ User/home hình như có vấn đề khi chọn thể loại
+lỗi phân trang
+
+chuong 1 bo sung theo co
+hinh co watermark
+database diagram
+sua phan trang
+approver chi duyet don hang
+khong duoc sua ma 
+sua loai sp bị loi
+sua chi tiet san pham
+đăng ký bị lỗi
+quên mật khẩu
+Tao phieu dat bị loi khi them moi nha cung cap
+chua an tao phieu nhap
+cho nhap so luong gio hang, thay doi so luong
+dat hang thanh cong shơ lại thong tin
+duyet don hang moi giam so luong
+danh sach shippẻr trong don hang chua cap nhat
+cap nhat trang thai 
+rang buoc thoi gian khuyen mai trong qua khu
+
 QL phieu nhap
+hiện username trong bảng QL nhân viên
+

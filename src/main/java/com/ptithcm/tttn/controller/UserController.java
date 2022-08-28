@@ -60,7 +60,9 @@ public class UserController {
     public String index(HttpServletRequest request, HttpSession session, ModelMap model) {
         session.setAttribute("brands", nhaCungCapDAOImpl.getSuppliers());
         session.setAttribute("categorys", loaiSPDAOImpl.getListCategory());
-
+        
+        showProducts(request, model, sanPhamDAOImpl.getListProductToSale());
+        
         Map<SanPham, Integer> newProducts = new HashMap<>();
         for (SanPham s : sanPhamDAOImpl.getListNewProduct()) {
             newProducts.put(s, chiTietKMDAOImpl.getDiscount(s.getMaSP()));
@@ -79,8 +81,6 @@ public class UserController {
         session.setAttribute("newProducts", newProducts);
         session.setAttribute("hotProducts", hotProducts);
         session.setAttribute("hotSaleProducts", hotSaleProducts);
-
-        showProducts(request, model, sanPhamDAOImpl.getListProduct());
 
         return "User/home";
     }

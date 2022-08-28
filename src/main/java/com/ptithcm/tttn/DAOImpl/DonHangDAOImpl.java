@@ -66,6 +66,7 @@ public class DonHangDAOImpl extends AbstractDao<DonHang> implements DonHangDAO {
     @Override
     public List<Revenue> revenue(String from, String to) {
         Session session = factory.getCurrentSession();
+        Transaction tran = session.beginTransaction();
         String sql = "exec DoanhThu '" + from + "' , '" + to + "'";
         SQLQuery query = session.createSQLQuery(sql);
         query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
@@ -75,6 +76,7 @@ public class DonHangDAOImpl extends AbstractDao<DonHang> implements DonHangDAO {
             Map row = (Map) object;
             revenues.add(new Revenue((Integer) row.get("NAM"), (Integer) row.get("THANG"), ((BigDecimal) row.get("DOANHTHU")).intValue()));
         }
+        tran.commit();
         return revenues;
     }
 

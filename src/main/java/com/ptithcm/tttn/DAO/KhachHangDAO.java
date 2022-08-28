@@ -14,4 +14,8 @@ public interface KhachHangDAO extends Dao<KhachHang> {
     Integer insertCustomer(KhachHang customer, TaiKhoan taiKhoan);
 
     List<KhachHang> getAllCustomer(SessionFactory factory);
+    
+    Integer setStatus(int status, String idCustomer);
+    
+    List<KhachHang> searchCustomers(String nameCustomer);
 }

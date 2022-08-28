@@ -29,11 +29,11 @@ public class ChiTietKM implements Serializable {
         this.giamGia = giamGia;
     }
 
-    public ChiTietKMPK getChiTietKMPK() {
+    public ChiTietKMPK getPk() {
         return pk;
     }
 
-    public void setChiTietKMPK(ChiTietKMPK pk) {
+    public void setPk(ChiTietKMPK pk) {
         this.pk = pk;
     }
 

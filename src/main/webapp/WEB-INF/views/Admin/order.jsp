@@ -77,6 +77,7 @@
                             let inputGia = document.createElement("input");
                             input.type = "number";
                             input.name = "soLuong";
+                            input.min = 1;
                             input.style = "width: 50px;margin: 10px 20px 10px 5px;";
                             inputGia.type = "number";
                             inputGia.name = "gia";
@@ -106,6 +107,7 @@
                 let input = document.createElement("input");
                 input.type = "number";
                 input.name = "soLuong";
+                input.min = 1;
                 input.style = "width: 50px;margin: 10px 20px 10px 5px;";
                 let inputGia = document.createElement("input");
                 inputGia.type = "number";

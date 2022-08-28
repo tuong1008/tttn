@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface SanPhamDAO extends Dao<SanPham> {
     List<SanPham> getListProduct();
+    
+    List<SanPham> getListProductToSale();
 
     List<SanPham> getListHotSaleProduct(int bigSaleOffPercent);
 

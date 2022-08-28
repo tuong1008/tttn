@@ -13,13 +13,13 @@ public class NhaCungCap implements Serializable {
     @Column(name = "MANCC")
     private String maNCC;
 
-    @Column(name = "TENNCC")
+    @Column(name = "TENNCC", columnDefinition = "nvarchar(255)")
     private String tenNCC;
 
     @Column(name = "SDT")
     private String sdt;
 
-    @Column(name = "DIACHI")
+    @Column(name = "DIACHI", columnDefinition = "nvarchar(255)")
     private String diaChi;
 
     @Column(name = "EMAIL")

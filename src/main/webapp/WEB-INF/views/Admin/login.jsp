@@ -15,7 +15,7 @@
         .container-app {
             background-color: lightgray;
             height: 100vh;
-
+            background-image: url(/tttn/resource/img/background-dashboard.webp);
             align-items: center;
         }
 
@@ -74,6 +74,7 @@
     <base href="${pageContext.servletContext.contextPath}/">
 </head>
 <body>
+    <fmt:setLocale value="vi_VN" scope="session"/>
 <div class="container-app">
     <div class="logo-app">
         <img src="resource/img/FPTShop_logo.png" alt="">

@@ -46,7 +46,7 @@ span {
 			<p> <span>Số điện thoại người nhận:</span>${bill.sdtNN}</p>
 			<p> <span>Email người nhận:</span>${bill.emailNN}</p>
 			<p> <span>Ngày tạo:</span>${bill.ngayTao}</p>
-			<p> <span>Ngày nhận:</span>${bill.ngayNhans}</p>
+			<p> <span>Ngày nhận:</span>${bill.ngayNhan}</p>
 			<p> <span>Tổng tiền:</span><fmt:formatNumber type = "currency" value = "${bill.tongTien}" /></p>
 		</div>
 		

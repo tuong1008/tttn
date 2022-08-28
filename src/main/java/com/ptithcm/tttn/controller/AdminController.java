@@ -2,6 +2,7 @@ package com.ptithcm.tttn.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ptithcm.tttn.DAO.*;
+import com.ptithcm.tttn.common.Utils;
 import com.ptithcm.tttn.entity.CTDonHang;
 import com.ptithcm.tttn.entity.CTPhieuDat;
 import com.ptithcm.tttn.entity.CTPhieuDatPK;
@@ -19,6 +20,7 @@ import com.ptithcm.tttn.entity.PhieuDat;
 import com.ptithcm.tttn.entity.PhieuNhap;
 import com.ptithcm.tttn.entity.SanPham;
 import com.ptithcm.tttn.entity.TaiKhoan;
+import com.ptithcm.tttn.model.Revenue;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -26,6 +28,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import org.hibernate.SessionFactory;
@@ -94,12 +97,13 @@ public class AdminController {
 
     @Autowired
     KhuyenMaiDAO khuyenMaiDAO;
-    
+
     @Autowired
     DonHangDAO donHangDAO;
 
     @Autowired
     CTDonHangDAO ctDonHangDAO;
+
     @RequestMapping("login")
     public String login(HttpSession session) {
         session.removeAttribute("staff");
@@ -190,17 +194,17 @@ public class AdminController {
             BindingResult errors) {
         int maQuyen = Integer.parseInt(request.getParameter("quyen"));
         if (validateStaff(request, staff, errors)) {
-            TaiKhoan k = new TaiKhoan("345", "1111", quyenDAO.getRole(maQuyen), null, null);
-
-            String temp = taiKhoanDAOImpl.save(k);
-
+            TaiKhoan k = new TaiKhoan(Utils.createUserName(staff.getHoTen()), "1111",
+                    quyenDAO.getRole(maQuyen));
+            System.out.println(k.getTenDN());
+            String result1 = taiKhoanDAOImpl.save(k);
             staff.setTaiKhoan(k);
-
-            String temp1 = nhanVienDAO.save(staff);
-
-            if (temp1.isEmpty()) {
+            staff.setMaNV(nhanVienDAO.nextPK("NhanVien", "NV", "maNV"));
+            String result2 = nhanVienDAO.save(staff);
+            if (result2.equals("")) {
                 model.addAttribute("message", "Thêm thành công");
                 model.addAttribute("staff", new NhanVien());
+
             } else {
                 model.addAttribute("message", "Thêm thất bại, vui lòng kiểm tra lại thông tin" + staff);
             }
@@ -214,16 +218,17 @@ public class AdminController {
     @RequestMapping(value = "staff", params = "btnEdit", method = RequestMethod.POST)
     public String editStaff(HttpServletRequest request, ModelMap model, @ModelAttribute("staff") NhanVien staff,
             BindingResult errors) {
+        int maQuyen = Integer.parseInt(request.getParameter("quyen"));
         if (!validateStaff(request, staff, errors)) {
             System.out.println("Chao edit post");
             showStaffs(request, model, nhanVienDAO.getAllStaff());
             return "Admin/staff";
         }
-        System.out.println("Dia Chi: " + staff.getDiaChi());
-        System.out.println("Quyen: " + staff.getTaiKhoan().getTenDN());
+        TaiKhoan account = taiKhoanDAOImpl.getAccount(staff.getTaiKhoan().getTenDN());
+        account.setQuyen(quyenDAO.getRole(maQuyen));
+        String temp0 = taiKhoanDAOImpl.update(account);
         String temp = nhanVienDAO.update(staff);
-
-        if (temp.isEmpty()) {
+        if (temp.equals("")) {
             model.addAttribute("message", "Sửa thành công");
             model.addAttribute("staff", new NhanVien());
             model.addAttribute("btnStatus", "btnAdd");
@@ -316,16 +321,62 @@ public class AdminController {
     }
 //END-----------Staff
 
-//BEGIN-------------Product Management
-    @RequestMapping("product")
-    public String product(HttpServletRequest request, ModelMap model, HttpSession session) {
+//BEGIN---------Customer
+    @RequestMapping("customer")
+    public String customer(HttpServletRequest request, ModelMap model) {
+        showCustomer(request, model, khachHangDAO.getAllCustomer(factory));
+        return "Admin/customer";
+    }
 
+    @RequestMapping(value = "customer", params = "btnSearch")
+    public String searchCustomer(HttpServletRequest request, ModelMap model) {
+        showCustomer(request, model, khachHangDAO.searchCustomers(request.getParameter("name")));
+        return "Admin/customer";
+    }
+
+    @RequestMapping(value = "customer/{id}.htm", params = "linkBlock")
+    public String blockCustomer(HttpServletRequest request, ModelMap model, @PathVariable("id") String id) {
+        if (khachHangDAO.setStatus(0, id) == 1) {
+            model.addAttribute("message", "Block thành công");
+        }
+        showCustomer(request, model, khachHangDAO.getAllCustomer(factory));
+        return "redirect:/Admin/customer.htm";
+    }
+
+    @RequestMapping(value = "customer/{id}.htm", params = "linkUnBlock")
+    public String unBlockCustomer(HttpServletRequest request, ModelMap model, @PathVariable("id") String id) {
+        if (khachHangDAO.setStatus(1, id) == 1) {
+            model.addAttribute("message", "UnBlock thành công");
+        }
+        showCustomer(request, model, khachHangDAO.getAllCustomer(factory));
+        return "redirect:/Admin/customer.htm";
+    }
+
+    public void showCustomer(HttpServletRequest request, ModelMap model, List<KhachHang> customers) {
+        PagedListHolder pagedListHolder = new PagedListHolder(customers);
+        int page = ServletRequestUtils.getIntParameter(request, "p", 0);
+        pagedListHolder.setPage(page);
+        pagedListHolder.setMaxLinkedPages(5);
+        pagedListHolder.setPageSize(10);
+        model.addAttribute("pagedListHolder", pagedListHolder);
+    }
+//END-----------Customer
+
+//BEGIN-------------Product Management
+    @RequestMapping("productList")
+    public String productList(HttpServletRequest request, ModelMap model) {
         showProducts(request, model, sanPhamDAO.getListProduct());
 
         model.addAttribute("btnStatus", "btnAdd");
         model.addAttribute("categories", loaiSPDAO.getListCategory());
         model.addAttribute("suppliers", nhaCungCapDAO.getSuppliers());
         model.addAttribute("product", new SanPham());
+        return "Admin/product";
+    }
+
+    @RequestMapping(value = "productList", params = "btnSearch")
+    public String SearchProductList(HttpServletRequest request, ModelMap model) {
+//		showPhones(request, model, Phone.searchPhones(factory, request.getParameter("name")));
         return "Admin/product";
     }
 
@@ -349,6 +400,7 @@ public class AdminController {
         }
         sp.setGia(0);
         sp.setSlt(0);
+        sp.setMaSP(sanPhamDAO.nextPK("SanPham","SP" , "maSP"));
         sp.setHinhAnh(sp.getMaSP() + extension);
         String temp1 = sanPhamDAO.save(sp);
 
@@ -376,6 +428,19 @@ public class AdminController {
         showProducts(request, model, sanPhamDAO.getListProduct());
 
         return "Admin/product";
+    }
+
+    @RequestMapping(value = "product/{id}.htm", params = "linkDelete")
+    public String deleteStaff(HttpServletRequest request, ModelMap model, @PathVariable("id") String id) {
+
+        SanPham sp = sanPhamDAO.getOne(SanPham.class, id);
+        String result = sanPhamDAO.delete(sp);
+        if (result.equals("")) {
+            model.addAttribute("message", "Xóa thành công");
+        } else {
+            model.addAttribute("message", result);
+        }
+        return "redirect:/Admin/productList.htm";
     }
 
     public void showProducts(HttpServletRequest request, ModelMap model, List<SanPham> products) {
@@ -547,11 +612,30 @@ public class AdminController {
 //END-------------Order
 //BEGIN-------------Promotion
 
+    @RequestMapping("promotionList")
+    public String promotionList(HttpServletRequest request, ModelMap model) {
+        showPromotion(request, model, khuyenMaiDAO.getAll());
+        return "Admin/promotionList";
+    }
+
     @RequestMapping("promotion")
     public String getPromotionPage(HttpServletRequest request, ModelMap model) {
         model.addAttribute("btnStatus", "btnAdd");
         model.addAttribute("dsSanPham", sanPhamDAO.getListProduct());
         return "Admin/promotion";
+    }
+
+    @RequestMapping(value = "promotionList", params = "btnSearch")
+    public String SearchPromotionList(HttpServletRequest request, ModelMap model) {
+//		showPhones(request, model, Phone.searchPhones(factory, request.getParameter("name")));
+        System.out.println("chua viet Search Promotion");
+        return "Admin/promotionList";
+    }
+
+    @RequestMapping("promotionDetail/{id}.htm")
+    public String promotionDetailList(HttpServletRequest request, ModelMap model, @PathVariable("id") Integer id) {
+        showPromotionDetail(request, model, chiTietKMDAO.getDetailPromotions(id));
+        return "Admin/promotionDetail";
     }
 
     @RequestMapping(value = "promotion", params = "btnAdd", method = RequestMethod.POST)
@@ -577,7 +661,7 @@ public class AdminController {
 
             ChiTietKM ct = new ChiTietKM();
 
-            ct.setChiTietKMPK(pk);
+            ct.setPk(pk);
             ct.setGiamGia(Integer.valueOf(giamGias[i]));
 
             chiTietKMDAO.save(ct);
@@ -585,6 +669,24 @@ public class AdminController {
         model.addAttribute("btnStatus", "btnAdd");
         model.addAttribute("dsSanPham", sanPhamDAO.getListProduct());
         return "Admin/promotion";
+    }
+
+    public void showPromotionDetail(HttpServletRequest request, ModelMap model, List<ChiTietKM> promotions) {
+        PagedListHolder pagedListHolder = new PagedListHolder(promotions);
+        int page = ServletRequestUtils.getIntParameter(request, "p", 0);
+        pagedListHolder.setPage(page);
+        pagedListHolder.setMaxLinkedPages(5);
+        pagedListHolder.setPageSize(10);
+        model.addAttribute("pagedListHolder", pagedListHolder);
+    }
+
+    public void showPromotion(HttpServletRequest request, ModelMap model, List<KhuyenMai> promotions) {
+        PagedListHolder pagedListHolder = new PagedListHolder(promotions);
+        int page = ServletRequestUtils.getIntParameter(request, "p", 0);
+        pagedListHolder.setPage(page);
+        pagedListHolder.setMaxLinkedPages(5);
+        pagedListHolder.setPageSize(10);
+        model.addAttribute("pagedListHolder", pagedListHolder);
     }
 //END-------------Promotion    
 //BEGIN-------------Import
@@ -642,7 +744,7 @@ public class AdminController {
 //BEGIN-------------Supplier
     @RequestMapping("supplier")
     public String supplier(HttpServletRequest request, ModelMap model, HttpSession session) {
-        showSupplier(request, model, nhaCungCapDAO.getSuppliers());
+        showSuppliers(request, model, nhaCungCapDAO.getSuppliers());
 
         model.addAttribute("btnStatus", "btnAdd");
         model.addAttribute("supplier", new NhaCungCap());
@@ -652,7 +754,6 @@ public class AdminController {
     @RequestMapping(value = "supplier", params = "btnAdd", method = RequestMethod.POST)
     public String addSupplier(HttpServletRequest request, ModelMap model, @ModelAttribute("supplier") NhaCungCap ncc,
             BindingResult errors) {
-//        ncc.setMaNCC(nhaCungCapDAO.nextPK("NhaCungCap", "CC", "maNCC"));
         String temp1 = nhaCungCapDAO.save(ncc);
 
         if (temp1.isEmpty()) {
@@ -662,12 +763,57 @@ public class AdminController {
             model.addAttribute("message", "Thêm thất bại, vui lòng kiểm tra lại thông tin" + ncc);
         }
         model.addAttribute("btnStatus", "btnAdd");
-        showSupplier(request, model, nhaCungCapDAO.getSuppliers());
+        showSuppliers(request, model, nhaCungCapDAO.getSuppliers());
 
         return "Admin/supplier";
     }
 
-    public void showSupplier(HttpServletRequest request, ModelMap model, List<NhaCungCap> suppliers) {
+    @RequestMapping(value = "supplier", params = "btnEdit", method = RequestMethod.POST)
+
+    public String editSupplier(HttpServletRequest request, ModelMap model,
+            @ModelAttribute("supplier") NhaCungCap supplier, BindingResult errors) {
+        if (!validateSuppiler(request, supplier, errors)) {
+            System.out.println("Chao edit post");
+            showSuppliers(request, model, nhaCungCapDAO.getSuppliers());
+            return "Admin/supplier";
+        }
+        String result = nhaCungCapDAO.update(supplier);
+        if (result.equals("")) {
+            model.addAttribute("message", "Sửa thành công");
+            model.addAttribute("supplier", new NhaCungCap());
+            model.addAttribute("btnStatus", "btnAdd");
+        } else {
+            model.addAttribute("message", "Sửa thất bại" + supplier);
+            model.addAttribute("btnStatus", "btnEdit");
+        }
+        showSuppliers(request, model, nhaCungCapDAO.getSuppliers());
+        return "Admin/supplier";
+    }
+
+    @RequestMapping(value = "supplier/{id}.htm", params = "linkEdit")
+    public String editSupplier(HttpServletRequest request, ModelMap model, @PathVariable("id") String id) {
+        showSuppliers(request, model, nhaCungCapDAO.getSuppliers());
+        System.out.println("Chao edit");
+        model.addAttribute("btnStatus", "btnEdit");
+        NhaCungCap supplier = nhaCungCapDAO.getOne(NhaCungCap.class, id);
+        model.addAttribute("supplier", supplier);
+        return "Admin/supplier";
+    }
+
+    @RequestMapping(value = "supplier/{id}.htm", params = "linkDelete")
+    public String deleteSupplier(HttpServletRequest request, ModelMap model, @PathVariable("id") String id) {
+        NhaCungCap supplier = nhaCungCapDAO.getOne(NhaCungCap.class, id);
+        String result = nhaCungCapDAO.delete(supplier);
+        System.out.println("xin chao xoa");
+        if (result.equals("")) {
+            model.addAttribute("message", "Xóa thành công");
+        } else {
+            model.addAttribute("message", "Xóa thất bại");
+        }
+        return "redirect:/Admin/supplier.htm";
+    }
+
+    public void showSuppliers(HttpServletRequest request, ModelMap model, List<NhaCungCap> suppliers) {
         PagedListHolder pagedListHolder = new PagedListHolder(suppliers);
         int page = ServletRequestUtils.getIntParameter(request, "p", 0);
         pagedListHolder.setPage(page);
@@ -675,13 +821,33 @@ public class AdminController {
         pagedListHolder.setPageSize(5);
         model.addAttribute("pagedListHolder", pagedListHolder);
     }
-//END-------------Supplier
 
-    @RequestMapping("customer")
-    public String customer(HttpServletRequest request, ModelMap model) {
-        showCustomer(request, model, khachHangDAO.getAllCustomer(factory));
-        return "Admin/customer";
+    public Boolean validateSuppiler(HttpServletRequest request, NhaCungCap supplier, BindingResult errors) {
+        String checkname = "([\\p{L}\\s]+){1,50}";
+        String checkphone = "[0-9]{10,13}";
+        String checkemail = "^[A-Za-z0-9+_.-]+@(.+)$";
+        String checkaddress = "([\\p{L}\\s\\d\\,]+){1,200}";
+
+        if (supplier.getTenNCC().trim().matches(checkname) == false) {
+            errors.rejectValue("tenNCC", "supplier",
+                    "Họ tên không được để trống, chứa ký tự đặc biệt hoặc quá 50 ký tự!");
+        }
+        if (supplier.getSdt().trim().matches(checkphone) == false) {
+            errors.rejectValue("sdt", "supplier", "số điện thoại không đúng!");
+        }
+        if (supplier.getEmail().trim().matches(checkemail) == false) {
+            errors.rejectValue("email", "supplier", "email không đúng định dạng!");
+        }
+        if (supplier.getDiaChi().trim().matches(checkaddress) == false) {
+            errors.rejectValue("diaChi", "supplier",
+                    "Địa chỉ không được để trống, chứa ký tự đặc biệt hoặc quá 200 ký tự!");
+        }
+        if (errors.hasErrors()) {
+            return false;
+        }
+        return true;
     }
+//END-------------Supplier
 
     @RequestMapping("product-supplier")
     public void getProductsOfSupplier(HttpServletRequest request, ModelMap model, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
@@ -694,117 +860,174 @@ public class AdminController {
         mapper.writeValue(response.getOutputStream(), products);
     }
 
-    public void showCustomer(HttpServletRequest request, ModelMap model, List<KhachHang> customers) {
-        PagedListHolder pagedListHolder = new PagedListHolder(customers);
+//BEGIN----------------- bill manager ---------------------//
+    @RequestMapping("billUnConfirm")
+    public String billUnConfirm(HttpServletRequest request, ModelMap model) {
+        List<DonHang> bills = donHangDAO.getBillUnconfirm();
+        Collections.sort(bills);
+        showBill(request, model, bills);
+        model.addAttribute("nameBill", "billUnConfirm");
+        return "Admin/bill";
+    }
+
+    @RequestMapping("billCancel")
+    public String billCancel(HttpServletRequest request, ModelMap model, HttpSession session) {
+        List<DonHang> bills = donHangDAO.getBillCancel();
+        Collections.sort(bills);
+        showBill(request, model, bills);
+        model.addAttribute("nameBill", "billCancel");
+        return "Admin/bill";
+    }
+
+    @RequestMapping("billComplete")
+    public String billComplete(HttpServletRequest request, ModelMap model, HttpSession session) {
+        List<DonHang> bills = donHangDAO.getBillComplete(session);
+        Collections.sort(bills);
+        showBill(request, model, bills);
+        model.addAttribute("nameBill", "billComplete");
+        return "Admin/bill";
+    }
+
+    @RequestMapping("billDelivery")
+    public String billDelivery(HttpServletRequest request, ModelMap model, HttpSession session) {
+        List<DonHang> bills = donHangDAO.getBillDelivering(session);
+        Collections.sort(bills);
+        showBill(request, model, bills);
+        model.addAttribute("nameBill", "billDelivery");
+        return "Admin/bill";
+    }
+
+    @RequestMapping(value = "billUnConfirm", params = "btnSearch")
+    public String searchBillUnConfirm(HttpServletRequest request, ModelMap model) {
+        showBill(request, model, donHangDAO.searchBills(request.getParameter("from"), request.getParameter("to")));
+        model.addAttribute("nameBill", "billUnConfirm");
+        return "Admin/bill";
+    }
+
+    @RequestMapping(value = "billComplete", params = "btnSearch")
+    public String searchBillComplete(HttpServletRequest request, ModelMap model) {
+        showBill(request, model, donHangDAO.searchBills(request.getParameter("from"), request.getParameter("to")));
+        model.addAttribute("nameBill", "billComplete");
+        return "Admin/bill";
+    }
+
+    @RequestMapping(value = "billCancel", params = "btnSearch")
+    public String searchbillCancel(HttpServletRequest request, ModelMap model) {
+        showBill(request, model, donHangDAO.searchBills(request.getParameter("from"), request.getParameter("to")));
+        return "Admin/billCancel";
+    }
+
+    public void showBill(HttpServletRequest request, ModelMap model, List<DonHang> bills) {
+        PagedListHolder pagedListHolder = new PagedListHolder(bills);
         int page = ServletRequestUtils.getIntParameter(request, "p", 0);
         pagedListHolder.setPage(page);
         pagedListHolder.setMaxLinkedPages(5);
         pagedListHolder.setPageSize(10);
         model.addAttribute("pagedListHolder", pagedListHolder);
     }
-//BEGIN----------------- bill manager ---------------------//
 
-	@RequestMapping("billUnConfirm")
-	public String billUnConfirm(HttpServletRequest request, ModelMap model) {
-		List<DonHang> bills = donHangDAO.getBillUnconfirm();
-		Collections.sort(bills);
-		showBill(request, model, bills);
-		model.addAttribute("nameBill", "billUnConfirm");
-		return "Admin/bill";
-	}
-	
-	@RequestMapping("billCancel")
-	public String billCancel(HttpServletRequest request, ModelMap model, HttpSession session) {
-		List<DonHang> bills = donHangDAO.getBillCancel();
-		Collections.sort(bills);
-		showBill(request, model, bills);
-		model.addAttribute("nameBill", "billCancel");
-		return "Admin/bill";
-	}
-	
-	@RequestMapping("billComplete")
-	public String billComplete(HttpServletRequest request, ModelMap model, HttpSession session) {
-		List<DonHang> bills = donHangDAO.getBillComplete(session);
-		Collections.sort(bills);
-		showBill(request, model, bills);
-		model.addAttribute("nameBill", "billComplete");
-		return "Admin/bill";
-	}
-	
-	@RequestMapping("billDelivery")
-	public String billDelivery(HttpServletRequest request, ModelMap model, HttpSession session) {
-		List<DonHang> bills = donHangDAO.getBillDelivering(session);
-		Collections.sort(bills);
-		showBill(request, model, bills);
-		model.addAttribute("nameBill", "billDelivery");
-		return "Admin/bill";
-	}
+    @RequestMapping(value = "billDetail/{id}.htm")
+    public String billDetail(HttpServletRequest request, ModelMap model, @PathVariable("id") String id) {
+        List<CTDonHang> ctDonHangs = ctDonHangDAO.getDetailBills(id);
+        model.addAttribute("list", ctDonHangs);
+        model.addAttribute("listNV", nhanVienDAO.getShippers());
+        model.addAttribute("bill", donHangDAO.getOne(DonHang.class, id));
+        return "Admin/billDetail";
+    }
 
-	@RequestMapping(value = "billUnConfirm", params = "btnSearch")
-	public String searchBillUnConfirm(HttpServletRequest request, ModelMap model) {
-		showBill(request, model, donHangDAO.searchBills(request.getParameter("from"), request.getParameter("to")));
-		model.addAttribute("nameBill", "billUnConfirm");
-		return "Admin/bill";
-	}
-	@RequestMapping(value = "billComplete", params = "btnSearch")
-	public String searchBillComplete(HttpServletRequest request, ModelMap model) {
-		showBill(request, model, donHangDAO.searchBills(request.getParameter("from"), request.getParameter("to")));
-		model.addAttribute("nameBill", "billComplete");
-		return "Admin/bill";
-	}
+    @RequestMapping(value = "billDetail/{id}.htm", params = "btnBrower")
+    public String billDetailBrower(HttpServletRequest request, ModelMap model, HttpSession session,
+            @PathVariable("id") String id) {
+        DonHang bill = donHangDAO.getOne(DonHang.class, id);
+        bill.setNhanVienG(nhanVienDAO.getOne(NhanVien.class, request.getParameter("maNVG")));
+        bill.setNhanVienD((NhanVien) session.getAttribute("staff"));
+        donHangDAO.update(bill);
+        return "redirect:/Admin/billUnConfirm.htm";
+    }
 
+    @RequestMapping(value = "billDetail/{id}.htm", params = "btnCancel")
+    public String billDetailCancel(HttpServletRequest request, ModelMap model, HttpSession session,
+            @PathVariable("id") String id) {
+        DonHang bill = donHangDAO.getOne(DonHang.class, id);
+        bill.setNhanVienD((NhanVien) session.getAttribute("staff"));
+        bill.setTrangThai(-1);
+        donHangDAO.update(bill);
+        return "redirect:/Admin/billUnConfirm.htm";
+    }
 
-	@RequestMapping(value = "billCancel", params = "btnSearch")
-	public String searchbillCancel(HttpServletRequest request, ModelMap model) {
-		showBill(request, model, donHangDAO.searchBills(request.getParameter("from"), request.getParameter("to")));
-		return "Admin/billCancel";
-	}
-
-	public void showBill(HttpServletRequest request, ModelMap model, List<DonHang> bills) {
-		PagedListHolder pagedListHolder = new PagedListHolder(bills);
-		int page = ServletRequestUtils.getIntParameter(request, "p", 0);
-		pagedListHolder.setPage(page);
-		pagedListHolder.setMaxLinkedPages(5);
-		pagedListHolder.setPageSize(10);
-		model.addAttribute("pagedListHolder", pagedListHolder);
-	}
-
-	@RequestMapping(value = "billDetail/{id}.htm")
-	public String billDetail(HttpServletRequest request, ModelMap model, @PathVariable("id") String id) {
-		List<CTDonHang> ctDonHangs = ctDonHangDAO.getDetailBills(id);
-		model.addAttribute("list", ctDonHangs);
-		model.addAttribute("listNV", nhanVienDAO.getShippers());
-		model.addAttribute("bill", donHangDAO.getOne(DonHang.class, id));
-		return "Admin/billDetail";
-	}
-
-	@RequestMapping(value = "billDetail/{id}.htm", params = "btnBrower")
-	public String billDetailBrower(HttpServletRequest request, ModelMap model, HttpSession session,
-			@PathVariable("id") String id) {
-		DonHang bill = donHangDAO.getOne(DonHang.class, id);
-		bill.setNhanVienG(nhanVienDAO.getOne(NhanVien.class, request.getParameter("maNVG")));
-		bill.setNhanVienD((NhanVien) session.getAttribute("staff"));
-		donHangDAO.update(bill);
-		return "redirect:/Admin/billUnConfirm.htm";
-	}
-
-	@RequestMapping(value = "billDetail/{id}.htm", params = "btnCancel")
-	public String billDetailCancel(HttpServletRequest request, ModelMap model, HttpSession session,
-			@PathVariable("id") String id) {
-		DonHang bill = donHangDAO.getOne(DonHang.class, id);
-		bill.setNhanVienD((NhanVien) session.getAttribute("staff"));
-		bill.setTrangThai(-1);
-		donHangDAO.update(bill);
-		return "redirect:/Admin/billUnConfirm.htm";
-	}
-
-	@RequestMapping(value = "billDetail/{id}.htm", params = "btnConfirm")
-	public String billDetailConfirm(HttpServletRequest request, ModelMap model, HttpSession session,
-			@PathVariable("id") String id) {
-		DonHang bill = donHangDAO.getOne(DonHang.class, id);
-		bill.setNgayNhan(new Date());
-		donHangDAO.update(bill);
-		return "redirect:/Admin/billDelivery.htm";
-	}
+    @RequestMapping(value = "billDetail/{id}.htm", params = "btnConfirm")
+    public String billDetailConfirm(HttpServletRequest request, ModelMap model, HttpSession session,
+            @PathVariable("id") String id) {
+        DonHang bill = donHangDAO.getOne(DonHang.class, id);
+        bill.setNgayNhan(new Date());
+        donHangDAO.update(bill);
+        return "redirect:/Admin/billDelivery.htm";
+    }
 //END----------------bill manager
+
+//BEGIN statistic
+    @RequestMapping(value = "statistic")
+    public String statistic() {
+        return "Admin/statistic";
+    }
+
+    @RequestMapping(value = "statistic", params = "btnSearch")
+    public String statistic(HttpServletRequest request, ModelMap model) {
+        String from = request.getParameter("from");
+        String to = request.getParameter("to");
+        List<Revenue> list = getRevenue(from, to);
+        model.addAttribute("list", list);
+        model.addAttribute("from", from);
+        model.addAttribute("to", to);
+        Integer sum = 0;
+        for (Revenue r : list) {
+            sum = sum + r.getTotal().intValue();
+        }
+        model.addAttribute("sum", sum);
+        return "Admin/statistic";
+    }
+
+    public List<Revenue> getRevenue(String from, String to) {
+        List<Revenue> revenues = donHangDAO.revenue(from, to);
+        Integer start = Integer.parseInt(from.substring(5, 7));
+        Integer end = Integer.parseInt(to.substring(5, 7));
+        List<Revenue> list = new ArrayList<Revenue>();
+        Integer yearFrom = Integer.parseInt(from.substring(0, 4));
+        Integer yearTo = Integer.parseInt(to.substring(0, 4));
+        for (int i = yearFrom; i <= yearTo; i++) {
+            int s = 1, e = 12;
+            if (i == yearFrom) {
+                s = start;
+            }
+            if (i == yearTo) {
+                e = end;
+            }
+            Boolean flag = false;
+            for (Revenue r : revenues) {
+                if (r.getYear() == i) {
+                    flag = true;
+                    break;
+                }
+            }
+            if (flag) {
+                for (int j = s; j <= e; j++) {
+                    Boolean f = false;
+                    for (Revenue r : revenues) {
+                        if (r.getYear() == i && r.getMonth() == j) {
+                            f = true;
+                            list.add(new Revenue(i, j, r.getTotal()));
+                            break;
+                        }
+                    }
+                    if (!f) {
+                        list.add(new Revenue(i, j, 0));
+                    }
+                }
+            } else {
+                list.add(new Revenue(i, 0, 0));
+            }
+        }
+        return list;
+    }
+//END statistic
 }

@@ -111,6 +111,7 @@
 </head>
 <body>
 <%@include file="/WEB-INF/views/Admin/menu.jsp" %>
+<div class="message" style="text-align: center; color: red;">${message}</div>
 <div class="info-app">
     <form:form class="pass-form" id="pass-form" action="Admin/changePass.htm">
         <div class="form__item">

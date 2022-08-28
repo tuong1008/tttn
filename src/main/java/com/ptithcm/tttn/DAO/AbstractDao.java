@@ -9,7 +9,7 @@ import java.util.List;
 
 public class AbstractDao<T> implements Dao<T> {
     @Autowired
-    SessionFactory sessionFactory;
+    public SessionFactory sessionFactory;
 
     @Override
     public String save(T t) {
@@ -51,10 +51,11 @@ public class AbstractDao<T> implements Dao<T> {
                     break;
             }
             trans.commit();
-        } catch (Throwable e) {
+        } catch (Exception e) {
             if (trans != null) {
                 trans.rollback();
             }
+            e.printStackTrace();
             return e.getMessage();
         }
         return "";
@@ -100,12 +101,17 @@ public class AbstractDao<T> implements Dao<T> {
 
     @Override
     public T getOne(Class<T> type, Object id) {
+        Session session = null;
         try {
-            Session session = sessionFactory.openSession();
+             session = sessionFactory.openSession();
             return (T) session.get(type, (Serializable) id);
         } catch (Throwable e) {
             e.printStackTrace();
 //            LOGGER.error(e.getMessage(), e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
         return null;
     }

@@ -15,13 +15,13 @@ public class NhanVien implements Serializable {
     @Column(name = "EMAIL")
     private String email;
 
-    @Column(name = "HOTEN")
+    @Column(name = "HOTEN", columnDefinition = "nvarchar(255)")
     private String hoTen;
 
-    @Column(name = "GIOITINH")
+    @Column(name = "GIOITINH", columnDefinition = "nvarchar(255)")
     private String gioiTinh;
 
-    @Column(name = "DIACHI")
+    @Column(name = "DIACHI", columnDefinition = "nvarchar(255)")
     private String diaChi;
 
     @Column(name = "SDT")
@@ -188,5 +188,7 @@ public class NhanVien implements Serializable {
     public void setKhuyenMais(Collection<KhuyenMai> khuyenMais) {
         this.khuyenMais = khuyenMais;
     }
+    
+    
 
 }
