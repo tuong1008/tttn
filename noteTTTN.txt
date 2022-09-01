@@ -48,16 +48,19 @@ sua phan trang
 approver chi duyet don hang
 khong duoc sua ma 
 sua loai sp bị loi
-sua chi tiet san pham
+ sua chi tiet san pham
 đăng ký bị lỗi
-quên mật khẩu
-Tao phieu dat bị loi khi them moi nha cung cap
+ quên mật khẩu
+ xoa san pham khi them phieu dat
+ unique
+ sua phieu dat
+ them nhan vien tao phieu dat
 chua an tao phieu nhap
 cho nhap so luong gio hang, thay doi so luong
 dat hang thanh cong shơ lại thong tin
 duyet don hang moi giam so luong
 danh sach shippẻr trong don hang chua cap nhat
-cap nhat trang thai 
+cap nhat trang thai a
 rang buoc thoi gian khuyen mai trong qua khu
 
 QL phieu nhap

@@ -95,7 +95,7 @@ public class UserController {
 
     @RequestMapping("home/{nameBrand}")
     public String fillBrand(HttpServletRequest request, ModelMap model, @PathVariable("nameBrand") String nameBrand) {
-        showProducts(request, model, sanPhamDAOImpl.getListProductByNameBrand(nameBrand));
+        showProducts(request, model, sanPhamDAOImpl.getListProductByNameBrandForSale(nameBrand));
         model.addAttribute("brandsss", nameBrand);
         return "User/home";
     }
@@ -163,6 +163,7 @@ public class UserController {
                 return "User/register";
             }
             TaiKhoan taiKhoan = new TaiKhoan(username, pass, quyenDAO.getRole(5), null, null);
+            customer.setMaKH(khachHangDAOImpl.nextPK("KhachHang", "KH", "maKH"));
             Integer temp = khachHangDAOImpl.insertCustomer(customer, taiKhoan);
 
             if (temp != 0) {

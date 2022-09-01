@@ -25,6 +25,7 @@
             <form:form action="${pageContext.request.contextPath}/Admin/product.htm"
                        enctype="multipart/form-data" method="post" modelAttribute="product" class="form-horizontal">
                 <div class="form-group">
+                    <form:input type="hidden" path="maSP"/>
                     <div class="form-element">
                         <label class="label-title" for="">Tên sản phẩm: </label>
                         <form:input path="tenSP" class="form-control" placeholder="Nhập tên sản phẩm"
@@ -41,8 +42,13 @@
 
                     <div class="form-element">
                         <label class="label-title" for="">Hình ảnh: </label>
-                        <input type="file" name="hinhAnh" class="form-control"
-                               id="hinhAnh"/>    
+                        <input onchange="chooseImgEvent(event)" type="file" name="hinhAnh" class="form-control"  accept="image/*"/>    
+                        <c:if test="${not empty fileURL}">
+                            <img id="productImg" style="max-width: 100px" src="resource/img/imgProduct/${product.hinhAnh}">
+                        </c:if>
+                        <c:if test="${empty fileURL}">
+                            <img id="productImg" style="max-width: 100px">
+                        </c:if>
                     </div>
                     <%--<form:input path="gia" class="form-control" placeholder="Enter gia"--%>
                     <!--id="gia"/>-->
@@ -50,15 +56,15 @@
                     <!--id="slt"/>-->
 
                     <div class="form-element">
-                        <label class="label-title" for="">Loại sản phẩm: </label>
-                        <form:select path="loaiSP">
-                            <form:options itemValue="maLoai" itemLabel="tenLoai" path="loaiSP" items="${categories}"/>
+                        <label class="label-title" for="">Loại sản phẩm:</label>
+                        <form:select path="loaiSP.maLoai">
+                            <form:options itemValue="maLoai" itemLabel="tenLoai" items="${categories}"/>
                         </form:select>    
                     </div>
 
                     <div class="form-element">
-                        <label class="label-title" for="">Nhà cung cấp: </label>
-                        <form:select path="nhaCungCap">
+                        <label class="label-title" for="">Nhà cung cấp:</label>
+                        <form:select path="nhaCungCap.maNCC">
                             <form:options itemValue="maNCC" itemLabel="tenNCC" items="${suppliers}"/>
                         </form:select>    
                     </div>
@@ -69,7 +75,7 @@
             <jsp:useBean id="pagedListHolder" scope="request"
                          type="org.springframework.beans.support.PagedListHolder"/>
             <c:url value="Admin/productList.htm" var="pagedLink">
-                <c:param name="p" value="~"/>
+                <c:param name="p" value="tuong"/>
             </c:url>
             <div>
                 <tg:paging pagedListHolder="${pagedListHolder}"
@@ -109,5 +115,14 @@
                 </c:forEach>
             </table>
         </div>
+        <script>
+            function chooseImgEvent(event) {
+                const img = event.target.files[0];
+                if (img) {
+                    document.getElementById("productImg").src = URL.createObjectURL(img);
+                }
+            }
+            ;
+        </script>
     </body>
 </html>

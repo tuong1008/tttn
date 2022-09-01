@@ -24,7 +24,7 @@
             <h2>THÔNG TIN LOẠI SẢN PHẨM</h2>
             <form:form action="${pageContext.request.contextPath}/Admin/product-type.htm"
                        method="post" modelAttribute="productType" class="form-horizontal">
-                <%--<form:input type="text" placeholder="Nhập maLoai" path="maLoai"/>--%>
+                <form:input type="hidden" placeholder="Nhập maLoai" path="maLoai"/>
                 <%--<form:errors class="error" path="maLoai"/>--%>
 
                 <div class="form-element">
@@ -39,8 +39,8 @@
             <h2>DANH SÁCH LOẠI SẢN PHẨM</h2>
             <jsp:useBean id="pagedListHolder" scope="request"
                          type="org.springframework.beans.support.PagedListHolder"/>
-            <c:url value="Admin/product.htm" var="pagedLink">
-                <c:param name="p" value="~"/>
+            <c:url value="Admin/product-type.htm" var="pagedLink">
+                <c:param name="p" value="tuong"/>
             </c:url>
             <div>
                 <tg:paging pagedListHolder="${pagedListHolder}"

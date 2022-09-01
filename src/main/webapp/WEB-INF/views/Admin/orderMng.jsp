@@ -26,7 +26,7 @@
             <jsp:useBean id="pagedListHolder" scope="request"
                          type="org.springframework.beans.support.PagedListHolder"/>
             <c:url value="Admin/orderMng.htm" var="pagedLink">
-                <c:param name="p" value="~"/>
+                <c:param name="p" value="tuong"/>
             </c:url>
             <div>
                 <tg:paging pagedListHolder="${pagedListHolder}"
@@ -54,7 +54,9 @@
                             <a href="Admin/order/${s.maPD}.htm?linkDelete">Xóa</a>
                         </td>
                         <td>
-                            <a href="Admin/import/${s.maPD}.htm">Tạo phiếu nhập</a>
+                            <c:if test="${empty s.phieuNhap}">
+                                <a href="Admin/import/${s.maPD}.htm">Tạo phiếu nhập</a>
+                            </c:if>
                         </td>
                     </tr>
                 </c:forEach>

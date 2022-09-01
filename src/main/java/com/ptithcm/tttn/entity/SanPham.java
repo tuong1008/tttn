@@ -9,13 +9,16 @@ import java.util.Collection;
 @Entity
 @Table(name = "SANPHAM")
 @NamedStoredProcedureQueries({
-        @NamedStoredProcedureQuery(name = "hotSale", procedureName = "KhuyenMaiKhung", resultClasses = SanPham.class,
-                parameters = {@StoredProcedureParameter(mode = ParameterMode.IN, type = Integer.class, name = "GIAMGIAKHUNG")}),
-        @NamedStoredProcedureQuery(name = "hotProduct", procedureName = "SPHot", resultClasses = SanPham.class,
-                parameters = {@StoredProcedureParameter(mode = ParameterMode.IN, type = Integer.class, name = "SOTHANG")}),
-        @NamedStoredProcedureQuery(name = "NewProduct", procedureName = "SPMoi", resultClasses = SanPham.class),
-        @NamedStoredProcedureQuery(name = "FindProductByName", procedureName = "TimKiemSPTheoTen", resultClasses = SanPham.class,
-                parameters = {@StoredProcedureParameter(mode = ParameterMode.IN, type = String.class, name = "TENSP")})
+    @NamedStoredProcedureQuery(name = "hotSale", procedureName = "KhuyenMaiKhung", resultClasses = SanPham.class,
+            parameters = {
+                @StoredProcedureParameter(mode = ParameterMode.IN, type = Integer.class, name = "GIAMGIAKHUNG")}),
+    @NamedStoredProcedureQuery(name = "hotProduct", procedureName = "SPHot", resultClasses = SanPham.class,
+            parameters = {
+                @StoredProcedureParameter(mode = ParameterMode.IN, type = Integer.class, name = "SOTHANG")}),
+    @NamedStoredProcedureQuery(name = "NewProduct", procedureName = "SPMoi", resultClasses = SanPham.class),
+    @NamedStoredProcedureQuery(name = "FindProductByName", procedureName = "TimKiemSPTheoTen", resultClasses = SanPham.class,
+            parameters = {
+                @StoredProcedureParameter(mode = ParameterMode.IN, type = String.class, name = "TENSP")})
 })
 public class SanPham implements Serializable {
 
@@ -70,8 +73,8 @@ public class SanPham implements Serializable {
     }
 
     public SanPham(String maSP, String tenSP, String moTa, String hinhAnh, long gia, int slt, int spMoi, LoaiSP loaiSP,
-                   NhaCungCap nhaCungCap, Collection<CTPhieuDat> ctPhieuDats, Collection<CTDonHang> ctDonHangs,
-                   Collection<CTPhieuNhap> ctPhieuNhaps, Collection<ChiTietKM> chiTietKMs) {
+            NhaCungCap nhaCungCap, Collection<CTPhieuDat> ctPhieuDats, Collection<CTDonHang> ctDonHangs,
+            Collection<CTPhieuNhap> ctPhieuNhaps, Collection<ChiTietKM> chiTietKMs) {
         super();
         this.maSP = maSP;
         this.tenSP = tenSP;
@@ -88,12 +91,12 @@ public class SanPham implements Serializable {
         this.chiTietKMs = chiTietKMs;
     }
 
-    public String getMaSP() {
-        return maSP;
-    }
-
     public void setMaSP(String maSP) {
         this.maSP = maSP;
+    }
+
+    public String getMaSP() {
+        return maSP;
     }
 
     public String getTenSP() {

@@ -380,6 +380,69 @@ public class AdminController {
         return "Admin/product";
     }
 
+    @RequestMapping(value = "product/{id}.htm", params = "linkEdit")
+    public String editProduct(HttpServletRequest request, ModelMap model, @PathVariable("id") String id) {
+        showProducts(request, model, sanPhamDAO.getListProduct());
+
+        model.addAttribute("btnStatus", "btnEdit");
+        SanPham s = sanPhamDAO.getOne(SanPham.class, id);
+        model.addAttribute("categories", loaiSPDAO.getListCategory());
+        model.addAttribute("suppliers", nhaCungCapDAO.getSuppliers());
+        model.addAttribute("product", s);
+
+        return "Admin/product";
+    }
+
+    @RequestMapping(value = "product", params = "btnEdit", method = RequestMethod.POST)
+    public String editProduct(HttpServletRequest request, ModelMap model, @ModelAttribute("product") SanPham sp,
+            BindingResult errors, @RequestParam("hinhAnh") MultipartFile productImage) {
+        
+        SanPham old = sanPhamDAO.getOne(SanPham.class, sp.getMaSP());
+        String extension = ""; //đuôi file
+        System.out.println(productImage);
+        if (productImage.getSize() != 0) {
+            String fileName = productImage.getOriginalFilename();
+
+            int index = fileName.lastIndexOf(".");
+            if (index > 0) {
+                extension = fileName.substring(index);
+            }
+            
+            sp.setHinhAnh(sp.getMaSP() + extension);
+        } else {
+            sp.setHinhAnh(old.getHinhAnh());
+        }
+        sp.setGia(old.getGia());
+        sp.setSlt(old.getSlt());
+
+        String temp = sanPhamDAO.update(sp);         
+
+        if (temp.isEmpty()) {
+            model.addAttribute("message", "Sửa thành công");
+            model.addAttribute("product", new SanPham());
+            model.addAttribute("btnStatus", "btnAdd");
+            String rootDir = request.getSession().getServletContext().getRealPath("/");
+            Path path = Paths.get(rootDir + "WEB-INF" + File.separator + "resource" + File.separator + "img" + File.separator + "imgProduct" + File.separator + sp.getMaSP() + extension);
+            if (productImage != null && !productImage.isEmpty()) {
+                try {
+                    productImage.transferTo(new File(path.toString()));
+                    //System.out.println("IMage Save at:"+path.toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    throw new RuntimeException("Product image saving failed", e);
+                }
+            }
+        } else {
+            model.addAttribute("message", "Sửa thất bại" + sp);
+            model.addAttribute("btnStatus", "btnEdit");
+        }
+        model.addAttribute("categories", loaiSPDAO.getListCategory());
+        model.addAttribute("suppliers", nhaCungCapDAO.getSuppliers());
+        showProducts(request, model, sanPhamDAO.getListProduct());
+
+        return "Admin/product";
+    }
+
     @RequestMapping(value = "product", params = "btnAdd", method = RequestMethod.POST)
     public String addProduct(HttpServletRequest request, @RequestParam("hinhAnh") MultipartFile productImage,
             @RequestParam("loaiSP") String loaiSPId,
@@ -387,8 +450,8 @@ public class AdminController {
             ModelMap model, @ModelAttribute("product") SanPham sp,
             BindingResult errors) {
         sp.setSpMoi(1);
-        sp.setLoaiSP(loaiSPDAO.getOne(LoaiSP.class, loaiSPId));
-        sp.setNhaCungCap(nhaCungCapDAO.getOne(NhaCungCap.class, nccId));
+//        sp.setLoaiSP(loaiSPDAO.getOne(LoaiSP.class, loaiSPId));
+//        sp.setNhaCungCap(nhaCungCapDAO.getOne(NhaCungCap.class, nccId));
 
         String fileName = productImage.getOriginalFilename();
         System.out.println(fileName);
@@ -400,7 +463,7 @@ public class AdminController {
         }
         sp.setGia(0);
         sp.setSlt(0);
-        sp.setMaSP(sanPhamDAO.nextPK("SanPham","SP" , "maSP"));
+        sp.setMaSP(sanPhamDAO.nextPK("SanPham", "SP", "maSP"));
         sp.setHinhAnh(sp.getMaSP() + extension);
         String temp1 = sanPhamDAO.save(sp);
 
@@ -754,6 +817,7 @@ public class AdminController {
     @RequestMapping(value = "supplier", params = "btnAdd", method = RequestMethod.POST)
     public String addSupplier(HttpServletRequest request, ModelMap model, @ModelAttribute("supplier") NhaCungCap ncc,
             BindingResult errors) {
+        ncc.setMaNCC(nhaCungCapDAO.nextPK("NhaCungCap", "CC", "maNCC"));
         String temp1 = nhaCungCapDAO.save(ncc);
 
         if (temp1.isEmpty()) {

@@ -27,11 +27,8 @@
             <form:form action="${pageContext.request.contextPath}/Admin/supplier.htm"
                        method="post" modelAttribute="supplier" class="form-horizontal">
                 <div class="form-group">
-                    <div class="form-element">
-                        <label class="label-title" for="">Mã: </label>
-                        <form:input type="text" placeholder="Nhập mã" path="maNCC"/>
-                        <form:errors class="error" path="maNCC"/>    
-                    </div>
+                    <form:input type="hidden" placeholder="Nhập mã" path="maNCC"/> 
+
 
                     <div class="form-element">
                         <label class="label-title" for="">Tên: </label>
@@ -67,7 +64,7 @@
             <jsp:useBean id="pagedListHolder" scope="request"
                          type="org.springframework.beans.support.PagedListHolder"/>
             <c:url value="Admin/supplier.htm" var="pagedLink">
-                <c:param name="p" value="~"/>
+                <c:param name="p" value="tuong"/>
             </c:url>
             <div>
                 <tg:paging pagedListHolder="${pagedListHolder}"

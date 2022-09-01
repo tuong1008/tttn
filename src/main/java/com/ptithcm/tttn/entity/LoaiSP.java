@@ -24,12 +24,12 @@ public class LoaiSP implements Serializable {
 
     }
 
-    public LoaiSP(String maLoai, String tenLoai, Collection<SanPham> sanPhams) {
-        super();
-        this.maLoai = maLoai;
-        this.tenLoai = tenLoai;
-        this.sanPhams = sanPhams;
-    }
+//    public LoaiSP(String maLoai, String tenLoai, Collection<SanPham> sanPhams) {
+//        super();
+//        this.maLoai = maLoai;
+//        this.tenLoai = tenLoai;
+//        this.sanPhams = sanPhams;
+//    }
 
     public String getMaLoai() {
         return maLoai;

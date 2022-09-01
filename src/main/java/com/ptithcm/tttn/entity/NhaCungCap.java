@@ -37,17 +37,19 @@ public class NhaCungCap implements Serializable {
 
     }
 
-//	public NhaCungCap(String maNCC, String tenNCC, String sdt, String diaChi, String email,
-//			Collection<PhieuDat> phieuDats, Collection<SanPham> sanPhams) {
-//		super();
-//		this.maNCC = maNCC;
-//		this.tenNCC = tenNCC;
-//		this.sdt = sdt;
-//		this.diaChi = diaChi;
-//		this.email = email;
-//		this.phieuDats = phieuDats;
-//		this.sanPhams = sanPhams;
-//	}
+    public NhaCungCap(String maNCC, String tenNCC, String sdt, String diaChi, String email,
+            Collection<PhieuDat> phieuDats, Collection<SanPham> sanPhams) {
+        super();
+        this.maNCC = maNCC;
+        this.tenNCC = tenNCC;
+        this.sdt = sdt;
+        this.diaChi = diaChi;
+        this.email = email;
+        this.phieuDats = phieuDats;
+        this.sanPhams = sanPhams;
+    }
+    
+    
 
     public String getMaNCC() {
         return maNCC;
@@ -105,4 +107,10 @@ public class NhaCungCap implements Serializable {
         this.sanPhams = sanPhams;
     }
 
+    @Override
+    public String toString() {
+        return "NhaCungCap{" + "maNCC=" + maNCC + ", tenNCC=" + tenNCC + ", sdt=" + sdt + ", diaChi=" + diaChi + ", email=" + email + '}';
+    }
+
+    
 }

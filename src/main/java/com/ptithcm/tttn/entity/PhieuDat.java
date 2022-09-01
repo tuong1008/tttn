@@ -32,22 +32,23 @@ public class PhieuDat implements Serializable {
     @OneToMany(mappedBy = "pk.phieuDat", fetch = FetchType.LAZY)
     private Collection<CTPhieuDat> ctPhieuDats;
 
-    @OneToMany(mappedBy = "phieuDat", fetch = FetchType.LAZY)
-    private Collection<PhieuNhap> phieuNhaps;
+    @OneToOne
+    @JoinColumn(name = "MAPN", referencedColumnName = "MAPD")
+    private PhieuNhap phieuNhap;
 
     public PhieuDat() {
 
     }
 
     public PhieuDat(String maPD, Date ngayTao, NhaCungCap nhaCungCap, NhanVien nhanVien,
-                    Collection<CTPhieuDat> ctPhieuDats, Collection<PhieuNhap> phieuNhaps) {
+                    Collection<CTPhieuDat> ctPhieuDats, PhieuNhap phieuNhap) {
         super();
         this.maPD = maPD;
         this.ngayTao = ngayTao;
         this.nhaCungCap = nhaCungCap;
         this.nhanVien = nhanVien;
         this.ctPhieuDats = ctPhieuDats;
-        this.phieuNhaps = phieuNhaps;
+        this.phieuNhap = phieuNhap;
     }
 
     public String getMaPD() {
@@ -90,12 +91,12 @@ public class PhieuDat implements Serializable {
         this.ctPhieuDats = ctPhieuDats;
     }
 
-    public Collection<PhieuNhap> getPhieuNhaps() {
-        return phieuNhaps;
+    public PhieuNhap getPhieuNhap() {
+        return phieuNhap;
     }
 
-    public void setPhieuNhaps(Collection<PhieuNhap> phieuNhaps) {
-        this.phieuNhaps = phieuNhaps;
+    public void setPhieuNhap(PhieuNhap phieuNhap) {
+        this.phieuNhap = phieuNhap;
     }
-
+    
 }

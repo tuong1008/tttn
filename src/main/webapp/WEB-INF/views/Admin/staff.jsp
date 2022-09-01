@@ -78,7 +78,7 @@
 		<jsp:useBean id="pagedListHolder" scope="request"
 			type="org.springframework.beans.support.PagedListHolder" />
 		<c:url value="Admin/staff.htm" var="pagedLink">
-			<c:param name="p" value="~" />
+			<c:param name="p" value="tuong" />
 		</c:url>
 		<div>
 			<tg:paging pagedListHolder="${pagedListHolder}"

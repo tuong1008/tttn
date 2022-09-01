@@ -76,13 +76,18 @@ public class SanPhamDAOImpl extends AbstractDao<SanPham> implements SanPhamDAO {
     }
 
     @Override
-    public List<SanPham> getListProductByNameBrand(String name) {
+    public List<SanPham> getListProductByNameBrandForSale(String name) {
         return getFromQuery("FROM SanPham S WHERE S.nhaCungCap.tenNCC =? and S.slt > 0", SanPham.class, name);
+    }
+    
+    @Override
+    public List<SanPham> getListProductByNameBrand(String name) {
+        return getFromQuery("FROM SanPham S WHERE S.nhaCungCap.tenNCC =?", SanPham.class, name);
     }
 
     @Override
     public List<SanPham> getListProductByIDBrand(String id) {
-        return getFromQuery("FROM SanPham S WHERE S.nhaCungCap.maNCC =? and S.slt > 0", SanPham.class, id);
+        return getFromQuery("FROM SanPham S WHERE S.nhaCungCap.maNCC =?", SanPham.class, id);
     }
     
     
