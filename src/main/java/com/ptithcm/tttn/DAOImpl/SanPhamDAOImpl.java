@@ -98,4 +98,48 @@ public class SanPhamDAOImpl extends AbstractDao<SanPham> implements SanPhamDAO {
         return list.isEmpty() ? null : list.get(0);
     }
 
+    @Override
+    public List<SanPham> getCustomListProduct(String[] nameBrands, String fromPrice, String toPrice, String[] categories) {
+        StringBuilder query = new StringBuilder("FROM SanPham s ");
+        StringBuilder whereClause = new StringBuilder("WHERE s.slt>0");
+        
+        for (String brand : nameBrands){
+            if (brand.equals("all")) break;
+            if (brand.equals(nameBrands[0])){
+                whereClause.append(" AND ");
+            }
+            
+            whereClause.append("s.nhaCungCap.maNCC = '"+brand+"'");
+            if (!brand.equals(nameBrands[nameBrands.length-1])){
+                whereClause.append(" OR ");
+            }
+        }
+        
+        if (!fromPrice.equals("")){
+            whereClause.append(" AND s.gia>="+fromPrice);
+        }
+        
+        if (!toPrice.equals("")){
+            whereClause.append(" AND s.gia<="+toPrice);
+        }
+        
+        for (String category : categories){
+            if (category.equals("all")) break;
+            
+            if (category.equals(categories[0])){
+                whereClause.append(" AND ");
+            }
+            
+            whereClause.append("s.loaiSP.maLoai = '"+category+"'");
+            if (!category.equals(categories[categories.length-1])){
+                whereClause.append(" OR ");
+            }
+        }        
+        
+        query.append(whereClause);
+        System.out.println("----===----"+query.toString());
+        
+        return getFromQuery(query.toString(), SanPham.class);
+    }
+
 }

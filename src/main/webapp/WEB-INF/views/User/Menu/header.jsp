@@ -16,7 +16,6 @@
                        placeholder="Nhập sản phẩm">
                 <button name="btnSearchByName" class="btn__search" type="submit">
                     <i class="fas fa-search header-search__icon"></i>
-                    <p class="tooltip">Tìm kiếm</p>
                 </button>
             </form>
         </div>

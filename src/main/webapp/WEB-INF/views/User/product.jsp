@@ -188,11 +188,11 @@
                 </c:if>
             </div>
             <label style="margin-left: 100px;">Số lượng:</label>
-            <form:input class="phone__amount" type="number" path="sl"/>
+            <form:input class="phone__amount" type="number" min="1" max="${p.slt}" path="sl"/>
             <form:errors class="error" path="sl"/>
             <form:input type="hidden" path="gia"/>
             <form:input type="hidden" value="${p.maSP}" path="pk.sanPham.maSP"/>
-            <button class="btn__buyMain" name="btnBuy">MUA NGAY</button>
+            <button class="btn__buyMain" name="btnBuy">THÊM HÀNG VÀO GIỎ</button>
             <div class="error">${message}</div>
         </form:form>
         <div class="phone-right phone__item">

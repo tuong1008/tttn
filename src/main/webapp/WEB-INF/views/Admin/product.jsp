@@ -43,10 +43,10 @@
                     <div class="form-element">
                         <label class="label-title" for="">Hình ảnh: </label>
                         <input onchange="chooseImgEvent(event)" type="file" name="hinhAnh" class="form-control"  accept="image/*"/>    
-                        <c:if test="${not empty fileURL}">
+                        <c:if test="${not empty product.hinhAnh}">
                             <img id="productImg" style="max-width: 100px" src="resource/img/imgProduct/${product.hinhAnh}">
                         </c:if>
-                        <c:if test="${empty fileURL}">
+                        <c:if test="${empty product.hinhAnh}">
                             <img id="productImg" style="max-width: 100px">
                         </c:if>
                     </div>

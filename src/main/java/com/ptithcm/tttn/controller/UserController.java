@@ -90,7 +90,19 @@ public class UserController {
         model.addAttribute("products",
                 sanPhamDAOImpl.getListProductByName(request.getParameter("nameProduct")));
         model.addAttribute("searchAll", "1");
-        return "User/home";
+        return "User/homeFilterResult";
+    }
+    
+    @RequestMapping(value = "home", params = "btnSearch", method = RequestMethod.POST)
+    public String filterProduct(HttpServletRequest request,HttpSession session, ModelMap model) {
+        String[] nameBrands = request.getParameterValues("nameBrand");
+        String fromPrice = request.getParameter("fromPrice");
+        String toPrice = request.getParameter("toPrice");
+        String[] nameCategories = request.getParameterValues("nameCategory");        
+        
+        List<SanPham> products = sanPhamDAOImpl.getCustomListProduct(nameBrands, fromPrice, toPrice, nameCategories);
+        showProducts(request, model, products);
+        return "User/homeFilterResult";
     }
 
     @RequestMapping("home/{nameBrand}")
@@ -229,7 +241,6 @@ public class UserController {
     }
 
     public void showBills(HttpServletRequest request, ModelMap model, HttpSession session) {
-        System.out.println("toi day di cu");
         List<DonHang> list = donHangDAOImpl.getBills(
                 ((KhachHang) session.getAttribute("customer")).getMaKH());
         PagedListHolder pagedListHolder = new PagedListHolder(list);

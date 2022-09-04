@@ -31,7 +31,8 @@ public class PhieuNhap implements Serializable {
     @OneToMany(mappedBy = "pk.phieuNhap", fetch = FetchType.LAZY)
     private Collection<CTPhieuNhap> ctPhieuNhaps;
 
-    @OneToOne(mappedBy = "phieuNhap", fetch = FetchType.LAZY)
+    @OneToOne
+    @JoinColumn(name = "MAPD")
     private PhieuDat phieuDat;
 
     public PhieuNhap() {

@@ -376,7 +376,7 @@ public class AdminController {
 
     @RequestMapping(value = "productList", params = "btnSearch")
     public String SearchProductList(HttpServletRequest request, ModelMap model) {
-//		showPhones(request, model, Phone.searchPhones(factory, request.getParameter("name")));
+//    showPhones(request, model, Phone.searchPhones(factory, request.getParameter("name")));
         return "Admin/product";
     }
 
@@ -445,13 +445,13 @@ public class AdminController {
 
     @RequestMapping(value = "product", params = "btnAdd", method = RequestMethod.POST)
     public String addProduct(HttpServletRequest request, @RequestParam("hinhAnh") MultipartFile productImage,
-            @RequestParam("loaiSP") String loaiSPId,
-            @RequestParam("nhaCungCap") String nccId,
+            @RequestParam("loaiSP.maLoai") String loaiSPId,
+            @RequestParam("nhaCungCap.maNCC") String nccId,
             ModelMap model, @ModelAttribute("product") SanPham sp,
             BindingResult errors) {
         sp.setSpMoi(1);
-//        sp.setLoaiSP(loaiSPDAO.getOne(LoaiSP.class, loaiSPId));
-//        sp.setNhaCungCap(nhaCungCapDAO.getOne(NhaCungCap.class, nccId));
+        sp.setLoaiSP(loaiSPDAO.getOne(LoaiSP.class, loaiSPId));
+        sp.setNhaCungCap(nhaCungCapDAO.getOne(NhaCungCap.class, nccId));
 
         String fileName = productImage.getOriginalFilename();
         System.out.println(fileName);
