@@ -232,7 +232,6 @@
     <%@include file="/WEB-INF/views/User/Menu/header.jsp" %>
 </header>
 <fmt:setLocale value="vi_VN" scope="session"/>
-<fmt:setBundle basename = "com.tutorialspoint.Example" var = "lang"/>
 <div class="container-app">
     <div class="slide">
         <div class="slide__list">

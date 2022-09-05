@@ -27,8 +27,15 @@ public class ChiTietKMDAOImpl extends AbstractDao<ChiTietKM> implements ChiTietK
 
         List<Integer> list = query.list();
         session.getTransaction().commit();
+        
+        int tongGiamGia = 0;
+        if (list != null){
+            for (int i : list){
+                tongGiamGia += i;
+            }
+        }
 
-        return list.isEmpty() ? 0 : list.get(0);
+        return tongGiamGia;
     }
 
     @Override
