@@ -62,6 +62,7 @@ duyet don hang moi giam so luong
 danh sach shippẻr trong don hang chua cap nhat
 cap nhat trang thai a
 rang buoc thoi gian khuyen mai trong qua khu
+sp moi true, sua  gia, sp moi
 
 QL phieu nhap
 hiện username trong bảng QL nhân viên

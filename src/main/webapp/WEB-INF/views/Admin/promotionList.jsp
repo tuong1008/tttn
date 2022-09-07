@@ -52,8 +52,8 @@
                         <td>${s.moTa}</td>
                         <td>${s.nhanVien.maNV}</td>
                         <td><a href="Admin/promotionDetail/${s.maKM}.htm">Chi tiết</a></td>
-                        <td><a href="Admin/promotionEdit/${s.maKM}.htm?linkEdit">Sửa</a></td>
-                        <td><a href="Admin/promotionList/${s.maKM}.htm?linkDelete">Xóa</a></td>
+                        <td><a href="Admin/promotion/${s.maKM}.htm?linkEdit">Sửa</a></td>
+                        <td><a href="Admin/promotion/${s.maKM}.htm?linkDelete">Xóa</a></td>
                     </tr>
                 </c:forEach>
             </table>

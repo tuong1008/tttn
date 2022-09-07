@@ -26,7 +26,7 @@ public class HoaDon implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "MANV")
-    private NhanVien nhanVien;
+    private NguoiDung nhanVien;
 
     @OneToOne
     @JoinColumn(name = "MADH", unique = true)
@@ -39,7 +39,7 @@ public class HoaDon implements Serializable {
 
     }
 
-    public HoaDon(String maHD, Date ngayTao, String maSoThue, NhanVien nhanVien, DonHang donHang,
+    public HoaDon(String maHD, Date ngayTao, String maSoThue, NguoiDung nhanVien, DonHang donHang,
                   Collection<PhieuTra> phieuTras) {
         super();
         this.maHD = maHD;
@@ -74,11 +74,11 @@ public class HoaDon implements Serializable {
         this.maSoThue = maSoThue;
     }
 
-    public NhanVien getNhanVien() {
+    public NguoiDung getNhanVien() {
         return nhanVien;
     }
 
-    public void setNhanVien(NhanVien nhanVien) {
+    public void setNhanVien(NguoiDung nhanVien) {
         this.nhanVien = nhanVien;
     }
 

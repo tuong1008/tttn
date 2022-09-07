@@ -17,7 +17,7 @@ import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfTable;
 import com.lowagie.text.pdf.PdfWriter;
-import com.ptithcm.tttn.entity.NhanVien;
+import com.ptithcm.tttn.entity.NguoiDung;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -46,10 +46,10 @@ public class StaffPDFView extends AbstractPdfView {
         table.addCell(PDF.getCell("Số điện thoại", fontTitle));
         table.addCell(PDF.getCell("Email", fontTitle));
 
-        ArrayList<NhanVien> staffs = (ArrayList<NhanVien>) model.get("staffs");
+        ArrayList<NguoiDung> staffs = (ArrayList<NguoiDung>) model.get("staffs");
 
-        for (NhanVien s : staffs) {
-            table.addCell(PDF.getCell(s.getMaNV(), font));
+        for (NguoiDung s : staffs) {
+            table.addCell(PDF.getCell(s.getUserId(), font));
             table.addCell(PDF.getCell(s.getHoTen(), font));
             table.addCell(PDF.getCell(s.getGioiTinh(), font));
             table.addCell(PDF.getCell(s.getDiaChi(), font));

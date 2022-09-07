@@ -4,6 +4,7 @@ import org.hibernate.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class AbstractDao<T> implements Dao<T> {
 
             switch (crud) {
                 case 1:
-                    session.persist(t);
+                    session.save(t);
                     break;
                 case 2:
                     session.merge(t);
@@ -88,9 +89,11 @@ public class AbstractDao<T> implements Dao<T> {
             trans.commit();
 
             return list;
-        } catch (Throwable e) {
+        } catch (Exception e) {
 //            LOGGER.error(e.getMessage(), e);
-            e.printStackTrace();
+            //e.printStackTrace();
+            Throwable error = e.getCause();
+            System.out.println("=-=-=-=-=-=-=-"+error.getMessage());
         } finally {
             if (session != null) {
                 session.close();

@@ -42,7 +42,7 @@
                 </tr>
                 <c:forEach var="c" items="${pagedListHolder.pageList}">
                     <tr>
-                        <td>${c.maKH}</td>
+                        <td>${c.userId}</td>
                         <td>${c.hoTen}</td>
                         <td>${c.gioiTinh}</td>
                         <td>${c.sdt}</td>
@@ -50,10 +50,10 @@
                         <td>${c.diaChi}</td>
                         <c:choose>
                             <c:when test = "${c.trangThai==1}">
-                                <td><a href="Admin/customer/${c.maKH}.htm?linkBlock">Khóa</a></td>
+                                <td><a href="Admin/customer/${c.userId}.htm?linkBlock">Khóa</a></td>
                             </c:when>
                             <c:otherwise>
-                                <td><a href="Admin/customer/${c.maKH}.htm?linkUnBlock">Mở khóa</a></td>
+                                <td><a href="Admin/customer/${c.userId}.htm?linkUnBlock">Mở khóa</a></td>
                             </c:otherwise>
                         </c:choose>
                     </tr>

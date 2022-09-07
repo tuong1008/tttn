@@ -5,8 +5,8 @@ import com.ptithcm.tttn.DAO.DonHangDAO;
 import com.ptithcm.tttn.common.Utils;
 import com.ptithcm.tttn.entity.CTDonHang;
 import com.ptithcm.tttn.entity.DonHang;
-import com.ptithcm.tttn.entity.KhachHang;
-import com.ptithcm.tttn.entity.NhanVien;
+import com.ptithcm.tttn.entity.NguoiDung;
+import com.ptithcm.tttn.entity.NguoiDung;
 import com.ptithcm.tttn.model.Revenue;
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -34,7 +34,7 @@ public class DonHangDAOImpl extends AbstractDao<DonHang> implements DonHangDAO {
 
     @Override
     public DonHang getBillUnBuy(String idCustomer) {
-        return getFromQuery("FROM DonHang D WHERE D.khachHang.maKH =? AND D.trangThai = 0", DonHang.class, idCustomer).get(0);
+        return getFromQuery("FROM DonHang D WHERE D.khachHang.userId =? AND D.trangThai = 0", DonHang.class, idCustomer).get(0);
     }
 
     @Override
@@ -83,9 +83,9 @@ public class DonHangDAOImpl extends AbstractDao<DonHang> implements DonHangDAO {
     @Override
     public List<DonHang> getBillComplete(HttpSession sessions) {
         String hql = "FROM DonHang where nhanVienD.maNV <>NULL AND nhanVienG.maNV <>NULL AND trangThai = 1 AND ngayNhan <> NULL";
-        NhanVien staff = (NhanVien) sessions.getAttribute("staff");
+        NguoiDung staff = (NguoiDung) sessions.getAttribute("staff");
         if (staff.getTaiKhoan().getQuyen().getMaQuyen() == 4) {
-            hql += " AND nhanVienG.maNV = '" + staff.getMaNV() + "'";
+            hql += " AND nhanVienG.maNV = '" + staff.getUserId()+ "'";
         }
         List<DonHang> list = getFromQuery(hql, DonHang.class);
         return list;
@@ -94,16 +94,16 @@ public class DonHangDAOImpl extends AbstractDao<DonHang> implements DonHangDAO {
     @Override
     public List<DonHang> getBillDelivering(HttpSession sessions) {
         String hql = "FROM DonHang where nhanVienD.maNV <>NULL AND nhanVienG.maNV <>NULL AND trangThai = 1 AND ngayNhan = NULL";
-        NhanVien staff = (NhanVien) sessions.getAttribute("staff");
+        NguoiDung staff = (NguoiDung) sessions.getAttribute("staff");
         if (staff.getTaiKhoan().getQuyen().getMaQuyen() == 4) {
-            hql += " AND nhanVienG.maNV = '" + staff.getMaNV() + "'";
+            hql += " AND nhanVienG.maNV = '" + staff.getUserId() + "'";
         }
         List<DonHang> list = getFromQuery(hql, DonHang.class);
         return list;
     }
     
     @Override
-    public int insert(KhachHang k) {
+    public int insert(NguoiDung k) {
         DonHang dh = new DonHang(nextPK("DonHang", "DH", "maDH"), 0, k.getHoTen(), k.getDiaChi(), k.getSdt(), k.getEmail(), new Date(), null, 0,
                 null, null, k, null, null);
         Session session = factory.openSession();

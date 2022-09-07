@@ -21,6 +21,7 @@ import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.validation.Valid;
 
 @Controller
 @Transactional
@@ -139,7 +140,7 @@ public class UserController {
         String passCustomer = request.getParameter("pass");
         if (taiKhoanImpl.getRole(passCustomer, idCustomer).equals("Customer")) {
             System.out.println(1);
-            KhachHang k = khachHangDAOImpl.getCustomer(idCustomer);
+            NguoiDung k = khachHangDAOImpl.getCustomer(idCustomer);
             if (k.getTrangThai() == 0) {
                 System.out.println(2);
                 model.addAttribute("message", "Tài khoản của bạn đã bị khóa, vui lòng liên hệ để được mở khóa!!");
@@ -148,7 +149,7 @@ public class UserController {
                 session.setAttribute("customer", k);
                 System.out.println(4);
                 session.setAttribute("detailBills", ctDonHangDAOImpl.getDetailBills(
-                        donHangDAOImpl.getBillUnBuy(k.getMaKH()).getMaDH()));
+                        donHangDAOImpl.getBillUnBuy(k.getUserId()).getMaDH()));
                 System.out.println(5);
                 return "redirect:/User/home.htm";
             }
@@ -160,31 +161,35 @@ public class UserController {
 
     @RequestMapping("register")
     public String register(ModelMap model) {
-        model.addAttribute("customer", new KhachHang());
+        model.addAttribute("customer", new NguoiDung());
         return "User/register";
     }
 
     @RequestMapping(value = "register", method = RequestMethod.POST)
-    public String addCustomer(HttpServletRequest request, ModelMap model, @ModelAttribute("customer") KhachHang customer,
+    public String addCustomer(HttpServletRequest request, ModelMap model, @ModelAttribute("customer") NguoiDung customer,
                               HttpSession session, BindingResult errors) {
         if (validateCustomer(customer, errors)) {
             String username = request.getParameter("userName");
             String pass = request.getParameter("pass");
             if (taiKhoanImpl.getAccount(username) != null) {
                 model.addAttribute("message", "Tài khoản đã tồn tại");
+                model.addAttribute("userName", username);
+                model.addAttribute("pass", pass);
                 return "User/register";
             }
             TaiKhoan taiKhoan = new TaiKhoan(username, pass, quyenDAO.getRole(5), null, null);
-            customer.setMaKH(khachHangDAOImpl.nextPK("KhachHang", "KH", "maKH"));
-            Integer temp = khachHangDAOImpl.insertCustomer(customer, taiKhoan);
+            customer.setUserId(khachHangDAOImpl.nextPK("NguoiDung", "KH", "userId"));
+            String error = khachHangDAOImpl.insertCustomer(customer, taiKhoan);
 
-            if (temp != 0) {
+            if (error.equals("")) {
                 session.setAttribute("customer", customer);
                 donHangDAOImpl.insert(customer);
-                session.setAttribute("detailBills", ctDonHangDAOImpl.getDetailBills(donHangDAOImpl.getBillUnBuy(customer.getMaKH()).getMaDH()));
+                session.setAttribute("detailBills", ctDonHangDAOImpl.getDetailBills(donHangDAOImpl.getBillUnBuy(customer.getUserId()).getMaDH()));
                 return "redirect:/User/home.htm";
             } else {
-                model.addAttribute("message", "Thêm thất bại" + customer);
+                model.addAttribute("message", error);
+                model.addAttribute("userName", username);
+                model.addAttribute("pass", pass);
             }
         }
         return "User/register";
@@ -206,7 +211,7 @@ public class UserController {
         String newPass = request.getParameter("newPass");
         String oldPass = request.getParameter("oldPass");
         String newPassReset = request.getParameter("newPassReset");
-        String idCustomer = ((KhachHang) session.getAttribute("customer")).getTaiKhoan().getTenDN();
+        String idCustomer = ((NguoiDung) session.getAttribute("customer")).getTaiKhoan().getTenDN();
         Boolean flag = true;
         if (taiKhoanImpl.getRole(oldPass, idCustomer).equals("")) {
             model.addAttribute("oldPassEr", "Mật khẩu cũ không chính xác");
@@ -242,7 +247,7 @@ public class UserController {
 
     public void showBills(HttpServletRequest request, ModelMap model, HttpSession session) {
         List<DonHang> list = donHangDAOImpl.getBills(
-                ((KhachHang) session.getAttribute("customer")).getMaKH());
+                ((NguoiDung) session.getAttribute("customer")).getUserId());
         PagedListHolder pagedListHolder = new PagedListHolder(list);
         int page = ServletRequestUtils.getIntParameter(request, "p", 0);
         pagedListHolder.setPage(page);
@@ -284,7 +289,7 @@ public class UserController {
 
         session.setAttribute("detailBills", ctDonHangDAOImpl.getDetailBills(
                 donHangDAOImpl.getBillUnBuy(
-                        ((KhachHang) session.getAttribute("customer")).getMaKH()).getMaDH()));
+                        ((NguoiDung) session.getAttribute("customer")).getUserId()).getMaDH()));
         return "redirect:/User/cart.htm";
     }
 
@@ -317,22 +322,22 @@ public class UserController {
 
     @RequestMapping(value = "info", params = "btnUpdate", method = RequestMethod.POST)
     public String editCustomer(HttpServletRequest request, ModelMap model,
-                               @ModelAttribute("customer") KhachHang customer, BindingResult errors, HttpSession session) {
+                               @ModelAttribute("customer") NguoiDung customer, BindingResult errors, HttpSession session) {
         if (validateCustomer(customer, errors)) {
-            Integer temp = khachHangDAOImpl.updateCustomer(customer);
+            String error = khachHangDAOImpl.updateCustomer(customer);
 
-            if (temp != 0) {
+            if (error.equals("")) {
                 model.addAttribute("message", "Sửa thành công");
                 session.setAttribute("customer", khachHangDAOImpl.getCustomer(
-                        ((KhachHang) session.getAttribute("customer")).getMaKH()));
+                        ((NguoiDung) session.getAttribute("customer")).getUserId()));
             } else {
-                model.addAttribute("message", "Sửa thất bại" + customer);
+                model.addAttribute("message", error);
             }
         }
         return "User/info";
     }
 
-    public Boolean validateCustomer(@ModelAttribute("customer") KhachHang customer, BindingResult errors) {
+    public Boolean validateCustomer(@ModelAttribute("customer") NguoiDung customer, BindingResult errors){
         String checkname = "([\\p{L}\\s]+){1,50}";
         String checkphone = "[0-9]{10}";
         String checkemail = "^[A-Za-z0-9+_.-]+@(.+)$";
@@ -362,7 +367,7 @@ public class UserController {
         if (session.getAttribute("customer") == null) {
             return "redirect:/User/login.htm";
         }
-        DonHang b = donHangDAOImpl.getBillUnBuy(((KhachHang) session.getAttribute("customer")).getMaKH());
+        DonHang b = donHangDAOImpl.getBillUnBuy(((NguoiDung) session.getAttribute("customer")).getUserId());
         CTDonHang db = ctDonHangDAOImpl.getDetailBill(b.getMaDH(), id);
 
         if (db == null) {
@@ -402,7 +407,7 @@ public class UserController {
             model.addAttribute("p", sanPhamDAOImpl.getProduct(detailBill.getPk().getSanPham().getMaSP()));
             return "User/product";
         }
-        DonHang b = donHangDAOImpl.getBillUnBuy(((KhachHang) session.getAttribute("customer")).getMaKH());
+        DonHang b = donHangDAOImpl.getBillUnBuy(((NguoiDung) session.getAttribute("customer")).getUserId());
         detailBill.getPk().setDonHang(b);
         detailBill.setGia(0L);
         String temp = ctDonHangDAOImpl.save(detailBill);
@@ -419,7 +424,7 @@ public class UserController {
 
     @RequestMapping(value = "payment")
     public String payment(HttpServletRequest request, HttpSession session, ModelMap model) {
-        DonHang b = donHangDAOImpl.getBillUnBuy(((KhachHang) session.getAttribute("customer")).getMaKH());
+        DonHang b = donHangDAOImpl.getBillUnBuy(((NguoiDung) session.getAttribute("customer")).getUserId());
         List<CTDonHang> cts = ctDonHangDAOImpl.getDetailBills(b.getMaDH());
         long sum = 0;
         for (CTDonHang ct : cts) {
@@ -443,29 +448,28 @@ public class UserController {
         return "User/payment";
     }
 
-    @RequestMapping(value = "payment", method = RequestMethod.POST)
-    public String payment(HttpServletRequest request, HttpSession session, @ModelAttribute("donHang") DonHang donHang) {
-        System.out.println("Payment");
-
-        for (CTDonHang ct : ctDonHangDAOImpl.getDetailBills(donHang.getMaDH())) {
-            ct.setGia(ct.getPk().getSanPham().getGia()
-                    * (100 - chiTietKMDAOImpl.getDiscount(ct.getPk().getSanPham().getMaSP())) / 100);
-
-            SanPham s = ct.getPk().getSanPham();
-            s.setSlt(s.getSlt() - ct.getSl());
-
-            sanPhamDAOImpl.update(s);
-            ctDonHangDAOImpl.update(ct);
-        }
-        donHang.setTrangThai(1);
-        donHangDAOImpl.update(donHang);
-
-        KhachHang k = khachHangDAOImpl.getCustomer(
-                ((KhachHang) session.getAttribute("customer")).getTaiKhoan().getTenDN());
-        int temp = donHangDAOImpl.insert(k);
-
-        if (temp == 1)
-            session.setAttribute("detailBills", ctDonHangDAOImpl.getDetailBills(donHangDAOImpl.getBillUnBuy(k.getMaKH()).getMaDH()));
-        return "redirect:/User/home.htm";
-    }
+//    @RequestMapping(value = "payment", method = RequestMethod.POST)
+//    public String payment(HttpServletRequest request, HttpSession session, @ModelAttribute("donHang") DonHang donHang) {
+//        System.out.println("Payment");
+//
+//        for (CTDonHang ct : ctDonHangDAOImpl.getDetailBills(donHang.getMaDH())) {
+//            ct.setGia(ct.getPk().getSanPham().getGia()
+//                    * (100 - chiTietKMDAOImpl.getDiscount(ct.getPk().getSanPham().getMaSP())) / 100);
+//
+//            SanPham s = ct.getPk().getSanPham();
+//            s.setSlt(s.getSlt() - ct.getSl());
+//
+//            sanPhamDAOImpl.update(s);
+//            ctDonHangDAOImpl.update(ct);
+//        }
+//        donHang.setTrangThai(1);
+//        donHangDAOImpl.update(donHang);
+//
+//        NguoiDung k = khachHangDAOImpl.getCustomer(((NguoiDung) session.getAttribute("customer")).getUserId());
+//        int temp = khachHangDAOImpl.(k);
+//
+//        if (temp == 1)
+//            session.setAttribute("detailBills", ctDonHangDAOImpl.getDetailBills(donHangDAOImpl.getBillUnBuy(k.getMaKH()).getMaDH()));
+//        return "redirect:/User/home.htm";
+//    }
 }

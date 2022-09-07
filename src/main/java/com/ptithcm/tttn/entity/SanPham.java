@@ -67,16 +67,9 @@ public class SanPham implements Serializable {
     @OneToMany(mappedBy = "pk.sanPham", fetch = FetchType.LAZY)
     @JsonBackReference
     private Collection<ChiTietKM> chiTietKMs;
-    
-    @Transient
-    int tongGiamGia = 0;
 
     public SanPham() {
-        if (chiTietKMs != null){
-            for (ChiTietKM i : chiTietKMs){
-                tongGiamGia += i.getGiamGia();
-            }
-        }
+       
     }
 
     public SanPham(String maSP, String tenSP, String moTa, String hinhAnh, long gia, int slt, int spMoi, LoaiSP loaiSP,
@@ -96,11 +89,6 @@ public class SanPham implements Serializable {
         this.ctDonHangs = ctDonHangs;
         this.ctPhieuNhaps = ctPhieuNhaps;
         this.chiTietKMs = chiTietKMs;
-        if (this.chiTietKMs != null){
-            for (ChiTietKM i : this.chiTietKMs){
-                tongGiamGia += i.getGiamGia();
-            }
-        }
     }
 
     public void setMaSP(String maSP) {

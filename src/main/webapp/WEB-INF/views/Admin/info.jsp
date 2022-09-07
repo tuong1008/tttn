@@ -108,7 +108,7 @@
         <div class="infos">
             <div class="item">
                 <label for="">Mã nhân viên</label>
-                <label class="info">${sessionScope.staff.maNV}</label>
+                <label class="info">${sessionScope.staff.userId}</label>
             </div>
             <div class="item">
                 <label for="">Họ và tên</label>

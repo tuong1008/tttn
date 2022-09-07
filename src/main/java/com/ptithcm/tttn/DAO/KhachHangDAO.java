@@ -1,21 +1,22 @@
 package com.ptithcm.tttn.DAO;
 
-import com.ptithcm.tttn.entity.KhachHang;
+import com.microsoft.sqlserver.jdbc.SQLServerException;
+import com.ptithcm.tttn.entity.NguoiDung;
 import com.ptithcm.tttn.entity.TaiKhoan;
 import org.hibernate.SessionFactory;
 
 import java.util.List;
 
-public interface KhachHangDAO extends Dao<KhachHang> {
-    KhachHang getCustomer(String username);
+public interface KhachHangDAO extends Dao<NguoiDung> {
+    NguoiDung getCustomer(String username);
 
-    Integer updateCustomer(KhachHang customer);
+    String updateCustomer(NguoiDung customer);
 
-    Integer insertCustomer(KhachHang customer, TaiKhoan taiKhoan);
+    String insertCustomer(NguoiDung customer, TaiKhoan taiKhoan);
 
-    List<KhachHang> getAllCustomer(SessionFactory factory);
+    List<NguoiDung> getAllCustomer(SessionFactory factory);
     
     Integer setStatus(int status, String idCustomer);
     
-    List<KhachHang> searchCustomers(String nameCustomer);
+    List<NguoiDung> searchCustomers(String nameCustomer);
 }

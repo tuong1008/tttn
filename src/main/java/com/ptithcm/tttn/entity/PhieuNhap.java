@@ -26,7 +26,7 @@ public class PhieuNhap implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "MANV")
-    private NhanVien nhanVien;
+    private NguoiDung nhanVien;
 
     @OneToMany(mappedBy = "pk.phieuNhap", fetch = FetchType.LAZY)
     private Collection<CTPhieuNhap> ctPhieuNhaps;
@@ -39,7 +39,7 @@ public class PhieuNhap implements Serializable {
 
     }
 
-    public PhieuNhap(String maPN, Date ngayTao, long tongTien, NhanVien nhanVien, Collection<CTPhieuNhap> ctPhieuNhaps,
+    public PhieuNhap(String maPN, Date ngayTao, long tongTien, NguoiDung nhanVien, Collection<CTPhieuNhap> ctPhieuNhaps,
                      PhieuDat phieuDat) {
         super();
         this.maPN = maPN;
@@ -74,11 +74,11 @@ public class PhieuNhap implements Serializable {
         this.tongTien = tongTien;
     }
 
-    public NhanVien getNhanVien() {
+    public NguoiDung getNhanVien() {
         return nhanVien;
     }
 
-    public void setNhanVien(NhanVien nhanVien) {
+    public void setNhanVien(NguoiDung nhanVien) {
         this.nhanVien = nhanVien;
     }
 

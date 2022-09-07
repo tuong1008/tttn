@@ -32,7 +32,7 @@ public class KhuyenMai implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "MANV")
-    private NhanVien nhanVien;
+    private NguoiDung nhanVien;
 
     @OneToMany(mappedBy = "pk.khuyenMai", fetch = FetchType.LAZY)
     private Collection<ChiTietKM> chiTietKMs;
@@ -41,7 +41,7 @@ public class KhuyenMai implements Serializable {
 
     }
 
-    public KhuyenMai(int maKM, Date ngayBD, Date ngayKT, String moTa, NhanVien nhanVien,
+    public KhuyenMai(int maKM, Date ngayBD, Date ngayKT, String moTa, NguoiDung nhanVien,
                      Collection<ChiTietKM> chiTietKMs) {
         super();
         this.maKM = maKM;
@@ -84,11 +84,11 @@ public class KhuyenMai implements Serializable {
         this.moTa = moTa;
     }
 
-    public NhanVien getNhanVien() {
+    public NguoiDung getNhanVien() {
         return nhanVien;
     }
 
-    public void setNhanVien(NhanVien nhanVien) {
+    public void setNhanVien(NguoiDung nhanVien) {
         this.nhanVien = nhanVien;
     }
 

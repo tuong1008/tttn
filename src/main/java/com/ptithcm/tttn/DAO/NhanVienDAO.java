@@ -1,22 +1,22 @@
 package com.ptithcm.tttn.DAO;
 
 
-import com.ptithcm.tttn.entity.NhanVien;
+import com.ptithcm.tttn.entity.NguoiDung;
 import java.util.ArrayList;
 
 import java.util.List;
 
-public interface NhanVienDAO extends Dao<NhanVien> {
-    NhanVien getStaff(String username);
+public interface NhanVienDAO extends Dao<NguoiDung> {
+    NguoiDung getStaff(String username);
 
     Integer getMaxNumberByName(String username);
 
-    NhanVien getStaffByID(String id);
+    NguoiDung getStaffByID(String id);
 
-    List<NhanVien> getAllStaff();
+    List<NguoiDung> getAllStaff();
 
-    List<NhanVien> searchAllStaff(String hoTen);
+    List<NguoiDung> searchAllStaff(String hoTen);
     
-    List<NhanVien> getShippers();
+    List<NguoiDung> getShippers();
 
 }

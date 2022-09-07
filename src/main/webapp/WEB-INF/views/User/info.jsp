@@ -157,7 +157,7 @@
                 <form:input type="text" path="diaChi" placeholder="Địa chỉ"/>
                 <form:errors class="error" path="diaChi"/>
             </div>
-            <form:input type="hidden" path="maKH"/>
+            <form:input type="hidden" path="userId"/>
             <form:input type="hidden" path="gioiTinh"/>
             <form:input type="hidden" path="taiKhoan.tenDN"/>
 

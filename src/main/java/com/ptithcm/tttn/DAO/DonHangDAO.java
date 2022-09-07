@@ -1,7 +1,7 @@
 package com.ptithcm.tttn.DAO;
 
 import com.ptithcm.tttn.entity.DonHang;
-import com.ptithcm.tttn.entity.KhachHang;
+import com.ptithcm.tttn.entity.NguoiDung;
 import com.ptithcm.tttn.model.Revenue;
 import org.hibernate.SessionFactory;
 
@@ -10,7 +10,7 @@ import javax.servlet.http.HttpSession;
 
 public interface DonHangDAO extends Dao<DonHang> {
 
-    int insert(KhachHang khachHang);
+    int insert(NguoiDung khachHang);
     
     DonHang getBillUnBuy(String idCustomer);
 

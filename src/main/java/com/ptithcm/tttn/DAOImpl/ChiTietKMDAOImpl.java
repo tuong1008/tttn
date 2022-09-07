@@ -3,7 +3,7 @@ package com.ptithcm.tttn.DAOImpl;
 import com.ptithcm.tttn.DAO.AbstractDao;
 import com.ptithcm.tttn.DAO.ChiTietKMDAO;
 import com.ptithcm.tttn.entity.ChiTietKM;
-import com.ptithcm.tttn.entity.NhanVien;
+import com.ptithcm.tttn.entity.NguoiDung;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -41,6 +41,19 @@ public class ChiTietKMDAOImpl extends AbstractDao<ChiTietKM> implements ChiTietK
     @Override
     public List<ChiTietKM> getDetailPromotions(Integer id) {
         return getFromQuery("FROM ChiTietKM WHERE pk.khuyenMai.maKM =?", ChiTietKM.class, id);
+    }
+
+    @Override
+    public void deleteByPromotionId(Integer id) {
+        Session session = factory.getCurrentSession();
+        session.beginTransaction();
+
+        String hql = "delete from ChiTietKM where pk.khuyenMai.maKM = :id";
+        Query query = session.createQuery(hql);
+        query.setParameter("id", id);
+
+        query.executeUpdate();
+        session.getTransaction().commit();
     }
 
 }

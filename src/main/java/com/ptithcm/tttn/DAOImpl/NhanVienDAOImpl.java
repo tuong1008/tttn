@@ -2,40 +2,36 @@ package com.ptithcm.tttn.DAOImpl;
 
 import com.ptithcm.tttn.DAO.AbstractDao;
 import com.ptithcm.tttn.DAO.NhanVienDAO;
-import com.ptithcm.tttn.entity.NhanVien;
-import java.util.ArrayList;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.ptithcm.tttn.entity.NguoiDung;
 
 import java.util.List;
 
-public class NhanVienDAOImpl extends AbstractDao<NhanVien> implements NhanVienDAO {
+public class NhanVienDAOImpl extends AbstractDao<NguoiDung> implements NhanVienDAO {
     @Override
-    public NhanVien getStaff(String username) {
-        List<NhanVien> list = getFromQuery("FROM NhanVien n where n.taiKhoan.tenDN = ?", NhanVien.class, username);
-        return list.isEmpty() ? null : list.get(0);
-    }
-
-    public NhanVien getStaffByID(String id) {
-        List<NhanVien> list = getFromQuery("FROM NhanVien n where n.maNV = ?", NhanVien.class, id);
+    public NguoiDung getStaff(String username) {
+        List<NguoiDung> list = getFromQuery("FROM NguoiDung n where n.taiKhoan.quyen.tenQuyen <> 'Customer' and n.taiKhoan.tenDN = ?", NguoiDung.class, username);
         return list.isEmpty() ? null : list.get(0);
     }
 
     @Override
-    public List<NhanVien> getAllStaff() {
-        return getFromQuery("FROM NhanVien", NhanVien.class);
+    public NguoiDung getStaffByID(String id) {
+        List<NguoiDung> list = getFromQuery("FROM NguoiDung n where n.userId = ?", NguoiDung.class, id);
+        return list.isEmpty() ? null : list.get(0);
     }
 
     @Override
-    public List<NhanVien> searchAllStaff(String hoTen) {
-        return getFromQuery("FROM NhanVien n Where n.hoTen like ?", NhanVien.class, "%" + hoTen + "%");
+    public List<NguoiDung> getAllStaff() {
+        return getFromQuery("FROM NguoiDung", NguoiDung.class);
+    }
+
+    @Override
+    public List<NguoiDung> searchAllStaff(String hoTen) {
+        return getFromQuery("FROM NguoiDung n Where n.hoTen like ?", NguoiDung.class, "%" + hoTen + "%");
     }
 
     @Override
     public Integer getMaxNumberByName(String username) {
-        List<String> list = getFromQuery("SELECT max(substring(tenDN,length(tenDN),length(tenDN))) FROM NhanVien WHERE substring(tenDN,1,length(tenDN)-1) =?", String.class, username);
+        List<String> list = getFromQuery("SELECT max(substring(tenDN,length(tenDN),length(tenDN))) FROM NguoiDung WHERE substring(tenDN,1,length(tenDN)-1) =?", String.class, username);
         return list.isEmpty() ? 0 : Integer.parseInt(list.get(0));
         
 //        Session session = sessionFactory.openSession();
@@ -52,8 +48,8 @@ public class NhanVienDAOImpl extends AbstractDao<NhanVien> implements NhanVienDA
     }
 
     @Override
-    public List<NhanVien> getShippers() {
-        return getFromQuery("FROM NhanVien Where taiKhoan.quyen.tenQuyen = 'Shipper' ", NhanVien.class);
+    public List<NguoiDung> getShippers() {
+        return getFromQuery("FROM NguoiDung Where taiKhoan.quyen.tenQuyen = 'Shipper' ", NguoiDung.class);
     }
 
 }

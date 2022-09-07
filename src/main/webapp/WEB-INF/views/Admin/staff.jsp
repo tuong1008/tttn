@@ -26,7 +26,7 @@
 		<form:form action="Admin/staff.htm" class="form-staff" modelAttribute="staff">
 			<div class="form-group">
 				<form:input type="hidden" path="taiKhoan.tenDN"/> 
-				<form:input type="hidden" path="maNV"/>
+				<form:input type="hidden" path="userId"/>
 				<div class="form-element">
 					<label class="label-title" for="">Họ tên: </label> 
 					<form:input type="text" placeholder="Nhập họ tên" path="hoTen" required="required"/>
@@ -35,19 +35,19 @@
 				</div>
 				<div class="form-element">
 					<label class="label-title" for="">Số điện thoại: </label> 
-					<form:input type="text" placeholder="Nhập số điện thoại" path="sdt"/> 					
+					<form:input type="text" placeholder="Nhập số điện thoại" path="sdt" required="required"/> 					
 					<label class="error"></label>
 					<form:errors class="error" path="sdt"/>
 				</div>	
 				<div class="form-element">
 					<label class="label-title" for="">Email: </label> 
-					<form:input type="email" path="email"/> 
+					<form:input placeholder="Nhập Email" type="text" path="email" required="required"  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"/> 
 					<label for="" class="error"></label>
 					<form:errors class="error" path="email"/>
 				</div>
 				<div class="form-element">
 					<label class="label-title" for="">Địa chỉ: </label> 
-					<form:input type="text" path="diaChi"/> 
+					<form:input placeholder="Nhập Địa chỉ" type="text" path="diaChi" required="required"/> 
 					<label for="" class="error"></label>
 					<form:errors class="error" path="diaChi"/>
 				</div>
@@ -100,7 +100,7 @@
 			</tr>
 			<c:forEach var="s" items="${pagedListHolder.pageList}">
 				<tr>
-					<td>${s.maNV}</td>
+					<td>${s.userId}</td>
                                         <td>${s.taiKhoan.tenDN}</td>
 					<td>${s.hoTen}</td>
 					<td>${s.gioiTinh}</td>
@@ -109,11 +109,11 @@
 					<td>${s.diaChi}</td>
 					<td>
 					<c:if test="${s.taiKhoan.quyen.maQuyen!=1}">
-						<a href="Admin/staff/${s.maNV}.htm?linkDelete">Xóa</a>
+						<a href="Admin/staff/${s.userId}.htm?linkDelete">Xóa</a>
 					</c:if>
 					</td>
-					<td><a href="Admin/staff/${s.maNV}.htm?linkEdit">Sửa</a></td>
-					<td><a href="Admin/staff/${s.maNV}.htm?linkReset">Reset</a></td>
+					<td><a href="Admin/staff/${s.userId}.htm?linkEdit">Sửa</a></td>
+					<td><a href="Admin/staff/${s.userId}.htm?linkReset">Reset</a></td>
 				</tr>
 			</c:forEach>
 		</table>

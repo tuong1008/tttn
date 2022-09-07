@@ -16,13 +16,13 @@ public class NhaCungCap implements Serializable {
     @Column(name = "TENNCC", columnDefinition = "nvarchar(255)")
     private String tenNCC;
 
-    @Column(name = "SDT")
+    @Column(name = "SDT", unique = true)
     private String sdt;
 
     @Column(name = "DIACHI", columnDefinition = "nvarchar(255)")
     private String diaChi;
 
-    @Column(name = "EMAIL")
+    @Column(name = "EMAIL", unique = true)
     private String email;
 
     @OneToMany(mappedBy = "nhaCungCap", fetch = FetchType.LAZY)

@@ -6,7 +6,7 @@ package com.ptithcm.tttn.DAOImpl;
 
 import com.ptithcm.tttn.DAO.AbstractDao;
 import com.ptithcm.tttn.DAO.PhieuDatDAO;
-import com.ptithcm.tttn.entity.NhanVien;
+import com.ptithcm.tttn.entity.NguoiDung;
 import com.ptithcm.tttn.entity.PhieuDat;
 import java.util.List;
 

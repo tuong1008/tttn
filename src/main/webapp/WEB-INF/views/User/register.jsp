@@ -154,21 +154,21 @@
 
     <form:form action="User/register.htm" class="login-app" modelAttribute="customer">
         <h3 class="title">Đăng ký</h3>
-        <form:input class="input-top" type="text" path="hoTen" placeholder="Họ và tên"/>
+        <form:input class="input-top" type="text" path="hoTen" placeholder="Họ và tên" required="required"/>
         <form:errors class="error" path="hoTen"/>
         <form:select path="gioiTinh" id="sex">
             <option value="Nam">Nam</option>
             <option value="Nữ">Nữ</option>
         </form:select>
-        <form:input type="number" path="sdt" placeholder="Số điện thoại"/>
+        <form:input type="number" path="sdt" placeholder="Số điện thoại" required="required"/>
         <form:errors class="error" path="sdt"/>
-        <form:input type="email" path="email" placeholder="Email"/>
+        <form:input type="email" path="email" placeholder="Email" required="required"/>
         <form:errors class="error" path="email"/>
-        <form:input type="text" path="diaChi" placeholder="Địa chỉ"/>
+        <form:input type="text" path="diaChi" placeholder="Địa chỉ" required="required"/>
         <form:errors class="error" path="diaChi"/>
-        <input type="text" name="userName" placeholder="Tên đăng nhập"/>
-        <input class="input-bottom" type="password" name="pass" placeholder="Mật khẩu"/>
-        <form:input type="hidden" path="maKH" value="1"/>
+        <input value="${userName}" type="text" name="userName" placeholder="Tên đăng nhập" required="required"/>
+        <input value="${pass}" class="input-bottom" type="password" name="pass" placeholder="Mật khẩu" required="required"/>
+        <form:input type="hidden" path="userId" value="1"/>
         <form:input type="hidden" path="trangThai" value="1"/>
         <button class="btn" name="btnAdd">Xác nhận</button>
         <div class="error">${message}</div>

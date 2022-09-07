@@ -20,10 +20,10 @@ public class TaiKhoan implements Serializable {
     private Quyen quyen;
 
     @OneToMany(mappedBy = "taiKhoan", fetch = FetchType.EAGER)
-    private Collection<KhachHang> khachHangs;
+    private Collection<NguoiDung> khachHangs;
 
     @OneToMany(mappedBy = "taiKhoan", fetch = FetchType.EAGER)
-    private Collection<NhanVien> nhanViens;
+    private Collection<NguoiDung> nhanViens;
 
     public TaiKhoan() {
 
@@ -37,8 +37,8 @@ public class TaiKhoan implements Serializable {
     
     
 
-    public TaiKhoan(String tenDN, String matKhau, Quyen quyen, Collection<KhachHang> khachHangs,
-                    Collection<NhanVien> nhanViens) {
+    public TaiKhoan(String tenDN, String matKhau, Quyen quyen, Collection<NguoiDung> khachHangs,
+                    Collection<NguoiDung> nhanViens) {
         super();
         this.tenDN = tenDN;
         this.matKhau = matKhau;
@@ -71,19 +71,19 @@ public class TaiKhoan implements Serializable {
         this.quyen = quyen;
     }
 
-    public Collection<KhachHang> getKhachHangs() {
+    public Collection<NguoiDung> getKhachHangs() {
         return khachHangs;
     }
 
-    public void setKhachHangs(Collection<KhachHang> khachHangs) {
+    public void setKhachHangs(Collection<NguoiDung> khachHangs) {
         this.khachHangs = khachHangs;
     }
 
-    public Collection<NhanVien> getNhanViens() {
+    public Collection<NguoiDung> getNhanViens() {
         return nhanViens;
     }
 
-    public void setNhanViens(Collection<NhanVien> nhanViens) {
+    public void setNhanViens(Collection<NguoiDung> nhanViens) {
         this.nhanViens = nhanViens;
     }
 

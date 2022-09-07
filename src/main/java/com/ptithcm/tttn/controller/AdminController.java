@@ -11,11 +11,10 @@ import com.ptithcm.tttn.entity.CTPhieuNhapPK;
 import com.ptithcm.tttn.entity.ChiTietKM;
 import com.ptithcm.tttn.entity.ChiTietKMPK;
 import com.ptithcm.tttn.entity.DonHang;
-import com.ptithcm.tttn.entity.KhachHang;
 import com.ptithcm.tttn.entity.KhuyenMai;
 import com.ptithcm.tttn.entity.LoaiSP;
 import com.ptithcm.tttn.entity.NhaCungCap;
-import com.ptithcm.tttn.entity.NhanVien;
+import com.ptithcm.tttn.entity.NguoiDung;
 import com.ptithcm.tttn.entity.PhieuDat;
 import com.ptithcm.tttn.entity.PhieuNhap;
 import com.ptithcm.tttn.entity.SanPham;
@@ -29,6 +28,7 @@ import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import org.hibernate.SessionFactory;
@@ -116,7 +116,7 @@ public class AdminController {
         String idAdmin = request.getParameter("name");
         String passAdmin = request.getParameter("password");
         String role = taiKhoanDAOImpl.getRole(passAdmin, idAdmin);
-        if (!role.equals("") && !role.equals("customer")) {
+        if (!role.equals("") && !role.equals("Customer")) {
             session.setAttribute("staff", nhanVienDAO.getStaff(idAdmin));
             return "redirect:/Admin/info.htm";
         } else {
@@ -141,7 +141,7 @@ public class AdminController {
         String newPass = request.getParameter("newPass");
         String oldPass = request.getParameter("oldPass");
         String newPassReset = request.getParameter("newPassReset");
-        NhanVien nv = ((NhanVien) session.getAttribute("staff"));
+        NguoiDung nv = ((NguoiDung) session.getAttribute("staff"));
         Boolean flag = true;
         if (!nv.getTaiKhoan().getMatKhau().equals(oldPass)) {
             model.addAttribute("oldPassEr", "Mật khẩu cũ không chính xác");
@@ -175,7 +175,7 @@ public class AdminController {
         showStaffs(request, model, nhanVienDAO.getAllStaff());
 
         model.addAttribute("btnStatus", "btnAdd");
-        model.addAttribute("staff", new NhanVien());
+        model.addAttribute("staff", new NguoiDung());
         session.setAttribute("roles", quyenDAO.getAllRole());
         return "Admin/staff";
     }
@@ -184,13 +184,13 @@ public class AdminController {
     public String searchStaff(HttpServletRequest request, ModelMap model) {
         showStaffs(request, model, nhanVienDAO.searchAllStaff(request.getParameter("name").trim()));
         model.addAttribute("btnStatus", "btnAdd");
-        model.addAttribute("staff", new NhanVien());
+        model.addAttribute("staff", new NguoiDung());
 
         return "Admin/staff";
     }
 
     @RequestMapping(value = "staff", params = "btnAdd", method = RequestMethod.POST)
-    public String addStaff(HttpServletRequest request, ModelMap model, @ModelAttribute("staff") NhanVien staff,
+    public String addStaff(HttpServletRequest request, ModelMap model, @ModelAttribute("staff") NguoiDung staff,
             BindingResult errors) {
         int maQuyen = Integer.parseInt(request.getParameter("quyen"));
         if (validateStaff(request, staff, errors)) {
@@ -199,11 +199,11 @@ public class AdminController {
             System.out.println(k.getTenDN());
             String result1 = taiKhoanDAOImpl.save(k);
             staff.setTaiKhoan(k);
-            staff.setMaNV(nhanVienDAO.nextPK("NhanVien", "NV", "maNV"));
+            staff.setUserId(nhanVienDAO.nextPK("NhanVien", "NV", "maNV"));
             String result2 = nhanVienDAO.save(staff);
             if (result2.equals("")) {
                 model.addAttribute("message", "Thêm thành công");
-                model.addAttribute("staff", new NhanVien());
+                model.addAttribute("staff", new NguoiDung());
 
             } else {
                 model.addAttribute("message", "Thêm thất bại, vui lòng kiểm tra lại thông tin" + staff);
@@ -216,7 +216,7 @@ public class AdminController {
     }
 
     @RequestMapping(value = "staff", params = "btnEdit", method = RequestMethod.POST)
-    public String editStaff(HttpServletRequest request, ModelMap model, @ModelAttribute("staff") NhanVien staff,
+    public String editStaff(HttpServletRequest request, ModelMap model, @ModelAttribute("staff") NguoiDung staff,
             BindingResult errors) {
         int maQuyen = Integer.parseInt(request.getParameter("quyen"));
         if (!validateStaff(request, staff, errors)) {
@@ -230,7 +230,7 @@ public class AdminController {
         String temp = nhanVienDAO.update(staff);
         if (temp.equals("")) {
             model.addAttribute("message", "Sửa thành công");
-            model.addAttribute("staff", new NhanVien());
+            model.addAttribute("staff", new NguoiDung());
             model.addAttribute("btnStatus", "btnAdd");
         } else {
             model.addAttribute("message", "Sửa thất bại" + staff);
@@ -245,16 +245,16 @@ public class AdminController {
         showStaffs(request, model, nhanVienDAO.getAllStaff());
         System.out.println("Chao edit");
         model.addAttribute("btnStatus", "btnEdit");
-        NhanVien s = nhanVienDAO.getStaffByID(id);
+        NguoiDung s = nhanVienDAO.getStaffByID(id);
         model.addAttribute("staff", s);
 
         return "Admin/staff";
     }
 
     @RequestMapping(value = "staff/{id}.htm", params = "linkDelete")
-    public String deleteStaff(HttpServletRequest request, ModelMap model, @ModelAttribute("staff") NhanVien staff,
+    public String deleteStaff(HttpServletRequest request, ModelMap model, @ModelAttribute("staff") NguoiDung staff,
             @PathVariable("id") String id) {
-        NhanVien nhanVien = nhanVienDAO.getStaffByID(id);
+        NguoiDung nhanVien = nhanVienDAO.getStaffByID(id);
         TaiKhoan taiKhoan = taiKhoanDAOImpl.getAccount(nhanVien.getTaiKhoan().getTenDN());
 
         String temp = nhanVienDAO.delete(nhanVien);
@@ -281,14 +281,14 @@ public class AdminController {
             model.addAttribute("message", "Reset thất bại");
         }
 
-        model.addAttribute("staff", new NhanVien());
+        model.addAttribute("staff", new NguoiDung());
         model.addAttribute("btnStatus", "btnAdd");
         showStaffs(request, model, nhanVienDAO.getAllStaff());
 
         return "Admin/staff";
     }
 
-    public Boolean validateStaff(HttpServletRequest request, NhanVien staff, BindingResult errors) {
+    public Boolean validateStaff(HttpServletRequest request, NguoiDung staff, BindingResult errors) {
         String checkname = "([\\p{L}\\s]+){1,50}";
         String checkphone = "[0-9]{10}";
         String checkemail = "^[A-Za-z0-9+_.-]+@(.+)$";
@@ -311,7 +311,7 @@ public class AdminController {
         return !errors.hasErrors();
     }
 
-    public void showStaffs(HttpServletRequest request, ModelMap model, List<NhanVien> staffs) {
+    public void showStaffs(HttpServletRequest request, ModelMap model, List<NguoiDung> staffs) {
         PagedListHolder pagedListHolder = new PagedListHolder(staffs);
         int page = ServletRequestUtils.getIntParameter(request, "p", 0);
         pagedListHolder.setPage(page);
@@ -352,7 +352,7 @@ public class AdminController {
         return "redirect:/Admin/customer.htm";
     }
 
-    public void showCustomer(HttpServletRequest request, ModelMap model, List<KhachHang> customers) {
+    public void showCustomer(HttpServletRequest request, ModelMap model, List<NguoiDung> customers) {
         PagedListHolder pagedListHolder = new PagedListHolder(customers);
         int page = ServletRequestUtils.getIntParameter(request, "p", 0);
         pagedListHolder.setPage(page);
@@ -702,7 +702,7 @@ public class AdminController {
     }
 
     @RequestMapping(value = "promotion", params = "btnAdd", method = RequestMethod.POST)
-    public String addPromotion(HttpServletRequest request, ModelMap model) throws ParseException {
+    public String addPromotion(HttpServletRequest request, ModelMap model, HttpSession session) throws ParseException {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String ngayBD = request.getParameter("ngayBD");
         String ngayKT = request.getParameter("ngayKT");
@@ -714,6 +714,42 @@ public class AdminController {
         p.setNgayBD(formatter.parse(ngayBD));
         p.setNgayKT(formatter.parse(ngayKT));
         p.setMoTa(moTa);
+        p.setNhanVien((NguoiDung) session.getAttribute("user"));
+
+        khuyenMaiDAO.save(p);
+
+        for (int i = 0; i < maSPs.length; i++) {
+            ChiTietKMPK pk = new ChiTietKMPK();
+            pk.setKhuyenMai(p);
+            pk.setSanPham(sanPhamDAO.getOne(SanPham.class, maSPs[i]));
+
+            ChiTietKM ct = new ChiTietKM();
+
+            ct.setPk(pk);
+            ct.setGiamGia(Integer.valueOf(giamGias[i]));
+
+            chiTietKMDAO.save(ct);
+        }
+        model.addAttribute("btnStatus", "btnAdd");
+        model.addAttribute("dsSanPham", sanPhamDAO.getListProduct());
+        return "Admin/promotion";
+    }
+    
+    @RequestMapping(value = "promotion/{id}.htm", params = "btnEdit", method = RequestMethod.POST)
+    public String editPromotion(HttpServletRequest request, ModelMap model, HttpSession session, @PathVariable("id") Integer id) throws ParseException {
+        chiTietKMDAO.deleteByPromotionId(id);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String ngayBD = request.getParameter("ngayBD");
+        String ngayKT = request.getParameter("ngayKT");
+        String moTa = request.getParameter("moTa");
+        String[] maSPs = request.getParameterValues("maSP");
+        String[] giamGias = request.getParameterValues("giamGia");
+
+        KhuyenMai p = khuyenMaiDAO.getOne(KhuyenMai.class, id);
+        p.setNgayBD(formatter.parse(ngayBD));
+        p.setNgayKT(formatter.parse(ngayKT));
+        p.setMoTa(moTa);
+        p.setNhanVien((NguoiDung) session.getAttribute("user"));
 
         khuyenMaiDAO.save(p);
 
@@ -734,6 +770,31 @@ public class AdminController {
         return "Admin/promotion";
     }
 
+    @RequestMapping(value = "promotion/{id}.htm", params = "linkEdit")
+    public String editPromotion(HttpServletRequest request, ModelMap model, @PathVariable("id") Integer id) {
+        model.addAttribute("btnStatus", "btnEdit");
+        KhuyenMai km = khuyenMaiDAO.getOne(KhuyenMai.class, id);
+        model.addAttribute("maKM", id);
+        model.addAttribute("ngayBD", km.getNgayBD());
+        model.addAttribute("ngayKT", km.getNgayKT());
+        model.addAttribute("moTa", km.getMoTa());
+        model.addAttribute("dsSanPham", sanPhamDAO.getListProduct());
+        model.addAttribute("ctKM", chiTietKMDAO.getDetailPromotions(id));
+        return "Admin/promotionEdit";
+    }
+
+    @RequestMapping(value = "promotion/{id}.htm", params = "linkDelete")
+    public String deletePromotion(HttpServletRequest request, ModelMap model, @PathVariable("id") String id) {
+        NhaCungCap supplier = nhaCungCapDAO.getOne(NhaCungCap.class, id);
+        String result = nhaCungCapDAO.delete(supplier);
+        if (result.equals("")) {
+            model.addAttribute("message", "Xóa thành công");
+        } else {
+            model.addAttribute("message", "Xóa thất bại");
+        }
+        return "redirect:/Admin/supplier.htm";
+    }
+    
     public void showPromotionDetail(HttpServletRequest request, ModelMap model, List<ChiTietKM> promotions) {
         PagedListHolder pagedListHolder = new PagedListHolder(promotions);
         int page = ServletRequestUtils.getIntParameter(request, "p", 0);
@@ -1003,8 +1064,8 @@ public class AdminController {
     public String billDetailBrower(HttpServletRequest request, ModelMap model, HttpSession session,
             @PathVariable("id") String id) {
         DonHang bill = donHangDAO.getOne(DonHang.class, id);
-        bill.setNhanVienG(nhanVienDAO.getOne(NhanVien.class, request.getParameter("maNVG")));
-        bill.setNhanVienD((NhanVien) session.getAttribute("staff"));
+        bill.setNhanVienG(nhanVienDAO.getOne(NguoiDung.class, request.getParameter("maNVG")));
+        bill.setNhanVienD((NguoiDung) session.getAttribute("staff"));
         donHangDAO.update(bill);
         return "redirect:/Admin/billUnConfirm.htm";
     }
@@ -1013,7 +1074,7 @@ public class AdminController {
     public String billDetailCancel(HttpServletRequest request, ModelMap model, HttpSession session,
             @PathVariable("id") String id) {
         DonHang bill = donHangDAO.getOne(DonHang.class, id);
-        bill.setNhanVienD((NhanVien) session.getAttribute("staff"));
+        bill.setNhanVienD((NguoiDung) session.getAttribute("staff"));
         bill.setTrangThai(-1);
         donHangDAO.update(bill);
         return "redirect:/Admin/billUnConfirm.htm";

@@ -4,7 +4,7 @@ import com.ptithcm.tttn.DAO.NhaCungCapDAO;
 import com.ptithcm.tttn.DAO.NhanVienDAO;
 import com.ptithcm.tttn.DAO.SanPhamDAO;
 import com.ptithcm.tttn.entity.NhaCungCap;
-import com.ptithcm.tttn.entity.NhanVien;
+import com.ptithcm.tttn.entity.NguoiDung;
 import com.ptithcm.tttn.entity.SanPham;
 import com.ptithcm.tttn.pdf.ProductPDFView;
 import com.ptithcm.tttn.pdf.StaffPDFView;
@@ -39,7 +39,7 @@ public class PDFController {
 
     @RequestMapping("staff")
     public ModelAndView staffListReport(HttpServletRequest req) {
-        List<NhanVien> staffs = nhanVienDAO.getAllStaff();
+        List<NguoiDung> staffs = nhanVienDAO.getAllStaff();
         return new ModelAndView(new StaffPDFView(), "staffs", staffs);
     }
 

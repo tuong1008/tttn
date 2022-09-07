@@ -46,15 +46,15 @@ public class DonHang implements Serializable, Comparable<DonHang> {
 
     @ManyToOne
     @JoinColumn(name = "MANVD")
-    private NhanVien nhanVienD;
+    private NguoiDung nhanVienD;
 
     @ManyToOne
     @JoinColumn(name = "MANVG")
-    private NhanVien nhanVienG;
+    private NguoiDung nhanVienG;
 
     @ManyToOne
     @JoinColumn(name = "MAKH")
-    private KhachHang khachHang;
+    private NguoiDung khachHang;
 
     @OneToMany(mappedBy = "pk.donHang", fetch = FetchType.LAZY)
     private Collection<CTDonHang> ctDonHangs;
@@ -67,7 +67,7 @@ public class DonHang implements Serializable, Comparable<DonHang> {
     }
 
     public DonHang(String maDH, int trangThai, String hoTenNN, String diaChiNN, String sdtNN, String emailNN,
-                   Date ngayTao, Date ngayNhan, long tongTien, NhanVien nhanVienD, NhanVien nhanVienG, KhachHang khachHang,
+                   Date ngayTao, Date ngayNhan, long tongTien, NguoiDung nhanVienD, NguoiDung nhanVienG, NguoiDung khachHang,
                    Collection<CTDonHang> ctDonHangs, Collection<HoaDon> hoaDons) {
         super();
         this.maDH = maDH;
@@ -158,27 +158,27 @@ public class DonHang implements Serializable, Comparable<DonHang> {
         this.tongTien = tongTien;
     }
 
-    public NhanVien getNhanVienD() {
+    public NguoiDung getNhanVienD() {
         return nhanVienD;
     }
 
-    public void setNhanVienD(NhanVien nhanVienD) {
+    public void setNhanVienD(NguoiDung nhanVienD) {
         this.nhanVienD = nhanVienD;
     }
 
-    public NhanVien getNhanVienG() {
+    public NguoiDung getNhanVienG() {
         return nhanVienG;
     }
 
-    public void setNhanVienG(NhanVien nhanVienG) {
+    public void setNhanVienG(NguoiDung nhanVienG) {
         this.nhanVienG = nhanVienG;
     }
 
-    public KhachHang getKhachHang() {
+    public NguoiDung getKhachHang() {
         return khachHang;
     }
 
-    public void setKhachHang(KhachHang khachHang) {
+    public void setKhachHang(NguoiDung khachHang) {
         this.khachHang = khachHang;
     }
 

@@ -26,7 +26,7 @@ public class PhieuTra implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "MANV")
-    private NhanVien nhanVien;
+    private NguoiDung nhanVien;
 
     @OneToMany(mappedBy = "phieuTra", fetch = FetchType.LAZY)
     private Collection<CTDonHang> ctDonHangs;
@@ -35,7 +35,7 @@ public class PhieuTra implements Serializable {
 
     }
 
-    public PhieuTra(String maPT, Date ngayLap, HoaDon hoaDon, NhanVien nhanVien, Collection<CTDonHang> ctDonHangs) {
+    public PhieuTra(String maPT, Date ngayLap, HoaDon hoaDon, NguoiDung nhanVien, Collection<CTDonHang> ctDonHangs) {
         super();
         this.maPT = maPT;
         this.ngayLap = ngayLap;
@@ -68,11 +68,11 @@ public class PhieuTra implements Serializable {
         this.hoaDon = hoaDon;
     }
 
-    public NhanVien getNhanVien() {
+    public NguoiDung getNhanVien() {
         return nhanVien;
     }
 
-    public void setNhanVien(NhanVien nhanVien) {
+    public void setNhanVien(NguoiDung nhanVien) {
         this.nhanVien = nhanVien;
     }
 
