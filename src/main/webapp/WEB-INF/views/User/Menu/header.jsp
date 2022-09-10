@@ -52,7 +52,7 @@
                                 <li class="cart-hover-list__item">
                                     <img src="resource/img/imgProduct/${s.pk.sanPham.hinhAnh}" width="100" height="100" alt="">
                                     <p>${s.pk.sanPham.tenSP}</p>
-                                    <span> <fmt:formatNumber type="currency" value="${s.pk.sanPham.gia}"/> </span>
+                                    <span> <fmt:formatNumber type="currency" value="${s.pk.sanPham.gia * (100 - s.pk.sanPham.giamGiaLonNhat)/100}"/> </span>
                                 </li>
                                 <%m = m + 1;%>
                             </c:forEach>

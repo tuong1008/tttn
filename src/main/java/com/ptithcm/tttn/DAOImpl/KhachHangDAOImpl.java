@@ -10,18 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 public class KhachHangDAOImpl extends AbstractDao<NguoiDung> implements KhachHangDAO {
-    @Autowired
-    SessionFactory factory;
 
     @Override
     public NguoiDung getCustomer(String username) {
-        List<NguoiDung> list = getFromQuery("FROM NguoiDung n.taiKhoan.quyen.tenQuyen = 'Customer' and k where k.taiKhoan.tenDN = ?", NguoiDung.class, username);
+        List<NguoiDung> list = getFromQuery("FROM NguoiDung k where k.taiKhoan.quyen.tenQuyen = 'Customer' and  k.taiKhoan.tenDN = ?", NguoiDung.class, username);
         return list.isEmpty() ? null : list.get(0);
     }
 
     @Override
     public String updateCustomer(NguoiDung customer) {
-        Session session = factory.openSession();
+        Session session = sessionFactory.openSession();
         Transaction t = session.beginTransaction();
         try {
             session.update(customer);
@@ -38,7 +36,7 @@ public class KhachHangDAOImpl extends AbstractDao<NguoiDung> implements KhachHan
 
     @Override
     public String insertCustomer(NguoiDung customer, TaiKhoan taiKhoan) {
-        Session session = factory.openSession();
+        Session session = sessionFactory.openSession();
         Transaction t = session.beginTransaction();
         try {
             session.save(taiKhoan);
@@ -57,8 +55,8 @@ public class KhachHangDAOImpl extends AbstractDao<NguoiDung> implements KhachHan
     }
 
     @Override
-    public List<NguoiDung> getAllCustomer(SessionFactory factory) {
-        return getFromQuery("FROM NguoiDung n WHERE n.taiKhoan.quyen.tenQuyen <> 'Customer'", NguoiDung.class);
+    public List<NguoiDung> getAllCustomer() {
+        return getFromQuery("FROM NguoiDung n WHERE n.taiKhoan.quyen.tenQuyen = 'Customer'", NguoiDung.class);
     }
 
     @Override
@@ -88,11 +86,12 @@ public class KhachHangDAOImpl extends AbstractDao<NguoiDung> implements KhachHan
 
     @Override
     public List<NguoiDung> searchCustomers(String nameCustomer) {
-		Session session = factory.getCurrentSession();
-		String hql = "FROM NguoiDung where hoTen LIKE :name";
+		Session session = sessionFactory.openSession();
+		String hql = "FROM NguoiDung n where n.taiKhoan.quyen.tenQuyen = 'Customer' and n.hoTen LIKE :name";
 		Query query = session.createQuery(hql);
 		query.setParameter("name", "%" + nameCustomer + "%");
 		List<NguoiDung> list = query.list();
+                session.close();
 		return list;
 	}
 }

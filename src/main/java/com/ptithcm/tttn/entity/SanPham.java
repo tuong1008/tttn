@@ -67,6 +67,9 @@ public class SanPham implements Serializable {
     @OneToMany(mappedBy = "pk.sanPham", fetch = FetchType.LAZY)
     @JsonBackReference
     private Collection<ChiTietKM> chiTietKMs;
+    
+    @Transient
+    private int giamGiaLonNhat=0;
 
     public SanPham() {
        
@@ -195,4 +198,14 @@ public class SanPham implements Serializable {
         this.chiTietKMs = chiTietKMs;
     }
 
+    public int getGiamGiaLonNhat() {
+        return giamGiaLonNhat;
+    }
+
+    public void setGiamGiaLonNhat(int giamGiaLonNhat) {
+        this.giamGiaLonNhat = giamGiaLonNhat;
+    }
+
+    
+    
 }

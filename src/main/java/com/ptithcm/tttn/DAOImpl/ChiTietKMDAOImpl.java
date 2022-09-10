@@ -11,14 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-
 public class ChiTietKMDAOImpl extends AbstractDao<ChiTietKM> implements ChiTietKMDAO {
-    @Autowired
-    SessionFactory factory;
 
     @Override
     public Integer getDiscount(String idProduct) {
-        Session session = factory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         session.beginTransaction();
 
         String hql = "SELECT C.giamGia FROM ChiTietKM C where C.pk.sanPham.maSP = :id AND (current_date() BETWEEN C.pk.khuyenMai.ngayBD AND C.pk.khuyenMai.ngayKT)";
@@ -27,15 +24,19 @@ public class ChiTietKMDAOImpl extends AbstractDao<ChiTietKM> implements ChiTietK
 
         List<Integer> list = query.list();
         session.getTransaction().commit();
-        
-        int tongGiamGia = 0;
-        if (list != null){
-            for (int i : list){
-                tongGiamGia += i;
+
+        int giamGiaLonNhat = 0;
+        if (list != null) {
+            for (int i : list) {
+                if (giamGiaLonNhat < i) {
+                    giamGiaLonNhat = i;
+                }
             }
         }
 
-        return tongGiamGia;
+        session.close();
+
+        return giamGiaLonNhat;
     }
 
     @Override
@@ -45,7 +46,7 @@ public class ChiTietKMDAOImpl extends AbstractDao<ChiTietKM> implements ChiTietK
 
     @Override
     public void deleteByPromotionId(Integer id) {
-        Session session = factory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         session.beginTransaction();
 
         String hql = "delete from ChiTietKM where pk.khuyenMai.maKM = :id";
@@ -54,6 +55,8 @@ public class ChiTietKMDAOImpl extends AbstractDao<ChiTietKM> implements ChiTietK
 
         query.executeUpdate();
         session.getTransaction().commit();
+        
+        session.close();
     }
 
 }

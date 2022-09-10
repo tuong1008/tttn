@@ -9,5 +9,6 @@ import java.util.List;
 
 public interface KhuyenMaiDAO extends Dao<KhuyenMai>{
     List<KhuyenMai> getAll();
+    List<KhuyenMai> getListByMota(String mota);
 }
 

@@ -86,7 +86,7 @@
     <jsp:useBean id="pagedListHolder" scope="request"
                  type="org.springframework.beans.support.PagedListHolder"/>
     <c:url value="User/history.htm" var="pagedLink">
-        <c:param name="p" value="~"/>
+        <c:param name="p" value="tuong"/>
     </c:url>
     <div>
         <tg:paging pagedListHolder="${pagedListHolder}"
@@ -116,6 +116,7 @@
                 <div class="cart-detail__item"><label>${b.maDH}</label></div>
                 <div class="cart-detail__item"><label>
                     <c:if test="${b.trangThai==1}">Chờ xác nhận</c:if>
+                    <c:if test="${b.trangThai ==1 && b.nhanVienG != null}">Ðang giao</c:if>
                     <c:if test="${b.trangThai==2}">Đã hoàn thành</c:if>
                 </label></div>
                 <div class="cart-detail__item"><label>${b.hoTenNN}</label></div>

@@ -35,14 +35,14 @@ public class AbstractDao<T> implements Dao<T> {
     @Override
     public String action(T t, int crud) {
         Transaction trans = null;
-        Session session;
+        Session session = null;
         try {
             session = sessionFactory.openSession();
             trans = session.beginTransaction();
 
             switch (crud) {
                 case 1:
-                    session.save(t);
+                    session.saveOrUpdate(t);
                     break;
                 case 2:
                     session.merge(t);
@@ -57,7 +57,12 @@ public class AbstractDao<T> implements Dao<T> {
                 trans.rollback();
             }
             e.printStackTrace();
-            return e.getMessage();
+            Throwable error = e.getCause();
+            return error.getMessage();
+        } finally{
+            if (session != null) {
+                session.close();
+            }
         }
         return "";
     }
@@ -84,14 +89,15 @@ public class AbstractDao<T> implements Dao<T> {
             Query query = session.createQuery(hql);
 
             setParameters(query, params);
-
+            
+            
             list.addAll(query.list());
             trans.commit();
 
             return list;
         } catch (Exception e) {
 //            LOGGER.error(e.getMessage(), e);
-            //e.printStackTrace();
+            e.printStackTrace();
             Throwable error = e.getCause();
             System.out.println("=-=-=-=-=-=-=-"+error.getMessage());
         } finally {

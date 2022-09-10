@@ -28,7 +28,7 @@ public class SupplierPDFView extends AbstractPdfView {
     protected void buildPdfDocument(Map<String, Object> model, Document document, PdfWriter pdfWriter,
             HttpServletRequest request, HttpServletResponse response) throws Exception {
         String rootDir = request.getSession().getServletContext().getRealPath("/");
-        Path path = Paths.get(rootDir + "WEB-INF" + File.separator + "resource" + File.separator + "TIMES.ttf");
+        Path path = Paths.get(rootDir + "WEB-INF" + File.separator + "resource" + File.separator + "times.ttf");
         BaseFont bf = BaseFont.createFont(path.toAbsolutePath().toString(), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
         Font font = new Font(bf, 13);
         Font fontTitle = new Font(bf, 15);

@@ -192,7 +192,7 @@
             </div>
         </div>
         <p class="commit">
-            Bằng việc đăng kí, bạn đã đồng ý với AsianShop về <br> <a
+            Bằng việc đăng kí, bạn đã đồng ý với Nike về <br> <a
                 href="User/operatingRegulation.htm" class="commit__rule">Điều khoản dịch vụ</a> &
             <a href="User/privacyPolicy.htm"
                class="commit__security">Chính sách bảo mật</a>

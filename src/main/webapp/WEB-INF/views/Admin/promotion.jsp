@@ -27,11 +27,11 @@
                 <div class="form-group">
                     <div class="form-element">
                         <label>Ngày bắt đầu</label>
-                        <input type="date" name="ngayBD"/>    
+                        <input id="from" type="date" name="ngayBD" required="required"/>    
                     </div>
                     <div class="form-element">
                         <label>Ngày kết thúc</label>
-                        <input type="date" name="ngayKT"/>    
+                        <input id="to" type="date" name="ngayKT" required="required"/>    
                     </div>
                     <div>
                         <label>Mô tả</label>
@@ -52,7 +52,7 @@
                     </div>
                     <div>
                         <button style="margin: 5px auto" name="btnMoreProduct" onclick="moreProduct(event)">Thêm sản phẩm</button>
-                        <button style="margin: 5px auto" name="${btnStatus}">Lưu</button>
+                        <button style="margin: 5px auto" name="${btnStatus}" onclick="save(event)">Lưu</button>
                     </div>
             </form>
             <script>
@@ -64,6 +64,14 @@
                     console.log(select);
                     container.appendChild(select);
                 }
+                function save(event) {
+			let from = new Date(document.getElementById("from").value);
+			let to = new Date(document.getElementById("to").value);
+			if(from > to){
+				alert("Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày kết thúc");
+				event.preventDefault();
+			}
+		}
 
             </script>
     </body>

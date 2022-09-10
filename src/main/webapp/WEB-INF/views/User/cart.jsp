@@ -131,7 +131,7 @@
     <jsp:useBean id="pagedListHolder" scope="request"
                  type="org.springframework.beans.support.PagedListHolder"/>
     <c:url value="User/cart.htm" var="pagedLink">
-        <c:param name="p" value="~"/>
+        <c:param name="p" value="tuong"/>
     </c:url>
     <div>
         <tg:paging pagedListHolder="${pagedListHolder}"
@@ -153,12 +153,6 @@
         <div class="title__item">Thao tác</div>
     </div>
     <div class="cart__list">
-        <%! int total = 0; %>
-        <%
-            if (total > 0) {
-                total = 0;
-            }
-        %>
         <c:forEach var="b" items="${pagedListHolder.pageList}">
             <div class="cart__item">
                 <div class="cart__product">
@@ -179,7 +173,9 @@
 
     </div>
     <p class="total-pay">Tổng thanh toán: <fmt:formatNumber type="currency" value="${sum}"/></p>
-    <a class="btn__buy" href="User/payment.htm">Thanh toán</a>
+    <c:if test="${sum != 0}">
+        <a class="btn__buy" href="User/payment.htm">Thanh toán</a>
+    </c:if>
 </div>
 
 <header class="footer-app">

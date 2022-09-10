@@ -23,6 +23,7 @@
         <%@include file="/WEB-INF/views/Admin/menu.jsp" %>
         <div class="container">
             <h2>DANH SÁCH KHUYẾN MÃI</h2>
+            <div class="error">${message}</div>
             <jsp:useBean id="pagedListHolder" scope="request"
                          type="org.springframework.beans.support.PagedListHolder"/>
             <c:url value="Admin/promotionList.htm" var="pagedLink">
@@ -50,7 +51,7 @@
                         <td><fmt:formatDate pattern="dd-MM-yyyy" value="${s.ngayBD}" /></td>
                         <td><fmt:formatDate pattern="dd-MM-yyyy" value="${s.ngayKT}" /></td>
                         <td>${s.moTa}</td>
-                        <td>${s.nhanVien.maNV}</td>
+                        <td>${s.nhanVien.userId}</td>
                         <td><a href="Admin/promotionDetail/${s.maKM}.htm">Chi tiết</a></td>
                         <td><a href="Admin/promotion/${s.maKM}.htm?linkEdit">Sửa</a></td>
                         <td><a href="Admin/promotion/${s.maKM}.htm?linkDelete">Xóa</a></td>

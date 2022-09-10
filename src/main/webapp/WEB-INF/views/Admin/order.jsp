@@ -23,6 +23,7 @@
         <%@include file="/WEB-INF/views/Admin/menu.jsp" %>
         <div class="container">
             <h2>THÊM PHIẾU ĐẶT</h2>
+            <div class="error">${message}</div>
             <form action="${pageContext.request.contextPath}/Admin/order.htm"
                   method="post" class="form-horizontal">
                 <label class="label-title" for="">Nhà cung cấp : </label>

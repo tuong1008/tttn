@@ -1,18 +1,19 @@
 package com.ptithcm.tttn.DAOImpl;
 
 import com.ptithcm.tttn.DAO.AbstractDao;
+import com.ptithcm.tttn.DAO.ChiTietKMDAO;
 import com.ptithcm.tttn.DAO.SanPhamDAO;
 import com.ptithcm.tttn.entity.SanPham;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 public class SanPhamDAOImpl extends AbstractDao<SanPham> implements SanPhamDAO {
+    
     @Autowired
-    SessionFactory factory;
+    ChiTietKMDAO chiTietKMDAO;
     
     @Override
     public List<SanPham> getListProduct() {
@@ -21,12 +22,16 @@ public class SanPhamDAOImpl extends AbstractDao<SanPham> implements SanPhamDAO {
     
     @Override
     public List<SanPham> getListProductToSale() {
-        return getFromQuery("FROM SanPham s WHERE s.slt > 0", SanPham.class);
+        List<SanPham> list = getFromQuery("FROM SanPham s WHERE s.slt > 0", SanPham.class);
+        for (SanPham sp : list){
+            sp.setGiamGiaLonNhat(chiTietKMDAO.getDiscount(sp.getMaSP()));
+        }
+        return list;
     }
 
     @Override
     public List<SanPham> getListHotSaleProduct(int bigSaleOffPercent) {
-        Session session = factory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         session.beginTransaction();
 
         SQLQuery sqlQuery = session.createSQLQuery("EXEC KhuyenMaiKhung ?").addEntity(SanPham.class);
@@ -34,24 +39,32 @@ public class SanPhamDAOImpl extends AbstractDao<SanPham> implements SanPhamDAO {
         List<SanPham> list = sqlQuery.list();
 
         session.getTransaction().commit();
+        
+        for (SanPham sp : list){
+            sp.setGiamGiaLonNhat(chiTietKMDAO.getDiscount(sp.getMaSP()));
+        }
+        session.close();
         return list;
     }
 
     @Override
     public List<SanPham> getListNewProduct() {
-        Session session = factory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         session.beginTransaction();
         SQLQuery sqlQuery = session.createSQLQuery("EXEC SPMOI").addEntity(SanPham.class);
 
         List<SanPham> list = sqlQuery.list();
 
         session.getTransaction().commit();
+        for (SanPham sp : list){
+            sp.setGiamGiaLonNhat(chiTietKMDAO.getDiscount(sp.getMaSP()));
+        }
         return list;
     }
 
     @Override
     public List<SanPham> getListHotProdduct(int monthNumber) {
-        Session session = factory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         session.beginTransaction();
         SQLQuery sqlQuery = session.createSQLQuery("EXEC SPHot ?").addEntity(SanPham.class);
         sqlQuery.setInteger(0, monthNumber);
@@ -59,12 +72,16 @@ public class SanPhamDAOImpl extends AbstractDao<SanPham> implements SanPhamDAO {
         List<SanPham> list = sqlQuery.list();
 
         session.getTransaction().commit();
+        for (SanPham sp : list){
+            sp.setGiamGiaLonNhat(chiTietKMDAO.getDiscount(sp.getMaSP()));
+        }
+        session.close();
         return list;
     }
 
     @Override
-    public List<SanPham> getListProductByName(String name) {
-        Session session = factory.getCurrentSession();
+    public List<SanPham> getListProductByNameForSale(String name) {
+        Session session = sessionFactory.openSession();
         session.beginTransaction();
 
         SQLQuery sqlQuery = session.createSQLQuery("EXEC TimKiemSPTheoTen ?").addEntity(SanPham.class);
@@ -72,12 +89,25 @@ public class SanPhamDAOImpl extends AbstractDao<SanPham> implements SanPhamDAO {
         List<SanPham> list = sqlQuery.list();
 
         session.getTransaction().commit();
+        for (SanPham sp : list){
+            sp.setGiamGiaLonNhat(chiTietKMDAO.getDiscount(sp.getMaSP()));
+        }
+        session.close();
         return list;
+    }
+    
+    @Override
+    public List<SanPham> getListProductByName(String name) {
+        return getFromQuery("FROM SanPham s WHERE s.tenSP like '%"+name+"%'", SanPham.class);
     }
 
     @Override
     public List<SanPham> getListProductByNameBrandForSale(String name) {
-        return getFromQuery("FROM SanPham S WHERE S.nhaCungCap.tenNCC =? and S.slt > 0", SanPham.class, name);
+        List<SanPham> list = getFromQuery("FROM SanPham S WHERE S.nhaCungCap.tenNCC =? and S.slt > 0", SanPham.class, name);
+        for (SanPham sp : list){
+            sp.setGiamGiaLonNhat(chiTietKMDAO.getDiscount(sp.getMaSP()));
+        }
+        return list;
     }
     
     @Override
@@ -87,7 +117,11 @@ public class SanPhamDAOImpl extends AbstractDao<SanPham> implements SanPhamDAO {
 
     @Override
     public List<SanPham> getListProductByIDBrand(String id) {
-        return getFromQuery("FROM SanPham S WHERE S.nhaCungCap.maNCC =?", SanPham.class, id);
+        List<SanPham> list = getFromQuery("FROM SanPham S WHERE S.nhaCungCap.maNCC =?", SanPham.class, id);
+        for (SanPham sp : list){
+            sp.setGiamGiaLonNhat(chiTietKMDAO.getDiscount(sp.getMaSP()));
+        }
+        return list;
     }
     
     
@@ -95,6 +129,9 @@ public class SanPhamDAOImpl extends AbstractDao<SanPham> implements SanPhamDAO {
     @Override
     public SanPham getProduct(String maSP) {
         List<SanPham> list = getFromQuery("FROM SanPham S WHERE S.maSP = ?", SanPham.class, maSP);
+        for (SanPham sp : list){
+            sp.setGiamGiaLonNhat(chiTietKMDAO.getDiscount(sp.getMaSP()));
+        }
         return list.isEmpty() ? null : list.get(0);
     }
 
@@ -137,9 +174,12 @@ public class SanPhamDAOImpl extends AbstractDao<SanPham> implements SanPhamDAO {
         }        
         
         query.append(whereClause);
-        System.out.println("----===----"+query.toString());
         
-        return getFromQuery(query.toString(), SanPham.class);
+        List<SanPham> list = getFromQuery(query.toString(), SanPham.class);
+        for (SanPham sp : list){
+            sp.setGiamGiaLonNhat(chiTietKMDAO.getDiscount(sp.getMaSP()));
+        }
+        return list;
     }
 
 }

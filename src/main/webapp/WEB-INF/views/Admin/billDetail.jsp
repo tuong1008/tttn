@@ -32,21 +32,23 @@ span {
 <body>
 	<%@include file="/WEB-INF/views/Admin/menu.jsp"%>
 	<div class="container">
-		<h2>ĐƠN HÀNG</h2>
-		
+		<h2>ĐƠN HÀNG</h2>		
 		<c:if test="${sessionScope.staff.taiKhoan.quyen.maQuyen!=4}">
-			<div class="link-export__wrapper"><a class="link-export" href="pdf/detailBill/${id}.htm">Xuất danh sách</a></div>
-		</c:if>		
-		
+			<div class="link-export__wrapper"><a class="link-export" href="pdf/bill/${id}.htm">Xuất hóa đơn</a></div>
+		</c:if>
 		<div class="bill-Info">
 			<p> <span>Mã đơn hàng: </span>${bill.maDH}</p>
-			<p> <span>Mã khách hàng:</span>${bill.khachHang.maKH}</p>
+			<p> <span>Mã khách hàng:</span>${bill.khachHang.userId}</p>
 			<p> <span>Họ tên người nhận:</span>${bill.hoTenNN}</p>
 			<p> <span>Địa chỉ người nhận:</span>${bill.diaChiNN}</p>
 			<p> <span>Số điện thoại người nhận:</span>${bill.sdtNN}</p>
 			<p> <span>Email người nhận:</span>${bill.emailNN}</p>
-			<p> <span>Ngày tạo:</span>${bill.ngayTao}</p>
-			<p> <span>Ngày nhận:</span>${bill.ngayNhan}</p>
+                        <p> <span>Mã nhân viên giao:</span>${bill.nhanVienG.userId}</p>
+                        <p> <span>Nhân viên giao:</span>${bill.nhanVienG.hoTen}</p>
+                        <p> <span>Mã nhân viên duyệt:</span>${bill.nhanVienD.userId}</p>
+                        <p> <span>Nhân viên duyệt:</span>${bill.nhanVienD.hoTen}</p>
+			<p> <span>Ngày tạo:</span><fmt:formatDate pattern="dd-MM-yyyy" value="${bill.ngayTao}" /></p>
+			<p> <span>Ngày nhận:</span><fmt:formatDate pattern="dd-MM-yyyy" value="${bill.ngayNhan}" /></p>
 			<p> <span>Tổng tiền:</span><fmt:formatNumber type = "currency" value = "${bill.tongTien}" /></p>
 		</div>
 		
@@ -70,9 +72,9 @@ span {
 			<form action="Admin/billDetail/${bill.maDH}.htm">
 				<div class="form-element">
 					<label>Chọn nhân viên giao hàng</label>
-						<select name="maNVG">
+                                        <select name="maNVG" required="required">
 							<c:forEach var="s" items="${listNV}">
-								<option value="${s.maNV}">${s.maNV}__${s.hoTen}</option>
+								<option value="${s.userId}">${s.userId}__${s.hoTen}</option>
 							</c:forEach>
 						</select>		
 				</div>

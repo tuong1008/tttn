@@ -19,10 +19,10 @@ public class TaiKhoan implements Serializable {
     @JoinColumn(name = "MAQUYEN")
     private Quyen quyen;
 
-    @OneToMany(mappedBy = "taiKhoan", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "taiKhoan", fetch = FetchType.LAZY)
     private Collection<NguoiDung> khachHangs;
 
-    @OneToMany(mappedBy = "taiKhoan", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "taiKhoan", fetch = FetchType.LAZY)
     private Collection<NguoiDung> nhanViens;
 
     public TaiKhoan() {

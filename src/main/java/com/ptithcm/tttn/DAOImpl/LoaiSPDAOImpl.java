@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 public class LoaiSPDAOImpl extends AbstractDao<LoaiSP> implements LoaiSPDAO {
-    @Autowired
-    SessionFactory sessionFactory;
 
     @Override
     public List<LoaiSP> getListCategory() {

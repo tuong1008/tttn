@@ -5,6 +5,7 @@ import com.ptithcm.tttn.DAO.NhanVienDAO;
 import com.ptithcm.tttn.entity.NguoiDung;
 
 import java.util.List;
+import org.hibernate.Session;
 
 public class NhanVienDAOImpl extends AbstractDao<NguoiDung> implements NhanVienDAO {
     @Override
@@ -21,17 +22,18 @@ public class NhanVienDAOImpl extends AbstractDao<NguoiDung> implements NhanVienD
 
     @Override
     public List<NguoiDung> getAllStaff() {
-        return getFromQuery("FROM NguoiDung", NguoiDung.class);
+        return getFromQuery("FROM NguoiDung n where n.taiKhoan.quyen.tenQuyen <> 'Customer'", NguoiDung.class);
     }
 
     @Override
     public List<NguoiDung> searchAllStaff(String hoTen) {
-        return getFromQuery("FROM NguoiDung n Where n.hoTen like ?", NguoiDung.class, "%" + hoTen + "%");
+        return getFromQuery("FROM NguoiDung n Where n.taiKhoan.quyen.tenQuyen <> 'Customer' and n.hoTen like ?", NguoiDung.class, "%" + hoTen + "%");
     }
 
     @Override
     public Integer getMaxNumberByName(String username) {
-        List<String> list = getFromQuery("SELECT max(substring(tenDN,length(tenDN),length(tenDN))) FROM NguoiDung WHERE substring(tenDN,1,length(tenDN)-1) =?", String.class, username);
+        List<String> list = getFromQuery("SELECT max(substring(n.tenDN,length(n.tenDN),length(n.tenDN))) FROM NguoiDung n WHERE substring(n.tenDN,1,length(n.tenDN)-1) =? and n.taiKhoan.quyen.tenQuyen <> 'Customer'", String.class);
+        System.out.println(list.toString());
         return list.isEmpty() ? 0 : Integer.parseInt(list.get(0));
         
 //        Session session = sessionFactory.openSession();

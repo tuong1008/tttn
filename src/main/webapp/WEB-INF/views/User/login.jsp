@@ -171,7 +171,7 @@
             </div>
         </div>
         <div class="bottom">
-            <span class="question">Bạn đã mới biết đến Asian shop</span> <a href="User/register.htm">Đăng ký</a>
+            <span class="question">Bạn đã mới biết đến Nike shop</span> <a href="User/register.htm">Đăng ký</a>
         </div>
         <div class="error">${message}</div>
     </form>

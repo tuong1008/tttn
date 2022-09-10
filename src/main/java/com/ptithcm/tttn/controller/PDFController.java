@@ -1,13 +1,22 @@
 package com.ptithcm.tttn.controller;
 
+import com.ptithcm.tttn.DAO.CTDonHangDAO;
+import com.ptithcm.tttn.DAO.DonHangDAO;
+import com.ptithcm.tttn.DAO.HoaDonDAO;
 import com.ptithcm.tttn.DAO.NhaCungCapDAO;
 import com.ptithcm.tttn.DAO.NhanVienDAO;
 import com.ptithcm.tttn.DAO.SanPhamDAO;
+import com.ptithcm.tttn.common.Utils;
+import com.ptithcm.tttn.entity.DonHang;
+import com.ptithcm.tttn.entity.HoaDon;
 import com.ptithcm.tttn.entity.NhaCungCap;
 import com.ptithcm.tttn.entity.NguoiDung;
 import com.ptithcm.tttn.entity.SanPham;
+import com.ptithcm.tttn.model.Revenue;
+import com.ptithcm.tttn.pdf.BillPDFView;
 import com.ptithcm.tttn.pdf.ProductPDFView;
 import com.ptithcm.tttn.pdf.StaffPDFView;
+import com.ptithcm.tttn.pdf.StatisticPDFView;
 import com.ptithcm.tttn.pdf.SupplierPDFView;
 import java.util.List;
 
@@ -33,9 +42,18 @@ public class PDFController {
 
     @Autowired
     NhaCungCapDAO nhaCungCapDAOImpl;
-    
+
     @Autowired
     NhanVienDAO nhanVienDAO;
+
+    @Autowired
+    DonHangDAO donHangDAO;
+    
+    @Autowired
+    HoaDonDAO hoaDonDAO;
+    
+    @Autowired
+    CTDonHangDAO ctDonHangDAO;
 
     @RequestMapping("staff")
     public ModelAndView staffListReport(HttpServletRequest req) {
@@ -53,6 +71,25 @@ public class PDFController {
     public ModelAndView SupplierListReport(HttpServletRequest req) {
         List<NhaCungCap> suppliers = nhaCungCapDAOImpl.getSuppliers();
         return new ModelAndView(new SupplierPDFView(), "suppliers", suppliers);
+    }
+
+    @RequestMapping("statistic")
+    public ModelAndView statisticListReport(HttpServletRequest req) {
+        String from = req.getParameter("from");
+        String to = req.getParameter("to");
+        List<Revenue> revenues = new Utils().getRevenue(donHangDAO.revenue(from, to), from, to);
+        return new ModelAndView(new StatisticPDFView(), "revenues", revenues);
+    }
+
+    @RequestMapping("bill")
+    public ModelAndView billReport(HttpServletRequest req) {
+        String id = req.getParameter("id");
+        HoaDon billl = hoaDonDAO.getOne(HoaDon.class, id);
+        DonHang bill = billl.getDonHang();
+        System.out.println(bill.getCtDonHangs().size());
+        bill.setCtDonHangs(ctDonHangDAO.getDetailBills(bill.getMaDH()));
+        System.out.println(bill.getCtDonHangs());
+        return new ModelAndView(new BillPDFView(), "billl", billl);
     }
 
 }

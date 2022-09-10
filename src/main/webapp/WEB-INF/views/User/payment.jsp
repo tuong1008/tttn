@@ -157,7 +157,7 @@
                             placeholder="Tổng tiền"/>
                 <form:errors class="error" path="tongTien"/>
             </div>
-            <form:input type="hidden" path="khachHang.maKH"/>
+            <form:input type="hidden" path="khachHang.userId"/>
             <form:input type="hidden" path="ngayTao"/>
             <form:input type="hidden" path="maDH"/>
             <form:input type="hidden" path="trangThai"/>

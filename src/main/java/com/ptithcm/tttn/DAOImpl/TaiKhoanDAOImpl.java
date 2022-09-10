@@ -5,15 +5,11 @@ import com.ptithcm.tttn.DAO.TaiKhoanDAO;
 import com.ptithcm.tttn.entity.TaiKhoan;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 
 public class TaiKhoanDAOImpl extends AbstractDao<TaiKhoan> implements TaiKhoanDAO {
-    @Autowired
-    SessionFactory sessionFactory;
 
     @Override
     public String getRole(String pass, String userName) {
@@ -23,7 +19,7 @@ public class TaiKhoanDAOImpl extends AbstractDao<TaiKhoan> implements TaiKhoanDA
 
     @Override
     public Integer updatePass(String newPass, String userName) {
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         try {
             session.beginTransaction();
 
@@ -37,6 +33,10 @@ public class TaiKhoanDAOImpl extends AbstractDao<TaiKhoan> implements TaiKhoanDA
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
+        } finally{
+            if (session != null) {
+                session.close();
+            }
         }
         return 1;
     }

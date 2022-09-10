@@ -179,11 +179,12 @@
                 </div>
             </div>
             <div class="cost">
-                <c:if test="${discount>0}">
-                    <span class="cost__discount">- ${discount} %</span>
+                <c:if test="${p.giamGiaLonNhat>0}">
+                    <span class="cost__discount">- ${p.giamGiaLonNhat} %</span>
                     <span class="cost__unit"> <fmt:formatNumber type="currency" value="${p.gia}"/> </span>
+                    <span class="cost__unit-action"> <fmt:formatNumber type="currency" value="${p.gia * (100 - p.giamGiaLonNhat)/100}"/> </span>
                 </c:if>
-                <c:if test="${discount==0}">
+                <c:if test="${p.giamGiaLonNhat==0}">
                     <span class="cost__unit-action"> <fmt:formatNumber type="currency" value="${p.gia}"/> </span>
                 </c:if>
             </div>

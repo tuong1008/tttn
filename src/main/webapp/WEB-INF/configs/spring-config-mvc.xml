@@ -21,10 +21,7 @@
           p:prefix="/WEB-INF/views/" p:suffix=".jsp"
           class="org.springframework.web.servlet.view.InternalResourceViewResolver"/>
 
-<!--    <bean id="path" class="com.ptithcm.tttn.model.BasePath">
-        <property name="pathName"
-                  value="D:\PTIT_HCM\Semester_7\Web_Programming\Doan\BuyPhone\src\main\webapp\resource\img\imgPhone"/>
-    </bean>-->
+
 
     <mvc:resources mapping="/resource/**" location="/WEB-INF/resource/"/>
 
@@ -47,4 +44,6 @@
     <bean id="phieuNhapDAO" class="com.ptithcm.tttn.DAOImpl.PhieuNhapDAOImpl"/>
     <bean id="ctPhieuNhapDAO" class="com.ptithcm.tttn.DAOImpl.CTPhieuNhapDAOImpl"/>
     <bean id="khuyenMaiDAO" class="com.ptithcm.tttn.DAOImpl.KhuyenMaiDAOImpl"/>
+    <bean id="hoaDonDAO" class="com.ptithcm.tttn.DAOImpl.HoaDonDAOImpl"/>
+    
 </beans>

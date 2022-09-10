@@ -39,8 +39,6 @@
                     <th>Ngày tạo</th>
                     <th>Mã nhà cung cấp</th>
                     <th>Mã nhân viên</th>
-                    <th>Sửa</th>
-                    <th>Xóa</th>
                     <th>Tạo phiếu nhập</th>
                 </tr>
                 <c:forEach var="s" items="${pagedListHolder.pageList}">
@@ -48,11 +46,7 @@
                         <td>${s.maPD}</td>
                         <td><fmt:formatDate pattern="dd-MM-yyyy" value="${s.ngayTao}" /></td>
                         <td>${s.nhaCungCap.maNCC}</td>
-                        <td>${s.nhanVien.maNV}</td>
-                        <td><a href="Admin/order/${s.maPD}.htm?linkEdit">Sửa</a></td>
-                        <td>
-                            <a href="Admin/order/${s.maPD}.htm?linkDelete">Xóa</a>
-                        </td>
+                        <td>${s.nhanVien.userId}</td>
                         <td>
                             <c:if test="${empty s.phieuNhap}">
                                 <a href="Admin/import/${s.maPD}.htm">Tạo phiếu nhập</a>

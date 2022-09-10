@@ -16,4 +16,9 @@ public class KhuyenMaiDAOImpl extends AbstractDao<KhuyenMai> implements  KhuyenM
         return getFromQuery("FROM KhuyenMai", KhuyenMai.class);
     }
 
+    @Override
+    public List<KhuyenMai> getListByMota(String moTa) {
+        return getFromQuery("FROM KhuyenMai s WHERE s.moTa like '%"+moTa+"%'", KhuyenMai.class);
+    }
+
 }

@@ -11,7 +11,7 @@ import javax.servlet.http.HttpSession;
 public interface DonHangDAO extends Dao<DonHang> {
 
     int insert(NguoiDung khachHang);
-    
+
     DonHang getBillUnBuy(String idCustomer);
 
     List<DonHang> getBills(String idCustomer);
@@ -25,6 +25,14 @@ public interface DonHangDAO extends Dao<DonHang> {
     List<DonHang> getBillDelivering(HttpSession session);
 
     List<DonHang> searchBills(String from, String to);
+
+    List<DonHang> searchBillUnconfirm(String from, String to);
+
+    List<DonHang> searchBillCancel(String from, String to);
+
+    List<DonHang> searchBillComplete(HttpSession session, String from, String to);
+
+    List<DonHang> searchBillDelivering(HttpSession session, String from, String to);
 
     List<Revenue> revenue(String from, String to);
 }

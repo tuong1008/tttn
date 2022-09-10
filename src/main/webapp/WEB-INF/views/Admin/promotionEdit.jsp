@@ -37,46 +37,8 @@
                         <label>Mô tả</label>
                         <textarea style="width: 100%" cols="20" rows="10" name="moTa">${moTa}</textarea>    
                     </div>
-
-                    <div id="template" style="display: none">
-                        <select name="maSP">
-                            <c:forEach var = "i" items="${dsSanPham}">
-                                <option value="${i.maSP}">${i.tenSP}</option>
-                            </c:forEach>
-                        </select>
-                        <label>Giảm giá(%)</label>
-                        <input type="number" min="0" max="99" name="giamGia" value="${ct.giamGia}"/>
-                    </div>
-
-                    <div id="container">
-                        <c:forEach var="ct" items="${ctKM}">
-                            <div>
-                                <select name="maSP">
-                                    <c:forEach var = "i" items="${dsSanPham}">
-                                        <option value="${i.maSP}" ${ct.pk.sanPham.maSP == i.maSP ? "selected":""}>${i.tenSP}</option>
-                                    </c:forEach>
-                                </select>
-                                <label>Giảm giá(%)</label>
-                                <input type="number" min="0" max="99" name="giamGia" value="${ct.giamGia}"/>
-                            </div>
-                        </c:forEach>
-                    </div>
-                    <div>
-                        <button style="margin: 5px auto" name="btnMoreProduct" onclick="moreProduct(event)">Thêm sản phẩm</button>
-                        <button style="margin: 5px auto" name="${btnStatus}">Lưu</button>
-                    </div>
+                </div>
+                <button name="${btnStatus}">Lưu</button>
             </form>
-            <script>
-                var templete = document.getElementById("template");
-                function moreProduct(event) {
-                    event.preventDefault();
-                    let container = document.getElementById("container");
-                    let select = templete.cloneNode(true);
-                    select.style="";
-                    console.log(select);
-                    container.appendChild(select);
-                }
-
-            </script>
     </body>
 </html>

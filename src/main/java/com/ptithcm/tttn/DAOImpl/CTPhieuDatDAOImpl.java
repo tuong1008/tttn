@@ -8,6 +8,7 @@ import com.ptithcm.tttn.DAO.AbstractDao;
 import com.ptithcm.tttn.DAO.CTPhieuDatDAO;
 import com.ptithcm.tttn.entity.CTPhieuDat;
 import java.util.List;
+import org.hibernate.Session;
 
 public class CTPhieuDatDAOImpl extends AbstractDao<CTPhieuDat> implements CTPhieuDatDAO{
 
@@ -20,5 +21,6 @@ public class CTPhieuDatDAOImpl extends AbstractDao<CTPhieuDat> implements CTPhie
     public List<CTPhieuDat> getById(String id) {
         return getFromQuery("FROM CTPhieuDat ct WHERE ct.pk.phieuDat.maPD=?", CTPhieuDat.class, id);
     }
+    
     
 }

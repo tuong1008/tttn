@@ -46,6 +46,7 @@ button{
 </head>
 <body>
 	<%@include file="/WEB-INF/views/Admin/menu.jsp"%>
+        <fmt:setLocale value="vi_VN" scope="session"/>
 	<div class="container">
 		<form action="" method="post">
 			<label>Từ</label>
@@ -55,6 +56,13 @@ button{
 			<label class="error">${error}</label>
 			<button onclick="search(event)" name="btnSearch">Tra cứu</button>
 		</form>
+                <c:if test="${from != null}">
+			<div class="link-export__wrapper">
+				<a class="link-export"
+					href="pdf/statistic.htm?from=${from}&to=${to}&sum=${sum}"
+					onclick="search(event)">Xuất danh sách</a>
+			</div>
+		</c:if>
 		<table>
 			<tr>
 				<th>Năm</th>

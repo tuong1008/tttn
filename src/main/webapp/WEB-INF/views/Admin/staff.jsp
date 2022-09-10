@@ -93,7 +93,7 @@
 				<th>Giới tính</th>
 				<th>Số điện thoại</th>
 				<th>Email</th>
-				<th>Địa chỉ</th>
+				<th>Chức vụ</th>
 				<th>Xóa</th>
 				<th>Sửa</th>
 				<th>Reset</th>
@@ -106,7 +106,7 @@
 					<td>${s.gioiTinh}</td>
 					<td>${s.sdt}</td>
 					<td>${s.email}</td>
-					<td>${s.diaChi}</td>
+					<td>${s.taiKhoan.quyen.tenQuyen}</td>
 					<td>
 					<c:if test="${s.taiKhoan.quyen.maQuyen!=1}">
 						<a href="Admin/staff/${s.userId}.htm?linkDelete">Xóa</a>

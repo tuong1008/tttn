@@ -24,6 +24,7 @@
         <%@include file="/WEB-INF/views/Admin/menu.jsp" %>
         <div class="container">
             <h2>THÔNG TIN NHÀ CUNG CẤP</h2>
+            <div class="error">${message}</div>
             <form:form action="${pageContext.request.contextPath}/Admin/supplier.htm"
                        method="post" modelAttribute="supplier" class="form-horizontal">
                 <div class="form-group">
