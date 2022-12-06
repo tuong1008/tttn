@@ -24,7 +24,7 @@ public class DonHangDAOImpl extends AbstractDao<DonHang> implements DonHangDAO {
 
     @Override
     public DonHang getBillUnBuy(String idCustomer) {
-        return getFromQuery("FROM DonHang D WHERE D.khachHang.userId =? AND D.trangThai = 0", DonHang.class, idCustomer).get(0);
+        return getFromQuery("FROM DonHang D WHERE D.khachHang.userId =? AND D.trangThai = 'Giỏ hàng'", DonHang.class, idCustomer).get(0);
     }
 
     @Override
@@ -95,7 +95,7 @@ public class DonHangDAOImpl extends AbstractDao<DonHang> implements DonHangDAO {
 
     @Override
     public int insert(NguoiDung k) {
-        DonHang dh = new DonHang(nextPK("DonHang", "DH", "maDH"), 0, k.getHoTen(), k.getDiaChi(), k.getSdt(), k.getEmail(), new Date(), null, 0,
+        DonHang dh = new DonHang(nextPK("DonHang", "DH", "maDH"), "Giỏ hàng", k.getHoTen(), k.getDiaChi(), k.getSdt(), k.getEmail(), new Date(), null, 0,
                 null, null, k, null, null);
         Session session = sessionFactory.openSession();
         Transaction t = session.beginTransaction();

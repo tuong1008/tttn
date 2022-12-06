@@ -30,6 +30,7 @@
                 <tg:paging pagedListHolder="${pagedListHolder}"
                            pagedLink="${pagedLink}" />
             </div>
+            <div class="error">${message}</div>
             <table>
                 <tr>
                     <th>Mã KH</th>

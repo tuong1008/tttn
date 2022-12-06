@@ -16,8 +16,8 @@ public class DonHang implements Serializable, Comparable<DonHang> {
     @Column(name = "MADH")
     private String maDH;
 
-    @Column(name = "TRANGTHAI")
-    private int trangThai;
+    @Column(name = "TRANGTHAI", columnDefinition = "nvarchar(255)")
+    private String trangThai;
 
     @Column(name = "HOTENNN", columnDefinition = "nvarchar(255)")
     private String hoTenNN;
@@ -48,9 +48,8 @@ public class DonHang implements Serializable, Comparable<DonHang> {
     @JoinColumn(name = "MANVD")
     private NguoiDung nhanVienD;
 
-    @ManyToOne
-    @JoinColumn(name = "MANVG")
-    private NguoiDung nhanVienG;
+    @Column(columnDefinition = "nvarchar(255)")
+    private String nhanVienG;
 
     @ManyToOne
     @JoinColumn(name = "MAKH")
@@ -66,8 +65,8 @@ public class DonHang implements Serializable, Comparable<DonHang> {
 
     }
 
-    public DonHang(String maDH, int trangThai, String hoTenNN, String diaChiNN, String sdtNN, String emailNN,
-                   Date ngayTao, Date ngayNhan, long tongTien, NguoiDung nhanVienD, NguoiDung nhanVienG, NguoiDung khachHang,
+    public DonHang(String maDH, String trangThai, String hoTenNN, String diaChiNN, String sdtNN, String emailNN,
+                   Date ngayTao, Date ngayNhan, long tongTien, NguoiDung nhanVienD, String nhanVienG, NguoiDung khachHang,
                    Collection<CTDonHang> ctDonHangs, Collection<HoaDon> hoaDons) {
         super();
         this.maDH = maDH;
@@ -94,11 +93,11 @@ public class DonHang implements Serializable, Comparable<DonHang> {
         this.maDH = maDH;
     }
 
-    public int getTrangThai() {
+    public String getTrangThai() {
         return trangThai;
     }
 
-    public void setTrangThai(int trangThai) {
+    public void setTrangThai(String trangThai) {
         this.trangThai = trangThai;
     }
 
@@ -166,11 +165,11 @@ public class DonHang implements Serializable, Comparable<DonHang> {
         this.nhanVienD = nhanVienD;
     }
 
-    public NguoiDung getNhanVienG() {
+    public String getNhanVienG() {
         return nhanVienG;
     }
 
-    public void setNhanVienG(NguoiDung nhanVienG) {
+    public void setNhanVienG(String nhanVienG) {
         this.nhanVienG = nhanVienG;
     }
 

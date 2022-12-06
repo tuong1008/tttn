@@ -1,7 +1,9 @@
 package com.ptithcm.tttn.controller;
 
 import com.ptithcm.tttn.DAO.*;
+import com.ptithcm.tttn.common.Utils;
 import com.ptithcm.tttn.entity.*;
+import java.io.IOException;
 import java.util.Date;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.util.List;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 @Controller
 @Transactional
@@ -382,6 +391,7 @@ public class UserController {
         CTDonHang oldBill = ctDonHangDAOImpl.getOne(CTDonHang.class, detailBill.getPk());
 
         if (oldBill == null) {
+            //có thể k cần trường hợp này
             if (session.getAttribute("customer") == null) {
                 return "redirect:/User/login.htm";
             }
@@ -448,25 +458,74 @@ public class UserController {
     public String payment(HttpServletRequest request, HttpSession session, @ModelAttribute("donHang") DonHang donHang) {
         System.out.println("Payment");
 
-        for (CTDonHang ct : ctDonHangDAOImpl.getDetailBills(donHang.getMaDH())) {
+        List<CTDonHang> cts = ctDonHangDAOImpl.getDetailBills(donHang.getMaDH());
+        StringBuilder builder = new StringBuilder("");
+        int i = 0;
+        for (CTDonHang ct : cts) {
             ct.setGia(ct.getPk().getSanPham().getGia()
                     * (100 - chiTietKMDAOImpl.getDiscount(ct.getPk().getSanPham().getMaSP())) / 100);
 
             SanPham s = ct.getPk().getSanPham();
             s.setSlt(s.getSlt() - ct.getSl());
 
+            builder.append(s.getTenSP());
+
+            //if not last
+            if (i != cts.size() - 1) {
+                builder.append(" - ");
+            }
+
             sanPhamDAOImpl.update(s);
             ctDonHangDAOImpl.update(ct);
+
+            i++;
         }
-        donHang.setTrangThai(1);
+
+        if (builder.length() > 255) {
+            builder.setLength(255);
+        }
+
+        donHang.setTrangThai("Chờ xác nhận");
         donHang.setNgayTao(new Date());
         donHangDAOImpl.update(donHang);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+
+        String[] adminDivisions = Utils.getAdminDivisions(donHang.getDiaChiNN());
+
+        System.out.println("@$#@#$"+builder.toString());
+        body.add("shopID", 1);
+        body.add("packageName", builder.toString());
+        body.add("length", 5);
+        body.add("width", 10);
+        body.add("height", 20);
+        body.add("quantity", 1);
+        body.add("unitPrice", donHang.getTongTien());
+        body.add("consigneeName", donHang.getHoTenNN());
+        body.add("consigneePhone", donHang.getSdtNN());
+        body.add("consigneeNote", "đẹp nhẹ gọn");
+        body.add("adminDivision1", adminDivisions[2]);
+        body.add("adminDivision2", adminDivisions[1]);
+        body.add("adminDIvision3", adminDivisions[0]);
+        body.add("shippingFeePayment", 0);
+        
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+        
+        String serverUrl = "http://localhost:8180/api/shopOrder";
+        
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.postForEntity(serverUrl, requestEntity, String.class);
 
         NguoiDung k = khachHangDAOImpl.getCustomer(((NguoiDung) session.getAttribute("customer")).getTaiKhoan().getTenDN());
         int temp = donHangDAOImpl.insert(k);
 
-        if (temp == 1)
+        if (temp == 1) {
             session.setAttribute("detailBills", ctDonHangDAOImpl.getDetailBills(donHangDAOImpl.getBillUnBuy(k.getUserId()).getMaDH()));
+        }
         return "redirect:/User/home.htm";
     }
+
 }

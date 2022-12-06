@@ -42,9 +42,6 @@ public class NguoiDung implements Serializable {
     @OneToMany(mappedBy = "nhanVienD", fetch = FetchType.LAZY)
     private Collection<DonHang> donHangDs;
 
-    @OneToMany(mappedBy = "nhanVienG", fetch = FetchType.LAZY)
-    private Collection<DonHang> donHangGs;
-
     @OneToMany(mappedBy = "nhanVien", fetch = FetchType.LAZY)
     private Collection<HoaDon> hoaDons;
 
@@ -158,14 +155,6 @@ public class NguoiDung implements Serializable {
 
     public void setDonHangDs(Collection<DonHang> donHangDs) {
         this.donHangDs = donHangDs;
-    }
-
-    public Collection<DonHang> getDonHangGs() {
-        return donHangGs;
-    }
-
-    public void setDonHangGs(Collection<DonHang> donHangGs) {
-        this.donHangGs = donHangGs;
     }
 
     public Collection<HoaDon> getHoaDons() {

@@ -114,11 +114,7 @@
         <c:forEach var="b" items="${pagedListHolder.pageList}">
             <div class="cart__item">
                 <div class="cart-detail__item"><label>${b.maDH}</label></div>
-                <div class="cart-detail__item"><label>
-                    <c:if test="${b.trangThai==1}">Chờ xác nhận</c:if>
-                    <c:if test="${b.trangThai ==1 && b.nhanVienG != null}">Ðang giao</c:if>
-                    <c:if test="${b.trangThai==2}">Đã hoàn thành</c:if>
-                </label></div>
+                <div class="cart-detail__item"><label>${b.trangThai}</label></div>
                 <div class="cart-detail__item"><label>${b.hoTenNN}</label></div>
                 <div class="cart-detail__item"><label>${b.sdtNN}</label></div>
                 <div class="cart-detail__item"><label>${b.ngayTao}</label></div>

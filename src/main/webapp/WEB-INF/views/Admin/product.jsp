@@ -82,6 +82,7 @@
                            pagedLink="${pagedLink}"/>
 
             </div>
+            <div class="error">${message}</div>
             <table>
                 <tr>
                     <th>Mã sản phẩm</th>

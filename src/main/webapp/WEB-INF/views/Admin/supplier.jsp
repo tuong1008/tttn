@@ -62,6 +62,7 @@
                 <button name="${btnStatus}">Lưu</button>
             </form:form>
             <h2>DANH SÁCH NHÀ CUNG CẤP</h2>
+            <div class="error">${message}</div>
             <jsp:useBean id="pagedListHolder" scope="request"
                          type="org.springframework.beans.support.PagedListHolder"/>
             <c:url value="Admin/supplier.htm" var="pagedLink">

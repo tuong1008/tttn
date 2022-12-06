@@ -22,6 +22,7 @@
         <%@include file="/WEB-INF/views/Admin/menu.jsp" %>
         <div class="container">
             <h2>SỬA KHUYẾN MÃI</h2>
+            <div class="error">${message}</div>
             <form action="${pageContext.request.contextPath}/Admin/promotion/${maKM}.htm"
                   method="post" class="form-horizontal">
                 <div class="form-group">

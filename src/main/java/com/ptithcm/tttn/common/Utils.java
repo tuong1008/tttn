@@ -80,5 +80,20 @@ public class Utils {
 		}
 		return result;
     }
+    
+    public static String[] getAdminDivisions(String address){
+        String[] out = new String[3];
+        int pos = address.length();
+        int skipLastIndex=2;
+        for (int i = 0; i < skipLastIndex; i++) {
+            pos = address.lastIndexOf(", ", pos - 1);
+        }
+        String adminDivision3 = address.substring(0, pos);
+        String[] adminDivisions = address.substring(pos + 2).split(", ");
+        out[0] = new String(adminDivision3);
+        out[1] = new String(adminDivisions[0]);
+        out[2] = new String(adminDivisions[1]);
+        return out;
+    }
 	
 }

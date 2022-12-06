@@ -47,7 +47,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.util.List;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
+import javax.json.stream.JsonGenerator;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -1158,14 +1164,47 @@ public class AdminController {
         return "Admin/billDetail";
     }
 
+    //Nhan vien xac nhan don hang va gan don cho shipper
     @RequestMapping(value = "billDetail/{id}.htm", params = "btnBrower")
     public String billDetailBrower(HttpServletRequest request, ModelMap model, HttpSession session,
             @PathVariable("id") String id) {
         DonHang bill = donHangDAO.getOne(DonHang.class, id);
-        bill.setNhanVienG(nhanVienDAO.getOne(NguoiDung.class, request.getParameter("maNVG")));
+//        bill.setNhanVienG(nhanVienDAO.getOne(NguoiDung.class, request.getParameter("maNVG")));
         bill.setNhanVienD((NguoiDung) session.getAttribute("staff"));
         donHangDAO.update(bill);
         return "redirect:/Admin/billUnConfirm.htm";
+    }
+    
+    @RequestMapping(value = "api-update-shipper-billDetail/{id}.htm", method = RequestMethod.PUT)
+    public ResponseEntity<String> updateShipper(HttpServletRequest request, ModelMap model, HttpSession session,
+            @PathVariable("id") String id, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json");
+        JsonReader rdr = Json.createReader(request.getInputStream());
+        JsonObject obj = rdr.readObject();
+
+        String shipperName = obj.getJsonString("shipperName").getString();
+        DonHang bill = donHangDAO.getOne(DonHang.class, id);
+        bill.setNhanVienG(shipperName);
+        donHangDAO.update(bill);
+        
+        return ResponseEntity.ok().body("Cập nhật shipper cho đơn hàng thành công");
+    }
+    
+    @RequestMapping(value = "api-update-status-billDetail/{id}.htm", method = RequestMethod.PUT)
+    public ResponseEntity<String> updateStatus(HttpServletRequest request, ModelMap model, HttpSession session,
+            @PathVariable("id") String id, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json");
+        JsonReader rdr = Json.createReader(request.getInputStream());
+        JsonObject obj = rdr.readObject();
+
+        String statusOrder = obj.getJsonString("statusOrder").getString();
+        DonHang bill = donHangDAO.getOne(DonHang.class, id);
+        bill.setTrangThai(statusOrder);
+        donHangDAO.update(bill);
+        
+        return ResponseEntity.ok().body("Cập nhật trạng thái cho đơn hàng thành công");
     }
 
     @RequestMapping(value = "billDetail/{id}.htm", params = "btnCancel")
@@ -1173,7 +1212,7 @@ public class AdminController {
             @PathVariable("id") String id) {
         DonHang bill = donHangDAO.getOne(DonHang.class, id);
         bill.setNhanVienD((NguoiDung) session.getAttribute("staff"));
-        bill.setTrangThai(-1);
+        bill.setTrangThai("Đã hủy");
         donHangDAO.update(bill);
         return "redirect:/Admin/billUnConfirm.htm";
     }
@@ -1183,7 +1222,7 @@ public class AdminController {
             @PathVariable("id") String id) {
         DonHang bill = donHangDAO.getOne(DonHang.class, id);
         bill.setNgayNhan(new Date());
-        bill.setTrangThai(2);
+        bill.setTrangThai("Đã hoàn thành");
         donHangDAO.update(bill);
         NguoiDung staff = (NguoiDung) session.getAttribute("staff");
         HoaDon billl = new HoaDon(hoaDonDAO.nextPK("HoaDon", "HD", "maHD"), new Date(), Utils.getMST(), staff, bill, null);
