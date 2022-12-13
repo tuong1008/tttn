@@ -98,7 +98,7 @@ public class SanPhamDAOImpl extends AbstractDao<SanPham> implements SanPhamDAO {
     
     @Override
     public List<SanPham> getListProductByName(String name) {
-        return getFromQuery("FROM SanPham s WHERE s.tenSP like '%"+name+"%'", SanPham.class);
+        return getFromQuery("FROM SanPham s WHERE s.tenSP like ?", SanPham.class, "%"+name+"%");
     }
 
     @Override

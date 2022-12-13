@@ -15,8 +15,8 @@ public class InLoggerCustomerInterceptor extends HandlerInterceptorAdapter {
         System.out.println("PreHandel, Trước khi vào Controller");
 
         HttpSession ss = request.getSession();
-
-        if (ss.getAttribute("customer") != null) {
+        
+        if (ss.getAttribute("customer") != null || request.getParameter("btnBuy") != null) {
             response.sendRedirect(request.getContextPath() + "/User/home.htm");
             return false;
         }

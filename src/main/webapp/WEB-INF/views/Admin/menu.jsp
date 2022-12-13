@@ -4,7 +4,7 @@
 
 <header>
     <div class="header__logo">
-        <img style="max-width: 50px" src="resource/img/nike_logo.png" alt="">
+        <img style="max-width: 50px" src="resource/img/logo.png" alt="">
     </div>
     <div class="header__right">
         <a class="header__logout" href="Admin/login.htm"><i class="fas fa-sign-out-alt"></i></a>

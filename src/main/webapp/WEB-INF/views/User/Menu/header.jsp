@@ -7,7 +7,7 @@
     <div class="header-top__wrap">
         <div class="header-top__item header-top__left">
             <a href="User/home.htm" class="header-top-left__link"> <img
-                    src="resource/img/nike_logo.png" alt="" class="header__logo">
+                    src="resource/img/logo.png" alt="" class="header__logo">
             </a>
         </div>
         <div class="header-top__item header-top__center">

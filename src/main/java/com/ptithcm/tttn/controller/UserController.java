@@ -258,6 +258,15 @@ public class UserController {
         model.addAttribute("idBill", idBill);
         return "User/historyDetail";
     }
+    
+    @RequestMapping(value = "history/idBill={idBill}.htm", params = "linkDelete")
+    public String cancelBill(HttpServletRequest request, HttpSession session, ModelMap model, @PathVariable("idBill") String idBill) {
+        DonHang d = donHangDAOImpl.getOne(DonHang.class, idBill);
+        d.setTrangThai("Đã hủy");
+        donHangDAOImpl.update(d);
+        showBills(request, model, session);
+        return "User/history";
+    }
 
     public void showDetailBills(HttpServletRequest request, ModelMap model, String idBill) {
         List<CTDonHang> list = ctDonHangDAOImpl.getDetailBills(idBill);
@@ -459,7 +468,6 @@ public class UserController {
         System.out.println("Payment");
 
         List<CTDonHang> cts = ctDonHangDAOImpl.getDetailBills(donHang.getMaDH());
-        StringBuilder builder = new StringBuilder("");
         int i = 0;
         for (CTDonHang ct : cts) {
             ct.setGia(ct.getPk().getSanPham().getGia()
@@ -468,56 +476,15 @@ public class UserController {
             SanPham s = ct.getPk().getSanPham();
             s.setSlt(s.getSlt() - ct.getSl());
 
-            builder.append(s.getTenSP());
-
-            //if not last
-            if (i != cts.size() - 1) {
-                builder.append(" - ");
-            }
-
             sanPhamDAOImpl.update(s);
             ctDonHangDAOImpl.update(ct);
 
             i++;
         }
 
-        if (builder.length() > 255) {
-            builder.setLength(255);
-        }
-
         donHang.setTrangThai("Chờ xác nhận");
         donHang.setNgayTao(new Date());
         donHangDAOImpl.update(donHang);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-
-        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-
-        String[] adminDivisions = Utils.getAdminDivisions(donHang.getDiaChiNN());
-
-        System.out.println("@$#@#$"+builder.toString());
-        body.add("shopID", 1);
-        body.add("packageName", builder.toString());
-        body.add("length", 5);
-        body.add("width", 10);
-        body.add("height", 20);
-        body.add("quantity", 1);
-        body.add("unitPrice", donHang.getTongTien());
-        body.add("consigneeName", donHang.getHoTenNN());
-        body.add("consigneePhone", donHang.getSdtNN());
-        body.add("consigneeNote", "đẹp nhẹ gọn");
-        body.add("adminDivision1", adminDivisions[2]);
-        body.add("adminDivision2", adminDivisions[1]);
-        body.add("adminDIvision3", adminDivisions[0]);
-        body.add("shippingFeePayment", 0);
-        
-        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-        
-        String serverUrl = "http://localhost:8180/api/shopOrder";
-        
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.postForEntity(serverUrl, requestEntity, String.class);
 
         NguoiDung k = khachHangDAOImpl.getCustomer(((NguoiDung) session.getAttribute("customer")).getTaiKhoan().getTenDN());
         int temp = donHangDAOImpl.insert(k);

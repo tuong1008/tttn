@@ -236,13 +236,16 @@
             <div class="slide">
                 <div class="slide__list">
                     <div class="slide__item slide__item--active" idx="0">
-                        <img src="resource/img/banner1.jpg">
+                        <img src="resource/img/slide1.jpg">
                     </div>
                     <div class="slide__item" idx="1">
-                        <img src="resource/img/banner2.jpg">
+                        <img src="resource/img/slide2.jpg">
                     </div>
                     <div class="slide__item" idx="2">
-                        <img src="resource/img/banner4.png">
+                        <img src="resource/img/slide3.jpg">
+                    </div>
+                    <div class="slide__item" idx="3">
+                        <img src="resource/img/slide4.jpg">
                     </div>
                 </div>
                 <span class="btn__slide" id="btn__slide--prev"><i

@@ -24,22 +24,22 @@ public class DonHangDAOImpl extends AbstractDao<DonHang> implements DonHangDAO {
 
     @Override
     public DonHang getBillUnBuy(String idCustomer) {
-        return getFromQuery("FROM DonHang D WHERE D.khachHang.userId =? AND D.trangThai = 'Giỏ hàng'", DonHang.class, idCustomer).get(0);
+        return getFromQuery("FROM DonHang D WHERE D.khachHang.userId =? AND D.trangThai = ?", DonHang.class, idCustomer,"Giỏ hàng").get(0);
     }
 
     @Override
     public List<DonHang> getBills(String idCustomer) {
-        return getFromQuery("FROM DonHang D WHERE D.trangThai <> 0 AND D.khachHang.userId =?", DonHang.class, idCustomer);
+        return getFromQuery("FROM DonHang D WHERE D.trangThai <> ? AND D.khachHang.userId =?", DonHang.class,"Giỏ hàng" , idCustomer);
     }
 
     @Override
     public List<DonHang> getBillUnconfirm() {
-        return getFromQuery("FROM DonHang B WHERE B.trangThai = 1 AND B.nhanVienD.userId = NULL", DonHang.class);
+        return getFromQuery("FROM DonHang B WHERE B.trangThai = ? AND B.nhanVienD.userId = NULL", DonHang.class, "Chờ xác nhận");
     }
 
     @Override
     public List<DonHang> getBillCancel() {
-        return getFromQuery("FROM DonHang WHERE trangThai = -1", DonHang.class);
+        return getFromQuery("FROM DonHang WHERE trangThai = ?", DonHang.class, "Đã hủy");
     }
 
     public List<DonHang> searchBills(String from, String to) {
@@ -73,12 +73,12 @@ public class DonHangDAOImpl extends AbstractDao<DonHang> implements DonHangDAO {
 
     @Override
     public List<DonHang> getBillComplete(HttpSession sessions) {
-        String hql = "FROM DonHang where trangThai = 2";
+        String hql = "FROM DonHang where trangThai = ?";
         NguoiDung staff = (NguoiDung) sessions.getAttribute("staff");
         if (staff.getTaiKhoan().getQuyen().getMaQuyen() == 4) {
             hql += " AND nhanVienG.userId = '" + staff.getUserId() + "'";
         }
-        List<DonHang> list = getFromQuery(hql, DonHang.class);
+        List<DonHang> list = getFromQuery(hql, DonHang.class, "Giao thành công");
         return list;
     }
 
@@ -115,9 +115,10 @@ public class DonHangDAOImpl extends AbstractDao<DonHang> implements DonHangDAO {
     @Override
     public List<DonHang> searchBillUnconfirm(String from, String to) {
         Session session = sessionFactory.openSession();
-        String hql = "FROM DonHang where trangThai = 1 AND nhanVienD.maNV = NULL AND ngayTao >=:from AND ngayTao <=:to";
+        String hql = "FROM DonHang where trangThai = :trangThai AND nhanVienD.maNV = NULL AND ngayTao >=:from AND ngayTao <=:to";
         Query query = session.createQuery(hql);
         try {
+            query.setParameter("trangThai", "Chờ xác nhận");
             query.setParameter("from", new SimpleDateFormat("yyyy-MM-dd").parse(from));
             query.setParameter("to", new SimpleDateFormat("yyyy-MM-dd").parse(to));
         } catch (ParseException e) {
@@ -132,13 +133,14 @@ public class DonHangDAOImpl extends AbstractDao<DonHang> implements DonHangDAO {
     @Override
 	public List<DonHang> searchBillComplete(HttpSession sessions, String from, String to) {
 		Session session = sessionFactory.openSession();
-		String hql = "FROM DonHang where trangThai = 2 AND ngayTao >=:from AND ngayTao <=:to";
+		String hql = "FROM DonHang where trangThai = :trangThai AND ngayTao >=:from AND ngayTao <=:to";
 		NguoiDung staff= (NguoiDung) sessions.getAttribute("staff");
 		if(staff.getTaiKhoan().getQuyen().getMaQuyen() == 4) {
 			hql += " AND nhanVienG.maNV = '" + staff.getUserId()+"'";
 		}
 		Query query = session.createQuery(hql);
-		try {
+		try {    
+			query.setParameter("trangThai", "Giao thành công");
 			query.setParameter("from", new SimpleDateFormat("yyyy-MM-dd").parse(from));
 			query.setParameter("to", new SimpleDateFormat("yyyy-MM-dd").parse(to));
 		} catch (ParseException e) {
@@ -153,9 +155,10 @@ public class DonHangDAOImpl extends AbstractDao<DonHang> implements DonHangDAO {
     @Override
     public List<DonHang> searchBillCancel(String from, String to) {
         Session session = sessionFactory.openSession();
-        String hql = "FROM DonHang where trangThai = -1 AND ngayTao >=:from AND ngayTao <=:to";
+        String hql = "FROM DonHang where trangThai = :trangThai AND ngayTao >=:from AND ngayTao <=:to";
         Query query = session.createQuery(hql);
         try {
+            query.setParameter("trangThai", "Đã hủy");
             query.setParameter("from", new SimpleDateFormat("yyyy-MM-dd").parse(from));
             query.setParameter("to", new SimpleDateFormat("yyyy-MM-dd").parse(to));
         } catch (ParseException e) {

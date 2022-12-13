@@ -70,14 +70,6 @@ span {
 		</table>
 		<c:if test="${bill.nhanVienD == NULl}">
 			<form action="Admin/billDetail/${bill.maDH}.htm">
-				<div class="form-element">
-					<label>Chọn nhân viên giao hàng</label>
-                                        <select name="maNVG" required="required">
-							<c:forEach var="s" items="${listNV}">
-								<option value="${s.userId}">${s.userId}__${s.hoTen}</option>
-							</c:forEach>
-						</select>		
-				</div>
 				<div style="display: flex;">
 					<button name="btnBrower">Duyệt đơn hàng</button>
 					<button name="btnCancel">Hủy đơn hàng</button>

@@ -1,6 +1,6 @@
 header {
     height: 60px;
-    background-color: #343a40;
+    background-color: #0000004a;
     position: fixed;
     left: 0;
     right: 0;
@@ -13,6 +13,7 @@ header {
     display: flex;
     width: 12.2%;
     margin-left: 36px;
+    margin-top: 20px;
 }
 
 .header__logo img {

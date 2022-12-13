@@ -38,7 +38,7 @@
             <mvc:mapping path="/User/changePass.htm"/>
             <mvc:mapping path="/User/history.htm"/>
             <mvc:mapping path="/User/history/**"/>
-            <mvc:mapping path="/User/phone.htm?btnBuy"/>
+            <mvc:mapping path="/User/product.htm"/>
             <mvc:exclude-mapping path="/User/login.htm"/>
             <bean class="com.ptithcm.tttn.interceptor.LoggerCustomerInterceptor"/>
         </mvc:interceptor>

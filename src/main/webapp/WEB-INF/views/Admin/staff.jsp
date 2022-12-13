@@ -62,7 +62,7 @@
                     <label class="label-title" for="">Quyền: </label>
                     <select name="quyen" >
                     	<c:forEach var="s" items="${sessionScope.roles}">
-	                    	<c:if test="${s.maQuyen !=5}">
+	                    	<c:if test="${(s.maQuyen ==1) || (s.maQuyen == 2) || (s.maQuyen == 3)}">
 	                    	   <option ${staff.taiKhoan.quyen.maQuyen == s.maQuyen ? 'selected="selected"' : ''} value="${s.maQuyen}">${s.tenQuyen}</option>                   	
 	                    	</c:if>
                     	</c:forEach>

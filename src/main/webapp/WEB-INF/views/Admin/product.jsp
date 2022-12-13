@@ -22,6 +22,7 @@
         <%@include file="/WEB-INF/views/Admin/menu.jsp" %>
         <div class="container">
             <h2>THÔNG TIN SẢN PHẨM</h2>
+            <div class="error">${message}</div>
             <form:form action="${pageContext.request.contextPath}/Admin/product.htm"
                        enctype="multipart/form-data" method="post" modelAttribute="product" class="form-horizontal">
                 <div class="form-group">
@@ -82,7 +83,6 @@
                            pagedLink="${pagedLink}"/>
 
             </div>
-            <div class="error">${message}</div>
             <table>
                 <tr>
                     <th>Mã sản phẩm</th>

@@ -134,7 +134,7 @@ public class AbstractDao<T> implements Dao<T> {
 
     @Override
     public String nextPK(String tenBang, String kyTuDau, String tenCotPK) {
-        Integer nextID = getFromQuery("SELECT MAX(substring("+tenCotPK+", 3, LENGTH("+tenCotPK+")))+1 FROM "+ tenBang, Integer.class).get(0);
+        Integer nextID = getFromQuery("SELECT MAX(CAST(substring("+tenCotPK+", 3, LENGTH("+tenCotPK+")) as java.lang.Integer))+1 FROM "+ tenBang, Integer.class).get(0);
         if (nextID == null){
             return kyTuDau + "0";
         }

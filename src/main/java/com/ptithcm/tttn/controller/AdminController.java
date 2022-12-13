@@ -52,9 +52,15 @@ import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.json.stream.JsonGenerator;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 @Transactional
@@ -1171,42 +1177,61 @@ public class AdminController {
         DonHang bill = donHangDAO.getOne(DonHang.class, id);
 //        bill.setNhanVienG(nhanVienDAO.getOne(NguoiDung.class, request.getParameter("maNVG")));
         bill.setNhanVienD((NguoiDung) session.getAttribute("staff"));
+        bill.setTrangThai("Chờ giao hàng xác nhận");
         donHangDAO.update(bill);
+        
+        List<CTDonHang> cts = ctDonHangDAO.getDetailBills(bill.getMaDH());
+        StringBuilder builder = new StringBuilder("");
+        int i = 0;
+        for (CTDonHang ct : cts) {
+            SanPham s = ct.getPk().getSanPham();
+
+            builder.append(s.getTenSP());
+
+            //if not last
+            if (i != cts.size() - 1) {
+                builder.append(" - ");
+            }
+            i++;
+        }
+
+        if (builder.length() > 255) {
+            builder.setLength(255);
+        }
+        
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+
+        String[] adminDivisions = Utils.getAdminDivisions(bill.getDiaChiNN());
+
+        body.add("shopID", 4);
+        body.add("packageName", builder.toString());
+        body.add("length", 5);
+        body.add("width", 10);
+        body.add("height", 20);
+        body.add("quantity", 1);
+        body.add("unitPrice", bill.getTongTien());
+        body.add("consigneeName", bill.getHoTenNN());
+        body.add("consigneePhone", bill.getSdtNN());
+        body.add("consigneeNote", "đẹp nhẹ gọn");
+        body.add("adminDivision1", adminDivisions[2]);
+        body.add("adminDivision2", adminDivisions[1]);
+        body.add("adminDivision3", adminDivisions[0]);
+        body.add("shippingFeePayment", 0);
+        body.add("originalOrderID", bill.getMaDH());
+        
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+        
+        String serverUrl = "http://172.20.10.3:8180/api/shopOrder";
+        
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.postForEntity(serverUrl, requestEntity, String.class);
         return "redirect:/Admin/billUnConfirm.htm";
     }
     
-    @RequestMapping(value = "api-update-shipper-billDetail/{id}.htm", method = RequestMethod.PUT)
-    public ResponseEntity<String> updateShipper(HttpServletRequest request, ModelMap model, HttpSession session,
-            @PathVariable("id") String id, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
-        request.setCharacterEncoding("UTF-8");
-        response.setContentType("application/json");
-        JsonReader rdr = Json.createReader(request.getInputStream());
-        JsonObject obj = rdr.readObject();
-
-        String shipperName = obj.getJsonString("shipperName").getString();
-        DonHang bill = donHangDAO.getOne(DonHang.class, id);
-        bill.setNhanVienG(shipperName);
-        donHangDAO.update(bill);
-        
-        return ResponseEntity.ok().body("Cập nhật shipper cho đơn hàng thành công");
-    }
     
-    @RequestMapping(value = "api-update-status-billDetail/{id}.htm", method = RequestMethod.PUT)
-    public ResponseEntity<String> updateStatus(HttpServletRequest request, ModelMap model, HttpSession session,
-            @PathVariable("id") String id, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
-        request.setCharacterEncoding("UTF-8");
-        response.setContentType("application/json");
-        JsonReader rdr = Json.createReader(request.getInputStream());
-        JsonObject obj = rdr.readObject();
-
-        String statusOrder = obj.getJsonString("statusOrder").getString();
-        DonHang bill = donHangDAO.getOne(DonHang.class, id);
-        bill.setTrangThai(statusOrder);
-        donHangDAO.update(bill);
-        
-        return ResponseEntity.ok().body("Cập nhật trạng thái cho đơn hàng thành công");
-    }
-
     @RequestMapping(value = "billDetail/{id}.htm", params = "btnCancel")
     public String billDetailCancel(HttpServletRequest request, ModelMap model, HttpSession session,
             @PathVariable("id") String id) {
