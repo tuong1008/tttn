@@ -55,7 +55,7 @@
                         <td><fmt:formatDate pattern="dd-MM-yyyy" value="${s.ngayTao}" /></td>
                         <td><fmt:formatDate pattern="dd-MM-yyyy" value="${s.ngayNhan}" /></td>
                         <td><fmt:formatNumber type = "currency" value = "${s.tongTien}" /></td>
-                        <td>${s.nhanVienG.userId}</td>
+                        <td>${s.nhanVienG}</td>
                         <td>${s.nhanVienD.userId}</td>
                         <td><a href="Admin/billDetail/${s.maDH}.htm">Xem chi tiết</a></td>
                     </tr>

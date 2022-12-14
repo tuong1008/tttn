@@ -33,9 +33,7 @@ span {
 	<%@include file="/WEB-INF/views/Admin/menu.jsp"%>
 	<div class="container">
 		<h2>ĐƠN HÀNG</h2>		
-		<c:if test="${sessionScope.staff.taiKhoan.quyen.maQuyen!=4}">
-			<div class="link-export__wrapper"><a class="link-export" href="pdf/bill/${id}.htm">Xuất hóa đơn</a></div>
-		</c:if>
+		
 		<div class="bill-Info">
 			<p> <span>Mã đơn hàng: </span>${bill.maDH}</p>
 			<p> <span>Mã khách hàng:</span>${bill.khachHang.userId}</p>

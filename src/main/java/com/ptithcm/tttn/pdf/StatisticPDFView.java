@@ -37,7 +37,7 @@ public class StatisticPDFView extends AbstractPdfView {
 		Font fontTitle = new Font(bf, 15);
 		Font fontNameCompany = new Font(bf, 12);
 
-		Paragraph nameCompany = new Paragraph("Công ty cổ phần Nike", fontNameCompany);
+		Paragraph nameCompany = new Paragraph("Công ty cổ phần Asia", fontNameCompany);
 		nameCompany.setAlignment(Element.ALIGN_LEFT);
 		nameCompany.setSpacingAfter(28);
 

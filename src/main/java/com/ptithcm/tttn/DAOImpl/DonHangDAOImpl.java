@@ -78,18 +78,18 @@ public class DonHangDAOImpl extends AbstractDao<DonHang> implements DonHangDAO {
         if (staff.getTaiKhoan().getQuyen().getMaQuyen() == 4) {
             hql += " AND nhanVienG.userId = '" + staff.getUserId() + "'";
         }
-        List<DonHang> list = getFromQuery(hql, DonHang.class, "Giao thành công");
+        List<DonHang> list = getFromQuery(hql, DonHang.class, "Đã hoàn thành");
         return list;
     }
 
     @Override
     public List<DonHang> getBillDelivering(HttpSession sessions) {
-        String hql = "FROM DonHang where nhanVienD.userId <>NULL AND nhanVienG.userId <>NULL AND trangThai = 1 AND ngayNhan = NULL";
+        String hql = "FROM DonHang where nhanVienD.userId <>NULL AND nhanVienG <>NULL AND trangThai = ? AND ngayNhan = NULL";
         NguoiDung staff = (NguoiDung) sessions.getAttribute("staff");
         if (staff.getTaiKhoan().getQuyen().getMaQuyen() == 4) {
             hql += " AND nhanVienG.userId = '" + staff.getUserId() + "'";
         }
-        List<DonHang> list = getFromQuery(hql, DonHang.class);
+        List<DonHang> list = getFromQuery(hql, DonHang.class, "Đang Giao");
         return list;
     }
 
@@ -140,7 +140,7 @@ public class DonHangDAOImpl extends AbstractDao<DonHang> implements DonHangDAO {
 		}
 		Query query = session.createQuery(hql);
 		try {    
-			query.setParameter("trangThai", "Giao thành công");
+			query.setParameter("trangThai", "Đã hoàn thành");
 			query.setParameter("from", new SimpleDateFormat("yyyy-MM-dd").parse(from));
 			query.setParameter("to", new SimpleDateFormat("yyyy-MM-dd").parse(to));
 		} catch (ParseException e) {
@@ -173,13 +173,14 @@ public class DonHangDAOImpl extends AbstractDao<DonHang> implements DonHangDAO {
     @Override
     public List<DonHang> searchBillDelivering(HttpSession sessions, String from, String to) {
         Session session = sessionFactory.openSession();
-        String hql = "FROM DonHang where nhanVienD.maNV <>NULL AND nhanVienG.maNV <>NULL AND trangThai = 1 AND ngayTao >=:from AND ngayTao <=:to";
+        String hql = "FROM DonHang where nhanVienD.maNV <>NULL AND nhanVienG <>NULL AND trangThai = :trangThai AND ngayTao >=:from AND ngayTao <=:to";
         NguoiDung staff = (NguoiDung) sessions.getAttribute("staff");
         if (staff.getTaiKhoan().getQuyen().getMaQuyen() == 4) {
             hql += " AND nhanVienG.maNV = '" + staff.getUserId()+ "'";
         }
         Query query = session.createQuery(hql);
         try {
+            query.setParameter("trangThai", "Đang Giao");
             query.setParameter("from", new SimpleDateFormat("yyyy-MM-dd").parse(from));
             query.setParameter("to", new SimpleDateFormat("yyyy-MM-dd").parse(to));
         } catch (ParseException e) {
